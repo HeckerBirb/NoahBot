@@ -26,7 +26,7 @@ async def ping_slash(ctx):
     await _ping(ctx, Reply.SLASH)
 
 
-@commands.command(name=get_name())
+@commands.command(name=get_name(), category='Diagnostics', help='A simple parse-and-reply check.')
 @commands.has_any_role(*(PrefixPerms.ADMINISTRATORS + PrefixPerms.MODERATORS))
 async def ping_prefix(ctx):
     await _ping(ctx, Reply.PREFIX)

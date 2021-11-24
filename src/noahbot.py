@@ -4,7 +4,8 @@ from discord.ext import commands
 
 
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix='++', case_insensitive=True, intents=intents)  # , help_command=PrettyHelp())
+help_command = commands.DefaultHelpCommand(no_category='Available Commands')
+bot = commands.Bot(command_prefix='++', case_insensitive=True, help_command=help_command, intents=intents)
 
 
 @bot.event
