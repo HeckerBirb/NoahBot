@@ -4,30 +4,25 @@ from src.conf import SlashPerms, PrefixPerms, GUILD_ID
 from src.cmds.slash_prefix_factory import Reply
 
 
-def get_description():
-    return 'A simple parse-and-respond check'
+def description():
+    return 'A simple parse-and-reply check.'
 
 
-def get_name():
+def name():
     return 'ping'
 
 
 async def _ping(ctx, reply):
-    await reply(ctx, 'pong')
+    await reply(ctx, 'Pong!')
 
 
-@bot.slash_command(
-    guild_ids=[GUILD_ID],
-    permissions=[SlashPerms.ADMINISTRATORS, SlashPerms.MODERATORS],
-    name=get_name(),
-    description=get_description()
-)
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
 async def ping_slash(ctx):
     await _ping(ctx, Reply.SLASH)
 
 
-@commands.command(name=get_name(), category='Diagnostics', help='A simple parse-and-reply check.')
-@commands.has_any_role(*(PrefixPerms.ADMINISTRATORS + PrefixPerms.MODERATORS))
+@commands.command(name=name(), help=description())
+@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
 async def ping_prefix(ctx):
     await _ping(ctx, Reply.PREFIX)
 

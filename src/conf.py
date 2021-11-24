@@ -14,14 +14,12 @@ class RoleIDs:
 
 
 class SlashPerms:
-    class RoleID:
-        ADMINISTRATORS = RoleIDs.POLLOS_HERMANOS
-        MODERATORS = RoleIDs.SEMI_POWERS
-
-    ADMINISTRATORS = _allow(RoleID.ADMINISTRATORS)
-    MODERATORS = _allow(RoleID.MODERATORS)
+    """ IDs for the specific roles. Note that due to the way slash commands handle permissions, these are SINGULAR. """
+    ADMIN = _allow(RoleIDs.POLLOS_HERMANOS)
+    MODERATOR = _allow(RoleIDs.SEMI_POWERS)
 
 
 class PrefixPerms:
-    ADMINISTRATORS = ['Administrator', RoleIDs.POLLOS_HERMANOS]
-    MODERATORS = ['Moderator', RoleIDs.SEMI_POWERS]
+    """ IDs for the specific roles. Note that due to the way prefix commands handle permissions, these are PLURAL. """
+    ALL_ADMINS = ['Administrator', RoleIDs.POLLOS_HERMANOS]
+    ALL_MODS = ['Moderator', RoleIDs.SEMI_POWERS]
