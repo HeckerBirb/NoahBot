@@ -13,9 +13,9 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name='NoahBot'))
 
 extensions = [
-    'moderation',
+    'mute',
     'htb',
-    'diagnostics'
+    'ping'
 ]
 for extension in extensions:
     bot.load_extension('src.cmds.' + extension)
