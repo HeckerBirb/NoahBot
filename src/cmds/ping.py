@@ -1,6 +1,7 @@
 from discord.ext import commands
 from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID
+from src.cmds.proxy_helpers import Reply
 
 
 def description():
@@ -24,17 +25,6 @@ async def ping_slash(ctx):
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
 async def ping_prefix(ctx):
     await _ping(ctx, Reply.prefix)
-
-
-class Reply:
-    """ Proxy for ctx.send and ctx.respond. """
-    @staticmethod
-    async def slash(ctx, msg):
-        await ctx.respond(msg)
-
-    @staticmethod
-    async def prefix(ctx, msg):
-        await ctx.send(msg)
 
 
 def setup(le_bot):

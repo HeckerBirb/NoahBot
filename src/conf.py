@@ -1,5 +1,12 @@
+import os
+
 from discord.commands import commands
 
+
+MYSQL_URI = os.getenv('MYSQL_URI', 'localhost')
+MYSQL_DATABASE = os.getenv('MYSQL_DATABASE', 'noahbot')
+MYSQL_USER = os.getenv('MYSQL_USER', 'root')
+MYSQL_PASS = os.getenv('MYSQL_PASS', 'noah')
 
 GUILD_ID = 368879044999118848
 

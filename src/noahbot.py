@@ -15,7 +15,8 @@ async def on_ready():
 extensions = [
     'mute',
     'htb',
-    'ping'
+    'ping',
+    'whois'
 ]
 for extension in extensions:
     bot.load_extension('src.cmds.' + extension)
