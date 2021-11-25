@@ -9,7 +9,7 @@ def name():
 
 
 def description():
-    return 'Receive instructions in a DM on how to get full access to the Discord server by correctly linking your accounts.'
+    return 'Receive instructions in a DM on how to identify yourself with your HTB account.'
 
 
 async def perform_action(ctx, reply):

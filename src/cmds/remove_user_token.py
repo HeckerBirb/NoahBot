@@ -9,7 +9,7 @@ def name():
 
 
 def description():
-    return 'Remove all records of identification the user has made, allowing them to link a new Discord or HTB account together.'
+    return 'Remove all records of identification the user has made from the database.'
 
 
 async def perform_action(ctx, reply):
