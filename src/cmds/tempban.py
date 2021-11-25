@@ -5,28 +5,27 @@ from src.cmds.proxy_helpers import Reply
 
 
 def name():
-    return 'ping'
+    return 'tempban'
 
 
 def description():
-    return 'A simple parse-and-reply check.'
+    return 'Ban a user from the server temporarily.'
 
 
-async def _ping(ctx, reply):
-    await reply(ctx, 'Pong!')
+async def _action(ctx, reply):
+    await reply(ctx, 'Not implemented yet...')
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
-async def ping_slash(ctx):
-    await _ping(ctx, Reply.slash)
+async def action_slash(ctx):
+    await _action(ctx, Reply.slash)
 
 
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
-async def ping_prefix(ctx):
-    await _ping(ctx, Reply.prefix)
+async def action_prefix(ctx):
+    await _action(ctx, Reply.prefix)
 
 
 def setup(le_bot):
-    le_bot.add_command(ping_prefix)
-
+    le_bot.add_command(action_prefix)

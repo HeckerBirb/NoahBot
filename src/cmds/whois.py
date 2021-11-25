@@ -6,12 +6,12 @@ from src.cmds.proxy_helpers import Reply
 import mysql.connector
 
 
-def description():
-    return 'Given a Discord user ID, show the associated HTB user ID and vise versa.'
-
-
 def name():
     return 'whois'
+
+
+def description():
+    return 'Given a Discord user ID, show the associated HTB user ID and vise versa.'
 
 
 async def _whois(ctx, user_id, reply):

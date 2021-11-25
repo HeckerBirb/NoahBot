@@ -1,4 +1,35 @@
+from discord.ext import commands
 from src.noahbot import bot
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID
+from src.cmds.proxy_helpers import Reply
+
+
+def name():
+    return 'ban'
+
+
+def description():
+    return 'Ban a user from the server permanently.'
+
+
+async def _action(ctx, reply):
+    await reply(ctx, 'Not implemented yet...')
+
+
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN], name=name(), description=description())
+async def action_slash(ctx):
+    await _action(ctx, Reply.slash)
+
+
+@commands.command(name=name(), help=description())
+@commands.has_any_role(*PrefixPerms.ALL_ADMINS)
+async def action_prefix(ctx):
+    await _action(ctx, Reply.prefix)
+
+
+def setup(le_bot):
+    le_bot.add_command(action_prefix)
+
 
 # Should contain all moderation commands, such as /warn /strike /ban /whois /badname etc.import typing
 #
@@ -535,8 +566,3 @@ from src.noahbot import bot
 #
 # def setup(bot):
 #     bot.add_cog(Moderation(bot))
-
-
-def setup(le_bot):
-    # le_bot.add_command(some_func)
-    pass
