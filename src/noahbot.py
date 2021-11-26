@@ -3,7 +3,7 @@ from pathlib import Path
 
 import discord
 from os import listdir
-from os.path import isfile, join, dirname
+from os.path import dirname
 from discord.ext import commands
 
 intents = discord.Intents.all()
