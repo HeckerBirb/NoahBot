@@ -13,7 +13,7 @@ def description():
     return 'Send a message as the bot in the specified channel.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

@@ -13,7 +13,7 @@ def description():
     return 'Removes the vanity role from your user.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

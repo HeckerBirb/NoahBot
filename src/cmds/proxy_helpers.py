@@ -4,14 +4,14 @@ from typing import Union
 
 
 class Reply:
-    """ Proxy for ctx.send and ctx.respond. """
+    """ Proxy for ctx.send and ctx.respond. Accepts same kwargs as the discord.InteractionResponse.send_message() does. """
     @staticmethod
-    async def slash(ctx, msg):
-        await ctx.respond(msg)
+    async def slash(ctx: ApplicationContext, msg=None, **kwargs):
+        await ctx.respond(content=msg, **kwargs)
 
     @staticmethod
-    async def prefix(ctx, msg):
-        await ctx.send(msg)
+    async def prefix(ctx: ApplicationContext, msg=None, **kwargs):
+        await ctx.send(content=msg, **kwargs)
 
 
 def get_user_id(user_id: Union[str, discord.Member]):

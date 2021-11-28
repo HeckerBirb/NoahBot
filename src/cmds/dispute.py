@@ -13,7 +13,7 @@ def description():
     return 'Dispute a ban request by changing the ban duration, then approve it.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

@@ -13,7 +13,7 @@ def description():
     return 'Remove all records of identification the user has made from the database.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

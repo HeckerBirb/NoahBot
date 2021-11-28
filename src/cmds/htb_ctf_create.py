@@ -13,7 +13,7 @@ def description():
     return 'Create the require Discord channels and user roles for a CTF hosted by HTB.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

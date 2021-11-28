@@ -13,7 +13,7 @@ def description():
     return 'Delete the Discord channels and user roles created with htbctfcreate for the specific CTF.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

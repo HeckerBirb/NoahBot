@@ -28,7 +28,7 @@ def description():
     return 'Receive instructions in a DM on how to identify yourself with your HTB account.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

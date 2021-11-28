@@ -13,7 +13,7 @@ def description():
     return 'Add slow mode to the channel. Specifying a value of 0 removes the slow mode again.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

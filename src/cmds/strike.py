@@ -30,7 +30,7 @@ def description():
     return 'Strike the user with the selected weight. DMs the user about the strike and the reason why.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

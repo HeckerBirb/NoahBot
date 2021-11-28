@@ -13,7 +13,7 @@ def description():
     return 'Remove a warning or a strike from a user by providing the infraction ID to remove.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

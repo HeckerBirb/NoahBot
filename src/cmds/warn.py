@@ -13,7 +13,7 @@ def description():
     return 'Warns a user of an action. Adds no weight but DMs the user about the warning and the reason why.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

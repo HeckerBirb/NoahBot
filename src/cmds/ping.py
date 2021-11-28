@@ -13,7 +13,7 @@ def description():
     return 'A simple parse-and-reply check.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Pong!')
 
 

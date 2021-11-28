@@ -13,7 +13,7 @@ def description():
     return "This is not the flag you're looking for..."
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

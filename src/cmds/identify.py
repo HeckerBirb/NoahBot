@@ -13,7 +13,7 @@ def description():
     return 'Identify yourself on the HTB Discord server by linking your HTB account ID to your Discord user ID.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

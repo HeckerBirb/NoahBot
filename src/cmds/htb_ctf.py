@@ -13,7 +13,7 @@ def description():
     return 'Join a CTF hosted by Hack The Box by providing the CTF name and password.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

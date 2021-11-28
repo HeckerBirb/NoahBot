@@ -13,7 +13,7 @@ def description():
     return 'Mute a person (adds the Muted role to person).'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

@@ -13,7 +13,7 @@ def description():
     return 'Join a vanity role if such is specified, otherwise list the vanity roles available to join.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 

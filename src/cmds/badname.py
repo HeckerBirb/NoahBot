@@ -13,7 +13,7 @@ def description():
     return 'Changes the nickname of a user to ChangeMe.'
 
 
-async def perform_action(ctx, reply):
+async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, 'Not implemented yet...')
 
 
