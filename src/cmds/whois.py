@@ -1,9 +1,10 @@
-import discord
 from discord.ext import commands
+from discord.commands.context import ApplicationContext
+from discord.commands import Option
 from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE
-from src.cmds.proxy_helpers import Reply
-import mysql.connector
+from src.cmds.proxy_helpers import Reply, get_user_id
+from mysql.connector import connect
 
 
 def name():
@@ -14,18 +15,15 @@ def description():
     return 'Given a Discord user ID, show the associated HTB user ID and vise versa.'
 
 
-async def _whois(ctx, user_id, reply):
+async def _whois(ctx: ApplicationContext, user_id, reply):
     identification = dict()
-    if isinstance(user_id, discord.Member):
-        user_id = user_id.id
-    try:
-        user_id = int(user_id.replace('<@', '').replace('!', '').replace('>', ''))
-    except ValueError:
-        return
+    user_id = get_user_id(user_id)
+    if user_id is None:
+        await reply(ctx, 'Error: malformed user ID.')
 
-    with mysql.connector.connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
-            query_str = """SELECT * FROM token WHERE user = %s or htbuser = %s LIMIT 1"""
+            query_str = """SELECT * FROM htb_discord_link WHERE discord_user_id = %s or htb_user_id = %s LIMIT 1"""
             cursor.execute(query_str, (user_id, user_id))
             for row in cursor.fetchall():
                 # row = id, is_token_valid, discord_id, htb_id
@@ -44,13 +42,13 @@ HTB ID: {identification['htb_id']}"""
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
-async def whois_slash(ctx, user_id):
+async def whois_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):
     await _whois(ctx, user_id, Reply.slash)
 
 
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
-async def whois_prefix(ctx, user_id):
+async def whois_prefix(ctx: ApplicationContext, user_id):
     await _whois(ctx, user_id, Reply.prefix)
 
 
