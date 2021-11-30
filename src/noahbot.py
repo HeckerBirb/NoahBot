@@ -13,7 +13,7 @@ bot = commands.Bot(command_prefix='++', case_insensitive=True, help_command=help
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Game(name='NoahBot'))
+    await bot.change_presence(activity=discord.Game(name='++cmd /cmd'))
 
 cmds_path = Path(dirname(__file__)) / 'cmds'
 ignored_files = ['proxy_helpers.py']
