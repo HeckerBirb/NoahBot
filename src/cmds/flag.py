@@ -14,7 +14,7 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply):
-    await reply(ctx, 'Not implemented yet...')
+    await reply(ctx, '`+-------------+`\n`| Not a flag. |`\n`+-------------+`')
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
