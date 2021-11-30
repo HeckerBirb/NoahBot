@@ -1,8 +1,11 @@
 import os
+from os.path import dirname, abspath
+from pathlib import Path
 
 from discord.commands import commands
 
 
+ROOT_DIR = Path(dirname(dirname(abspath(__file__))))
 MYSQL_URI = os.getenv('MYSQL_URI', 'localhost')
 MYSQL_DATABASE = os.getenv('MYSQL_DATABASE', 'noahbot')
 MYSQL_USER = os.getenv('MYSQL_USER', 'root')

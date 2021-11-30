@@ -1,6 +1,6 @@
 import discord
 from discord.commands.context import ApplicationContext
-from typing import Union
+from typing import Union, Optional
 
 
 class Reply:
@@ -14,7 +14,7 @@ class Reply:
         await ctx.send(content=msg, **kwargs)
 
 
-def get_user_id(user_id: Union[str, discord.Member]):
+def get_user_id(user_id: Union[str, discord.Member]) -> Optional[int]:
     if isinstance(user_id, discord.Member):
         user_id = user_id.id
     try:

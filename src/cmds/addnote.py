@@ -37,6 +37,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, note):
     user_id = get_user_id(user_id)
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
+        return
 
     moderator = ctx.author.id
     today = datetime.date(datetime.now())

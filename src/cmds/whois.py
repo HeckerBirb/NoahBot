@@ -20,6 +20,7 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
     user_id = get_user_id(user_id)
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
+        return
 
     with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:

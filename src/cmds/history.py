@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime, date
+from typing import Union
 
 from discord import Embed
 from discord.ext import commands
@@ -44,6 +45,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
     user_id = get_user_id(user_id)
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
+        return
 
     member = ctx.guild.get_member(int(user_id))
     if member is None:
@@ -99,7 +101,7 @@ Creation Date: **{creation_date}**
         await reply(ctx, embed=embed)
 
 
-def get_notes_of(user_id: str):
+def get_notes_of(user_id: Union[str, int]):
     notes = []
     with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
@@ -112,7 +114,7 @@ def get_notes_of(user_id: str):
     return notes
 
 
-def get_infractions_for(user_id):
+def get_infractions_for(user_id: Union[str, int]):
     infractions = []
     with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
