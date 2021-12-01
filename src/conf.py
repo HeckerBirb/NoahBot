@@ -4,6 +4,7 @@ from pathlib import Path
 
 from discord.commands import commands
 
+# TODO: Update this page before go-live
 
 ROOT_DIR = Path(dirname(dirname(abspath(__file__))))
 MYSQL_URI = os.getenv('MYSQL_URI', 'localhost')
@@ -12,6 +13,14 @@ MYSQL_USER = os.getenv('MYSQL_USER', 'root')
 MYSQL_PASS = os.getenv('MYSQL_PASS', 'noah')
 
 GUILD_ID = 368879044999118848
+
+
+JOINABLE_ROLES = {
+    'Noah Gang': 915400469164220417,
+    'Buddy Gang': 915400523035852800,
+    'Red Team': 915400555009028128,
+    'Blue Team': 915402415971389451
+}
 
 
 def _allow(role_id):
