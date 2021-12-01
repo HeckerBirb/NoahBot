@@ -69,35 +69,3 @@ def setup(le_bot):
     with open(ROOT_DIR / 'resources' / 'unisex_baby_names.txt') as r:
         baby_names = [baby_name for baby_name in r.read().split('\n')]
     le_bot.add_command(action_prefix)
-
-#    async def badname(
-#            self,
-#            ctx,
-#            member: Option(discord.Member, "The member to badname", required=True),
-#    ):
-#        """Remove a users bad discord name!"""
-#        moderator = ctx.author
-#        try:  # Check if the user exists
-#            oldname = member.display_name
-#            await member.edit(nick=f"ChangeMe")
-#            await ctx.channel.send(f"{member.name}'s name has been updated to ChangeMe")
-#            try:
-#                await member.send("Hello! It has been determined by a member of the staff team that your nickname "
-#                                  "was breaking the rules. It has been automagically updated to 'ChangeMe'. "
-#                                  "Please refer to #rules when creating a name.")
-#            except:
-#                await ctx.send("User has DMs disabled; DM not sent.")
-#            await InfractionRecord.insertInfraction(member,
-#                                                    moderator,
-#                                                    0,
-#                                                    f"User had a bad name of {oldname}",
-#                                                    ctx.guild.id)
-#        except Exception as e:
-#            # The user is invalid
-#
-#            await ctx.channel.send(f" {moderator.mention} Please specify a valid user.")
-#            raise e
-#
-#
-#
-#
