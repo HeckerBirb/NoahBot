@@ -12,6 +12,7 @@ class ErrorHandler(commands.Cog):
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
         """A global error handler cog."""
 
+        message = None
         if isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, MissingRequiredArgument):
@@ -20,9 +21,11 @@ class ErrorHandler(commands.Cog):
             message = 'You are missing the required permissions to run this command.'
         elif isinstance(error, commands.UserInputError):
             message = 'Something about your input was wrong, please check your input and try again.'
+
+        if message is None:
+            raise error
         else:
-            message = 'Oh no! Something went wrong while running the command...'
-        await ctx.send(message, delete_after=15)
+            await ctx.send(message, delete_after=15)
 
 
 def setup(bot: commands.Bot):

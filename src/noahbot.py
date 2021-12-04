@@ -16,7 +16,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name='++cmd /cmd'))
 
 cmds_path = Path(dirname(__file__)) / 'cmds'
-ignored_files = ['proxy_helpers.py']
+ignored_files = ['_proxy_helpers.py']
 extensions = [f.replace('.py', '') for f in listdir(cmds_path) if f not in ignored_files and not f.startswith('__')]
 
 for extension in extensions:
