@@ -57,10 +57,7 @@ async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or
 
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
-async def action_prefix(ctx: ApplicationContext, user_id, note=None):
-    if note is None:
-        await Reply.prefix(ctx, 'There is no note to add.')
-        return
+async def action_prefix(ctx: ApplicationContext, user_id, note):
     await perform_action(ctx, Reply.prefix, user_id, note)
 
 
