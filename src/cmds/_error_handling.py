@@ -22,7 +22,7 @@ class ErrorHandler(commands.Cog):
             message = 'Something about your input was wrong, please check your input and try again.'
         else:
             message = 'Oh no! Something went wrong while running the command...'
-        await ctx.send(message, delete_after=5)
+        await ctx.send(message, delete_after=15)
 
 
 def setup(bot: commands.Bot):
