@@ -1,6 +1,8 @@
 import calendar
 import time
+from datetime import datetime
 
+import discord
 from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
@@ -8,7 +10,8 @@ from discord.errors import Forbidden
 from mysql.connector import connect
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, HTB_URL, \
+    ChannelIDs
 from src.cmds._proxy_helpers import Reply, get_user_id, parse_duration_str
 
 """
@@ -49,7 +52,6 @@ async def _action(ctx, reply, user_id, duration, reason):
         return
 
     epoch_time = calendar.timegm(time.gmtime())
-    needs_approval = True  # TODO: is always true
 
 # TODO:
 #    if cmm(member):
@@ -59,47 +61,42 @@ async def _action(ctx, reply, user_id, duration, reason):
         reply(ctx, 'Invalid duration: cannot be in the past.', delete_after=15)
         return
 
+    ban_id = -1
     with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """INSERT INTO ban_record (user_id, reason, moderator, unban_time, approved) VALUES (%s, %s, %s, %s, %s)"""
             cursor.execute(query_str, (user_id, reason, ctx.author.id, dur, 0))
             connection.commit()
-        # TODO: Consider adding this as an infraction as well.
+            cursor.execute('SELECT id FROM ban_record WHERE user_id = %s AND unban_time = %s', (user_id, dur))
+            for row in cursor.fetchall():
+                ban_id = row[0]
+
+            query_str = """INSERT INTO infraction_record (user_id, reason, weight, moderator, date) VALUES (%s, %s, %s, %s, %s)"""
+            cursor.execute(query_str, (user_id, f'Previously banned for: {reason}', 0, ctx.author.id, datetime.date(datetime.now())))
+            connection.commit()
 
     member = ctx.guild.get_member(user_id)
     try:
         await member.send(
             f'You have been banned from {ctx.guild.name} for a duration of {duration} and the following reason: {reason}'
-            '\n\nIf you disagree with this decision, please feel free to reach out to an Administrator to appeal the ban.')
+            f'\n---\n'
+            'If you disagree with this decision, please feel free to reach out to an Administrator to appeal the ban.')
     except Forbidden:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
 # TODO:
 #   await ctx.guild.ban(member, reason=reason)
-    await reply(ctx, f'{member.mention} has been banned from the server.')
+    await reply(ctx, '**[DEBUG]** ACTUAL BANNING DISABLED.')
+    await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.')
 
-
-#    await InfractionRecord.insertInfraction(member, ctx.author, 0,
-#                                            f"{member.display_name} has been banned for a duration of "
-#                                            f"{length} for \"{reason}\"",
-#                                            ctx.guild.id)
-#    if needs_approval:
-#        embed = discord.Embed(title=f"Ban {ban_details[0][0]} Length Request",
-#                              description=f"{ctx.author.name} would like to ban {member.name}for "
-#                                          f"{length} for \"{reason}\"")
-#        embed.set_thumbnail(url=f"{BASE_URL}/images/logo600.png")
-#        embed.add_field(name="To Approve",
-#                        value=f"/approve {ban_details[0][0]}", inline=True)
-#        embed.add_field(name="To Change",
-#                        value=f"/dispute {ban_details[0][0]} (time, Note: Time is from now, not original ban.)",
-#                        inline=True)
-#        embed.add_field(
-#            name="To Deny", value=f"/deny {ban_details[0][0]}", inline=True)
-#        await self.bot.get_guild(htb_guild).get_channel(ApprovalChannel).send(embed=embed)
-#    await ctx.respond(
-#        f"{member.display_name} has been banned for a duration of {length} for \"{reason}\"",
-#        allowed_mentions=not_allowed_to_mention)
-
-    await reply(ctx, 'Not implemented yet...')
+    embed = discord.Embed(
+        title=f"Ban request #{ban_id}",
+        description=f'{ctx.author.name} would like to ban {member.name} for {duration}. Reason: {reason}'
+    )
+    embed.set_thumbnail(url=f'{HTB_URL}/images/logo600.png')
+    embed.add_field(name='Approve duration:', value=f'/approve {ban_id}', inline=True)
+    embed.add_field(name='Change duration:', value=f'/dispute {ban_id} <duration>', inline=True)
+    embed.add_field(name='Deny and unban:', value=f'/deny {ban_id}', inline=True)
+    await ctx.guild.get_channel(ChannelIDs.SR_MODERATOR).send(embed=embed)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

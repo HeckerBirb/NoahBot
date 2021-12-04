@@ -14,6 +14,7 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply):
+    # TODO should also unban
     await reply(ctx, 'Not implemented yet...')
 
 

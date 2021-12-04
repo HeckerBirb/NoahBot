@@ -169,9 +169,9 @@ def produce_inf_text(infraction, today_date):
         expired_status = "Active"
     else:
         expired_status = "Expired"
-    return f"""ID: {infraction.id}   Weight: {infraction.weight}
-Issued by <@{infraction.moderator}> on {infraction.date} ({expired_status})
-Reason: {infraction.reason if len(infraction.reason) <= 300 else infraction.reason[:300] + '...'}"""
+    return f"""#{infraction.id}, weight: {infraction.weight}
+Issued by <@{infraction.moderator}> on {infraction.date} ({expired_status}):
+{infraction.reason if len(infraction.reason) <= 300 else infraction.reason[:300] + '...'}"""
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

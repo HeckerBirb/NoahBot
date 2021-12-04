@@ -12,6 +12,7 @@ MYSQL_DATABASE = os.getenv('MYSQL_DATABASE', 'noahbot')
 MYSQL_USER = os.getenv('MYSQL_USER', 'root')
 MYSQL_PASS = os.getenv('MYSQL_PASS', 'noah')
 
+HTB_URL = 'https://www.hackthebox.com/'
 GUILD_ID = 368879044999118848
 
 
@@ -21,6 +22,10 @@ JOINABLE_ROLES = {
     'Red Team': 915400555009028128,
     'Blue Team': 915402415971389451
 }
+
+
+class ChannelIDs:
+    SR_MODERATOR = 407195797269118977
 
 
 def _allow(role_id):
