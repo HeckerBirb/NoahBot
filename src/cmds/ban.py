@@ -16,7 +16,7 @@ def description():
 
 
 async def perform_action(ctx, reply, user_id, reason):
-    await tempban.perform_action(ctx, reply, user_id, '100y', reason, needs_approval=False)
+    await tempban.perform_action(ctx, reply, user_id, '500w', reason, needs_approval=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN], name=name(), description=description())

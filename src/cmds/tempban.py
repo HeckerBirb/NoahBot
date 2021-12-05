@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
-from discord.errors import Forbidden
+from discord.errors import Forbidden, HTTPException
 from mysql.connector import connect
 
 from src.noahbot import bot
@@ -22,12 +22,13 @@ CREATE TABLE `ban_record` (
   `moderator` varchar(42) NOT NULL,
   `unban_time` int(42) NOT NULL,
   `approved` boolean NOT NULL,
+  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );
 
 INSERT INTO `ban_record`
 SELECT
-    id, member, reason, moderator, unbanTime, CASE WHEN approved = 1 THEN 1 ELSE 0 END as approved
+    id, member, reason, moderator, unbanTime, CASE WHEN approved = 1 THEN 1 ELSE 0 END as approved, CURRENT_TIMESTAMP
 FROM BanRecords;
 """
 
@@ -83,6 +84,9 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
             'If you disagree with this decision, please feel free to reach out to an Administrator to appeal the ban.')
     except Forbidden:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
+    except HTTPException:
+        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
+        return
 
     await ctx.guild.ban(member, reason=reason)
 
