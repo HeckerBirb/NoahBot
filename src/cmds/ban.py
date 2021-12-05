@@ -19,7 +19,7 @@ async def perform_action(ctx, reply, user_id, reason):
     await tempban.perform_action(ctx, reply, user_id, '500w', reason, needs_approval=False)
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN], name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
 async def action_slash(
         ctx: ApplicationContext,
         user_id: Option(str, 'User ID or @mention name.'),
@@ -29,7 +29,7 @@ async def action_slash(
 
 
 @commands.command(name=name(), help=description())
-@commands.has_any_role(*PrefixPerms.ALL_ADMINS)
+@commands.has_any_role(*(PrefixPerms.ALL_ADMINS, PrefixPerms.ALL_SR_MODERATORS))
 async def action_prefix(ctx: ApplicationContext, user_id, reason):
     await perform_action(ctx, Reply.prefix, user_id, reason)
 
