@@ -40,7 +40,7 @@ def description():
     return 'Ban a user from the server temporarily.'
 
 
-async def action(ctx, reply, user_id, duration, reason, needs_approval=True):
+async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=True):
     user_id = get_user_id(user_id)
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
@@ -110,13 +110,13 @@ async def action_slash(
         duration: Option(str, 'Duration of the ban in human-friendly notation, e.g. 2mo for two months or 3w for three weeks.'),
         reason: Option(str, 'The note to add. Will be sent to the user in a DM as well.')
 ):
-    await action(ctx, Reply.slash, user_id, duration, reason)
+    await perform_action(ctx, Reply.slash, user_id, duration, reason)
 
 
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
 async def action_prefix(ctx: ApplicationContext, user_id: str, duration: str, reason: str):
-    await action(ctx, Reply.prefix, user_id, duration, reason)
+    await perform_action(ctx, Reply.prefix, user_id, duration, reason)
 
 
 def setup(le_bot):
