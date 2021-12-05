@@ -12,7 +12,7 @@ from mysql.connector import connect
 from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, HTB_URL, \
     ChannelIDs
-from src.cmds._proxy_helpers import Reply, get_user_id, parse_duration_str
+from src.cmds._proxy_helpers import Reply, get_user_id, parse_duration_str, member_is_staff
 
 """
 CREATE TABLE `ban_record` (
@@ -45,6 +45,11 @@ async def _action(ctx, reply, user_id, duration, reason):
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
         return
+    member = ctx.guild.get_member(user_id)
+
+    if member_is_staff(member):
+        await reply(ctx, 'You cannot ban another staff member...')
+        return
 
     dur = parse_duration_str(duration)
     if dur is None:
@@ -52,10 +57,6 @@ async def _action(ctx, reply, user_id, duration, reason):
         return
 
     epoch_time = calendar.timegm(time.gmtime())
-
-# TODO:
-#    if cmm(member):
-#        return await ctx.send("You cannot ban another staff member.")
 
     if dur - epoch_time <= 0:
         reply(ctx, 'Invalid duration: cannot be in the past.', delete_after=15)
@@ -75,7 +76,6 @@ async def _action(ctx, reply, user_id, duration, reason):
             cursor.execute(query_str, (user_id, f'Previously banned for: {reason}', 0, ctx.author.id, datetime.date(datetime.now())))
             connection.commit()
 
-    member = ctx.guild.get_member(user_id)
     try:
         await member.send(
             f'You have been banned from {ctx.guild.name} for a duration of {duration} and the following reason: {reason}'
@@ -83,9 +83,8 @@ async def _action(ctx, reply, user_id, duration, reason):
             'If you disagree with this decision, please feel free to reach out to an Administrator to appeal the ban.')
     except Forbidden:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
-# TODO:
-#   await ctx.guild.ban(member, reason=reason)
-    await reply(ctx, '**[DEBUG]** ACTUAL BANNING DISABLED.')
+
+    await ctx.guild.ban(member, reason=reason)
     await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.')
 
     embed = discord.Embed(

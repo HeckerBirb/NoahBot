@@ -33,8 +33,14 @@ def _allow(role_id):
 
 
 class RoleIDs:
+    ADMINISTRATOR = 506943166365302789
+    COMMUNITY_MANAGER = 707322172267560991
+    MODERATOR = 486603600085123073
     POLLOS_HERMANOS = 407196347486306314
     SEMI_POWERS = 411892864537329685
+
+    ALL_ADMINS = [ADMINISTRATOR, COMMUNITY_MANAGER, POLLOS_HERMANOS]
+    ALL_MODS = [MODERATOR, SEMI_POWERS]
 
 
 class SlashPerms:
@@ -45,5 +51,5 @@ class SlashPerms:
 
 class PrefixPerms:
     """ IDs for the specific roles. Note that due to the way prefix commands handle permissions, these are PLURAL. """
-    ALL_ADMINS = ['Administrator', RoleIDs.POLLOS_HERMANOS]
-    ALL_MODS = ['Moderator', RoleIDs.SEMI_POWERS]
+    ALL_ADMINS = RoleIDs.ALL_ADMINS
+    ALL_MODS = RoleIDs.ALL_MODS

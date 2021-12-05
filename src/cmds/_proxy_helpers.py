@@ -6,6 +6,8 @@ import discord
 from discord.commands.context import ApplicationContext
 from typing import Union, Optional
 
+from src.conf import RoleIDs
+
 
 class Reply:
     """ Proxy for ctx.send and ctx.respond. Accepts same kwargs as the discord.InteractionResponse.send_message() does. """
@@ -19,6 +21,7 @@ class Reply:
 
 
 def get_user_id(user_id: Union[str, discord.Member]) -> Optional[int]:
+    """ Get the user ID given a string of the ID, a string of the representation of the user mention, or a Discord Member object. """
     if isinstance(user_id, discord.Member):
         user_id = user_id.id
     try:
@@ -49,3 +52,12 @@ def parse_duration_str(duration: str) -> Optional[int]:
 
     epoch_time = calendar.timegm(time.gmtime())
     return epoch_time + sum_seconds
+
+
+def member_is_staff(member: discord.Member) -> bool:
+    """ Checks if a member has any of the Administrator or Moderator roles defined in the RoleIDs class. """
+    for role in member.roles:
+        if role.id in RoleIDs.ALL_ADMINS + RoleIDs.ALL_MODS:
+            return True
+
+    return False
