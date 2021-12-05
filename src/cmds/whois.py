@@ -24,12 +24,11 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
 
     with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
-            query_str = """SELECT * FROM htb_discord_link WHERE discord_user_id = %s or htb_user_id = %s LIMIT 1"""
+            query_str = """SELECT discord_user_id, htb_user_id FROM htb_discord_link WHERE discord_user_id = %s or htb_user_id = %s LIMIT 1"""
             cursor.execute(query_str, (user_id, user_id))
             for row in cursor.fetchall():
-                # row = id, is_token_valid, discord_id, htb_id
-                identification['discord_id'] = row[2]
-                identification['htb_id'] = row[3]
+                identification['discord_id'] = row[0]
+                identification['htb_id'] = row[1]
 
     if len(identification) == 0:
         await reply(ctx, 'I cannot find that ID in our records.')
