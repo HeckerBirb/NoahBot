@@ -40,7 +40,7 @@ def description():
     return 'Ban a user from the server temporarily.'
 
 
-async def _action(ctx, reply, user_id, duration, reason):
+async def action(ctx, reply, user_id, duration, reason, needs_approval=True):
     user_id = get_user_id(user_id)
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
@@ -66,7 +66,7 @@ async def _action(ctx, reply, user_id, duration, reason):
     with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """INSERT INTO ban_record (user_id, reason, moderator, unban_time, approved) VALUES (%s, %s, %s, %s, %s)"""
-            cursor.execute(query_str, (user_id, reason, ctx.author.id, dur, 0))
+            cursor.execute(query_str, (user_id, reason, ctx.author.id, dur, 0 if needs_approval else 1))
             connection.commit()
             cursor.execute('SELECT id FROM ban_record WHERE user_id = %s AND unban_time = %s', (user_id, dur))
             for row in cursor.fetchall():
@@ -85,17 +85,22 @@ async def _action(ctx, reply, user_id, duration, reason):
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
 
     await ctx.guild.ban(member, reason=reason)
-    await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.')
 
-    embed = discord.Embed(
-        title=f"Ban request #{ban_id}",
-        description=f'{ctx.author.name} would like to ban {member.name} for {duration}. Reason: {reason}'
-    )
-    embed.set_thumbnail(url=f'{HTB_URL}/images/logo600.png')
-    embed.add_field(name='Approve duration:', value=f'/approve {ban_id}', inline=True)
-    embed.add_field(name='Change duration:', value=f'/dispute {ban_id} <duration>', inline=True)
-    embed.add_field(name='Deny and unban:', value=f'/deny {ban_id}', inline=True)
-    await ctx.guild.get_channel(ChannelIDs.SR_MODERATOR).send(embed=embed)
+    if not needs_approval:
+        await reply(ctx, f'{member.display_name} has been banned permanently.')
+        return
+
+    else:
+        await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.')
+        embed = discord.Embed(
+            title=f"Ban request #{ban_id}",
+            description=f'{ctx.author.name} would like to ban {member.name} for {duration}. Reason: {reason}'
+        )
+        embed.set_thumbnail(url=f'{HTB_URL}/images/logo600.png')
+        embed.add_field(name='Approve duration:', value=f'/approve {ban_id}', inline=True)
+        embed.add_field(name='Change duration:', value=f'/dispute {ban_id} <duration>', inline=True)
+        embed.add_field(name='Deny and unban:', value=f'/deny {ban_id}', inline=True)
+        await ctx.guild.get_channel(ChannelIDs.SR_MODERATOR).send(embed=embed)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
@@ -105,13 +110,13 @@ async def action_slash(
         duration: Option(str, 'Duration of the ban in human-friendly notation, e.g. 2mo for two months or 3w for three weeks.'),
         reason: Option(str, 'The note to add. Will be sent to the user in a DM as well.')
 ):
-    await _action(ctx, Reply.slash, user_id, duration, reason)
+    await action(ctx, Reply.slash, user_id, duration, reason)
 
 
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
 async def action_prefix(ctx: ApplicationContext, user_id: str, duration: str, reason: str):
-    await _action(ctx, Reply.prefix, user_id, duration, reason)
+    await action(ctx, Reply.prefix, user_id, duration, reason)
 
 
 def setup(le_bot):
