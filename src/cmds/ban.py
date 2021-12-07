@@ -30,8 +30,8 @@ async def action_slash(
 
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS, PrefixPerms.ALL_SR_MODERATORS))
-async def action_prefix(ctx: ApplicationContext, user_id, reason):
-    await perform_action(ctx, Reply.prefix, user_id, reason)
+async def action_prefix(ctx: ApplicationContext, user_id, *reason):
+    await perform_action(ctx, Reply.prefix, user_id, ' '.join(reason))
 
 
 def setup(le_bot):

@@ -50,7 +50,7 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
 
     if member_is_staff(member):
         await reply(ctx, 'You cannot ban another staff member...')
-        return
+        # return
 
     dur = parse_duration_str(duration)
     if dur is None:
@@ -79,16 +79,15 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
 
     try:
         await member.send(
-            f'You have been banned from {ctx.guild.name} for a duration of {duration} and the following reason: {reason}'
-            f'\n---\n'
-            'If you disagree with this decision, please feel free to reach out to an Administrator to appeal the ban.')
+            f'You have been banned from {ctx.guild.name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
+            f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
     except HTTPException:
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
         return
 
-    await ctx.guild.ban(member, reason=reason)
+    # await ctx.guild.ban(member, reason=reason)
 
     if not needs_approval:
         await reply(ctx, f'{member.display_name} has been banned permanently.')
@@ -119,8 +118,8 @@ async def action_slash(
 
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
-async def action_prefix(ctx: ApplicationContext, user_id: str, duration: str, reason: str):
-    await perform_action(ctx, Reply.prefix, user_id, duration, reason)
+async def action_prefix(ctx: ApplicationContext, user_id: str, duration: str, *reason: str):
+    await perform_action(ctx, Reply.prefix, user_id, duration, ' '.join(reason))
 
 
 def setup(le_bot):

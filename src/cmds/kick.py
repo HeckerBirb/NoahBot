@@ -25,7 +25,7 @@ async def action_slash(ctx: ApplicationContext):
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
 async def action_prefix(ctx: ApplicationContext):
-    await perform_action(ctx, Reply.prefix)
+    await perform_action(ctx, Reply.prefix)  # TODO: remember ' '.join(reason)
 
 
 def setup(le_bot):

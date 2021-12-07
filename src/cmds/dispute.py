@@ -1,9 +1,14 @@
+from datetime import datetime
+from typing import Optional
+
 from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
+from mysql.connector import connect
+
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID
-from src.cmds._proxy_helpers import Reply
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.cmds._proxy_helpers import Reply, parse_duration_str
 
 
 def name():
@@ -17,7 +22,32 @@ def description():
 async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
     # TODO: should also set "approved" to 1
     # TODO: when calculating the new "unban time", use `timestamp` from DB as baseline
-    await reply(ctx, 'Not implemented yet...')
+    try:
+        ban_id = int(ban_id)
+    except ValueError:
+        reply(ctx, 'Ban ID must be a number.')
+        return
+
+    if parse_duration_str(duration) is None:
+        reply(ctx, 'Could not parse duration. Malformed.')
+        return
+
+    with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+        with connection.cursor() as cursor:
+            unban_at: Optional[datetime] = None
+            query_str = """SELECT timestamp FROM ban_record WHERE id = %s"""
+            cursor.execute(query_str, (ban_id, ))
+            for row in cursor.fetchall():
+                unban_at = row[0]
+
+            new_unban_time = parse_duration_str(duration, int(unban_at.timestamp()))
+
+            query_str = """UPDATE ban_record SET unban_time = %s, approved = 1 WHERE id = %s"""
+            cursor.execute(query_str, (new_unban_time, ban_id))
+            connection.commit()
+
+    new_unban_at = datetime.fromtimestamp(new_unban_time).strftime('%B %d, %Y')
+    await reply(ctx, f'Ban duration updated and approved. The member will be unbanned on {new_unban_at} UTC.')
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())

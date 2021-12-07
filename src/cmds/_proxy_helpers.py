@@ -32,10 +32,10 @@ def get_user_id(user_id: Union[str, discord.Member]) -> Optional[int]:
     return user_id
 
 
-def parse_duration_str(duration: str, baseline: int = None) -> Optional[int]:
+def parse_duration_str(duration: str, baseline_ts: int = None) -> Optional[int]:
     """
     Converts an arbitrary measure of time, e.g. "3w" to a timestamp in seconds since 1970/01/01.
-    Uses baseline instead of the current time, if provided.
+    Uses baseline_ts instead of the current time, if provided.
     """
     dur = re.compile(r'(-?(?:\d+\.?\d*|\d*\.?\d+)(?:e[-+]?\d+)?)\s*([a-z]*)', re.IGNORECASE)
     units = {'s': 1}
@@ -54,10 +54,10 @@ def parse_duration_str(duration: str, baseline: int = None) -> Optional[int]:
         duration = duration[m.end():]
         sum_seconds += int(m.groups()[0]) * units.get(m.groups()[1], 1)
 
-    if baseline is None:
+    if baseline_ts is None:
         epoch_time = calendar.timegm(time.gmtime())
     else:
-        epoch_time = baseline
+        epoch_time = baseline_ts
     return epoch_time + sum_seconds
 
 

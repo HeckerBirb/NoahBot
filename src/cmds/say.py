@@ -18,8 +18,8 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply, channel: Union[int, discord.TextChannel], message: str):
-    if message is None:
-        reply(ctx, 'Please supply a channel and a message.')
+    if len(message) == 0:
+        message = 'No u.'
     if isinstance(channel, str):
         try:
             channel_id = int(channel.replace('<#', '').replace('>', ''))
@@ -44,8 +44,8 @@ async def action_slash(
 
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
-async def action_prefix(ctx: ApplicationContext, channel, message='No u.'):
-    await perform_action(ctx, Reply.prefix, channel, message)
+async def action_prefix(ctx: ApplicationContext, channel, *message):
+    await perform_action(ctx, Reply.prefix, channel, ' '.join(message))
 
 
 def setup(le_bot):
