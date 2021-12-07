@@ -5,6 +5,7 @@ from src.conf import SlashPerms, PrefixPerms, GUILD_ID
 from src.cmds._proxy_helpers import Reply
 
 
+# TODO: This should maybe be a PR to "Hack The Box" bot instead of exist in here.
 def name():
     return 'identify'
 

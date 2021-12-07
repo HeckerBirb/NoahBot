@@ -51,7 +51,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, note):
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
-async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.'), note: Option(str, 'The note to add. Will be sent to the user in a DM as well.')):
+async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.'), note: Option(str, 'The note to add.')):
     await perform_action(ctx, Reply.slash, user_id, note)
 
 

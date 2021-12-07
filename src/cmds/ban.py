@@ -23,7 +23,7 @@ async def perform_action(ctx, reply, user_id, reason):
 async def action_slash(
         ctx: ApplicationContext,
         user_id: Option(str, 'User ID or @mention name.'),
-        reason: Option(str, 'The note to add. Will be sent to the user in a DM as well.')
+        reason: Option(str, 'Ban reason. Will be sent to the user in a DM as well.')
 ):
     await perform_action(ctx, Reply.slash, user_id, reason)
 
