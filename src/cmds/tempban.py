@@ -50,7 +50,7 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
 
     if member_is_staff(member):
         await reply(ctx, 'You cannot ban another staff member...')
-        # return
+        return
 
     dur = parse_duration_str(duration)
     if dur is None:
@@ -87,7 +87,7 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
         return
 
-    # await ctx.guild.ban(member, reason=reason)
+    await ctx.guild.ban(member, reason=reason)
 
     if not needs_approval:
         await reply(ctx, f'{member.display_name} has been banned permanently.')
