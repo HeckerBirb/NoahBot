@@ -53,7 +53,7 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
         reason = 'No reason given...'
 
     if member_is_staff(member):
-        await reply(ctx, 'You cannot ban another staff member...')
+        await reply(ctx, 'You cannot ban another staff member.')
         return
 
     dur = parse_duration_str(duration)
