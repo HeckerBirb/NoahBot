@@ -41,12 +41,16 @@ def description():
     return 'Ban a user from the server temporarily.'
 
 
+# TODO: should have an auto-unban functionality
 async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=True):
     user_id = get_user_id(user_id)
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
         return
     member = ctx.guild.get_member(user_id)
+
+    if len(reason) == 0:
+        reason = 'No reason given...'
 
     if member_is_staff(member):
         await reply(ctx, 'You cannot ban another staff member...')

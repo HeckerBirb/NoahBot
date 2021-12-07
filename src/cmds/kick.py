@@ -22,6 +22,9 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, reason):
         return
     member = ctx.guild.get_member(user_id)
 
+    if len(reason) == 0:
+        reason = 'No reason given...'
+
     try:
         await member.send(
             f'You have been kicked from {ctx.guild.name} for the following reason:\n>>> {reason}\n')

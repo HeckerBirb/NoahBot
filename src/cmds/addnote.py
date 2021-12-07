@@ -39,6 +39,10 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, note):
         await reply(ctx, 'Error: malformed user ID.')
         return
 
+    if len(note) == 0:
+        reply(ctx, 'The note is empty. Try again...')
+        return
+
     moderator = ctx.author.id
     today = datetime.date(datetime.now())
     with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
