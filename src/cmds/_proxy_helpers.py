@@ -4,9 +4,11 @@ import time
 
 import discord
 from discord.commands.context import ApplicationContext
-from typing import Union, Optional
+from typing import Union, Optional, Tuple, Any
 
-from src.conf import RoleIDs
+from mysql.connector import connect
+
+from src.conf import RoleIDs, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 
 
 class Reply:
@@ -68,3 +70,12 @@ def member_is_staff(member: discord.Member) -> bool:
             return True
 
     return False
+
+
+def remove_record(delete_query: str, id_to_remove: Tuple[Any, ...]) -> None:
+    """ Delete a record from the database, given a one tuple of values for the delete query to use. """
+    with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+        with connection.cursor() as cursor:
+            query_str = delete_query
+            cursor.execute(query_str, id_to_remove)
+            connection.commit()
