@@ -24,7 +24,6 @@ async def perform_action(ctx: ApplicationContext, reply, channel: Union[int, dis
         try:
             channel_id = int(channel.replace('<#', '').replace('>', ''))
             channel = ctx.guild.get_channel_or_thread(channel_id)
-            await channel.send(message)
         except ValueError:
             await reply(ctx, f"""I don't know where "{channel}" is. Please use #channel-reference or a channel ID.""")
         return
