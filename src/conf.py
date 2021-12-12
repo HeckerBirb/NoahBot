@@ -6,15 +6,21 @@ from discord.commands import commands
 
 # TODO: Update this page before go-live
 
+GUILD_ID = 368879044999118848
+
 ROOT_DIR = Path(dirname(dirname(abspath(__file__))))
+
 MYSQL_URI = os.getenv('MYSQL_URI', 'localhost')
 MYSQL_DATABASE = os.getenv('MYSQL_DATABASE', 'noahbot')
 MYSQL_USER = os.getenv('MYSQL_USER', 'root')
 MYSQL_PASS = os.getenv('MYSQL_PASS', 'noah')
 
-HTB_URL = 'https://www.hackthebox.com/'
-GUILD_ID = 368879044999118848
-
+HTB_URL = 'https://www.hackthebox.com'
+API_URL = f'{HTB_URL}/api'
+API_V4_URL = f'{API_URL}/v4'
+IDENTIFY_BASE_URL = f'{API_URL}/users/identifier'
+# PROFILE_BASE_URL = f'{HTB_URL}/home/users/profile'
+# TOURNAMENT_WINS_BASE_URL = f'{API_V4_URL}/bg/tournament/winners'
 
 JOINABLE_ROLES = {
     'Noah Gang': 915400469164220417,
