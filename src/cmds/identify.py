@@ -8,10 +8,10 @@ from discord.commands.context import ApplicationContext
 from discord.commands import Option
 from mysql.connector import connect
 
-from src.cmds import tempban, ban
+from src.cmds import ban
 from src.cmds._error_handling import interruptable
 from src.noahbot import bot
-from src.conf import GUILD_ID, IDENTIFY_BASE_URL, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
+from src.conf import GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
     HTB_API_SECRET, API_URL, RoleIDs
 from src.cmds._proxy_helpers import Reply
 
@@ -58,8 +58,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
         await reply(ctx, "This Account Identifier does not appear to be the right length (must be 60 characters long).")
         return
 
-    add_token_to_db = True
-    acc_id_url = f'{IDENTIFY_BASE_URL}/{account_identifier}'
+    acc_id_url = f'{API_URL}/users/identifier/{account_identifier}'
 
     async with aiohttp.ClientSession() as session:
         async with session.get(acc_id_url) as r:
