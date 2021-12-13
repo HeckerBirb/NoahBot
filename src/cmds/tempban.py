@@ -29,7 +29,7 @@ CREATE TABLE `ban_record` (
 INSERT INTO `ban_record`
 SELECT
     id, member, reason, moderator, unbanTime, CASE WHEN approved = 1 THEN 1 ELSE 0 END as approved, CURRENT_TIMESTAMP
-FROM BanRecords;
+FROM hotbot.BanRecords;
 """
 
 
@@ -42,7 +42,7 @@ def description():
 
 
 # TODO: should have an auto-unban functionality
-async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=True):
+async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False):
     user_id = get_user_id(user_id)
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
@@ -78,7 +78,8 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
                 ban_id = row[0]
 
             query_str = """INSERT INTO infraction_record (user_id, reason, weight, moderator, date) VALUES (%s, %s, %s, %s, %s)"""
-            cursor.execute(query_str, (user_id, f'Previously banned for: {reason}', 0, ctx.author.id, datetime.date(datetime.now())))
+            banned_by = bot.user.id if banned_by_bot else ctx.author.id
+            cursor.execute(query_str, (user_id, f'Previously banned for: {reason}', 0, banned_by, datetime.date(datetime.now())))
             connection.commit()
 
     try:

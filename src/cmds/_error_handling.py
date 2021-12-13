@@ -2,6 +2,25 @@ from discord.ext import commands
 from discord.ext.commands.errors import MissingRequiredArgument, MissingPermissions, UserInputError, CommandNotFound, NoPrivateMessage
 
 
+# Inspired by https://stackoverflow.com/a/23665658
+class interruptable:
+    """ Allow the ability to "break out of" a with-statement, just like how `break` will break out of a loop. """
+    class Interrupt(Exception):
+        """ Exception to raise when wanting to break out of the with-statement. """
+
+    def __init__(self, value):
+        self.value = value
+
+    def __enter__(self):
+        return self.value.__enter__()
+
+    def __exit__(self, error_type, value, traceback):
+        error = self.value.__exit__(error_type, value, traceback)
+        if error_type == self.Interrupt:
+            return True
+        return error
+
+
 class ErrorHandler(commands.Cog):
     """A cog for global error handling."""
 

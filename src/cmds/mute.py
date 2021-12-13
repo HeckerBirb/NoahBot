@@ -24,7 +24,7 @@ CREATE TABLE `mute_record` (
 INSERT INTO `mute_record`
 SELECT
     id, member, reason, moderator, unmuteTime
-FROM MutedMember;
+FROM hotbot.MutedMember;
 """
 
 

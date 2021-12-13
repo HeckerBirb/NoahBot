@@ -21,7 +21,7 @@ CREATE TABLE `user_note` (
 INSERT INTO `user_note`
 SELECT
     id, member, note, date, moderator
-FROM Notes;
+FROM hotbot.Notes;
 """
 
 

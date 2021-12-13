@@ -15,8 +15,8 @@ def description():
     return 'Ban a user from the server permanently.'
 
 
-async def perform_action(ctx, reply, user_id, reason):
-    await tempban.perform_action(ctx, reply, user_id, '500w', reason, needs_approval=False)
+async def perform_action(ctx, reply, user_id, reason, banned_by_bot=False):
+    await tempban.perform_action(ctx, reply, user_id, '500w', reason, needs_approval=False, banned_by_bot=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())

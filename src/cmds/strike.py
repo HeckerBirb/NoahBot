@@ -22,7 +22,7 @@ CREATE TABLE `infraction_record` (
 INSERT INTO infraction_record
 SELECT
     id, member, reason, strikes, moderator, date
-FROM Strikes;
+FROM hotbot.Strikes;
 """
 
 
