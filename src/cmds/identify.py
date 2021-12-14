@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import aiohttp
 import discord
-from discord import Member
+from discord.errors import Forbidden
 from discord.ext import commands
 from discord.commands.context import ApplicationContext
 from discord.commands import Option
@@ -58,6 +58,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
         await reply(ctx, "This Account Identifier does not appear to be the right length (must be 60 characters long).")
         return
 
+    await reply(ctx, 'Identification initiated, please wait...')
     acc_id_url = f'{API_URL}/users/identifier/{account_identifier}'
 
     async with aiohttp.ClientSession() as session:
@@ -86,7 +87,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             cursor.execute(query_str, (account_identifier, ))
             for row in cursor.fetchall():
                 # row = id, account_identifier, discord_user_id, htb_user_id
-                most_recent_rec = HtbDiscordLink(acc_id=row[1], dis_user_id=row[2], htb_user_id=row[3])
+                most_recent_rec = HtbDiscordLink(acc_id=row[1], dis_user_id=int(row[2]), htb_user_id=int(row[3]))
 
             if most_recent_rec is not None:
                 if most_recent_rec.dis_user_id != ctx.author.id:
@@ -105,7 +106,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             cursor.execute(query_str, (json_htb_user_id, ))
             for row in cursor.fetchall():
                 # row = id, account_identifier, discord_user_id, htb_user_id
-                user_links.append(HtbDiscordLink(acc_id=row[1], dis_user_id=row[2], htb_user_id=row[3]))
+                user_links.append(HtbDiscordLink(acc_id=row[1], dis_user_id=int(row[2]), htb_user_id=int(row[3])))
 
             for u_link in user_links:
                 if ctx.author.id != u_link.dis_user_id:
@@ -124,7 +125,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             cursor.execute(query_str, (ctx.author.id, ))
             for row in cursor.fetchall():
                 # row = id, account_identifier, discord_user_id, htb_user_id
-                user_links.append(HtbDiscordLink(acc_id=row[1], dis_user_id=row[2], htb_user_id=row[3]))
+                user_links.append(HtbDiscordLink(acc_id=row[1], dis_user_id=int(row[2]), htb_user_id=int(row[3])))
 
             for u_link in user_links:
                 if u_link.htb_user_id != json_htb_user_id:
@@ -137,7 +138,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
                            f'Discord UID: {most_recent_rec.dis_user_id}, HTB UID: {most_recent_rec.htb_user_id}'
 
             elif naughty_list.htb_user_from_lookup_resolves_to_different_discord_user:
-                error_desc=f'The HTB account {ctx.author.mention} tried to identify as, is tied to another Discord account.\n' \
+                error_desc=f'The HTB account {json_htb_user_id} was attempted identified by user <@{ctx.author.id}>, but is tied to another Discord account.\n' \
                            f'Original Discord UID: <@{orig_discord_id}>, shared HTB UID: {json_htb_user_id}).'
 
             elif naughty_list.discord_user_resolves_to_different_htb_user:
@@ -158,15 +159,14 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             cursor.execute(query_str, (account_identifier, ctx.author.id, json_htb_user_id))
             connection.commit()
 
+    await process_identification(ctx, reply, htb_user_details, ctx.author.id)
 
-    member = ctx.guild.get_member(ctx.author.id)
+    member = bot.guilds[0].get_member(ctx.author.id)
     try:
         await member.edit(nick=htb_user_details['user_name'])
-    except Exception as e:
+    except Forbidden as e:
         # TODO Fix this
         raise e
-
-    new_roles = await process_identification(ctx, reply, htb_user_details, ctx.author)
 
     await reply(ctx, f'Your Discord user has been successfully identified as HTB user {json_htb_user_id}.')
 
@@ -184,9 +184,10 @@ async def _check_for_ban(uid) -> bool:
     return False
 
 
-async def process_identification(ctx, reply, htb_user_details, member: Member):
+async def process_identification(ctx, reply, htb_user_details, user_id: int):
     htb_uid = htb_user_details['user_id']
-    guild = ctx.guild
+    guild = bot.guilds[0]
+    member = guild.get_member(user_id)
     if await _check_for_ban(htb_uid):
         reason = 'Banned across the platform.'
         await ban.perform_action(ctx, reply, member.id, reason, banned_by_bot=True)
@@ -204,7 +205,7 @@ async def process_identification(ctx, reply, htb_user_details, member: Member):
         if role.id in RoleIDs.ALL_RANKS + RoleIDs.ALL_POSITIONS:
             to_remove.append(guild.get_role(role.id))
 
-    to_assign = [guild.get_role(RoleIDs.get_pos_id(htb_user_details['rank']))]
+    to_assign = [guild.get_role(RoleIDs.get_post_or_rank(htb_user_details['rank']))]
 
     if htb_user_details['vip']:
         to_assign.append(guild.get_role(RoleIDs.VIP))
@@ -228,7 +229,7 @@ async def process_identification(ctx, reply, htb_user_details, member: Member):
             pos_top = position
         if int(pos_top) <= 100:
             # BOT_LOG.debug(f'User is Hall of Fame rank {position}. Assigning role Top-{pos_top}...')
-            to_assign.append(guild.get_role(RoleIDs.get_pos_id(pos_top)))
+            to_assign.append(guild.get_role(RoleIDs.get_post_or_rank(pos_top)))
         else:
             # BOT_LOG.debug(f'User is position {position}. No Hall of Fame roles for them. :)')
             pass

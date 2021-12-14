@@ -71,15 +71,26 @@ class RoleIDs:
     HUNDRED = 586529258038493197
 
     @staticmethod
-    def get_pos_id(position: int) -> int:
+    def get_post_or_rank(what: int) -> int:
         return {
             1: RoleIDs.ONE,
             5: RoleIDs.FIVE,
             10: RoleIDs.TEN,
             25: RoleIDs.TWENTY_FIVE,
             50: RoleIDs.FIFTY,
-            100: RoleIDs.HUNDRED
-        }.get(position)
+            100: RoleIDs.HUNDRED,
+            'Omniscient': RoleIDs.OMNISCIENT,
+            'Guru': RoleIDs.GURU,
+            'Elite Hacker': RoleIDs.ELITE_HACKER,
+            'Pro Hacker': RoleIDs.PRO_HACKER,
+            'Hacker': RoleIDs.HACKER,
+            'Script Kiddie': RoleIDs.SCRIPT_KIDDIE,
+            'Noob': RoleIDs.NOOB,
+            'vip': RoleIDs.VIP,
+            'dedivip': RoleIDs.VIP_PLUS,
+            'Challenge Creator': RoleIDs.CHALLENGE_CREATOR,
+            'Box Creator': RoleIDs.BOX_CREATOR
+        }.get(what)
 
     # TODO: Remove these two
     POLLOS_HERMANOS = 407196347486306314
