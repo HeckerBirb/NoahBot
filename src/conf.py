@@ -8,6 +8,8 @@ from discord.commands import commands
 
 GUILD_ID = 368879044999118848
 
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
+
 ROOT_DIR = Path(dirname(dirname(abspath(__file__))))
 
 MYSQL_URI = os.getenv('MYSQL_URI', 'localhost')

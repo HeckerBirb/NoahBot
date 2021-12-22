@@ -12,6 +12,7 @@ from mysql.connector import connect
 
 from src.cmds import tempban
 from src.cmds._error_handling import interruptable
+from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 from src.conf import GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
     HTB_API_SECRET, API_URL, RoleIDs
@@ -237,17 +238,16 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
         else:
             pos_top = position
         if int(pos_top) <= 100:
-            # BOT_LOG.debug(f'User is Hall of Fame rank {position}. Assigning role Top-{pos_top}...')
+            STDOUT_LOG.debug(f'User is Hall of Fame rank {position}. Assigning role Top-{pos_top}...')
             to_assign.append(guild.get_role(RoleIDs.get_post_or_rank(pos_top)))
         else:
-            # BOT_LOG.debug(f'User is position {position}. No Hall of Fame roles for them. :)')
-            pass
+            STDOUT_LOG.debug(f'User is position {position}. No Hall of Fame roles for them. :)')
     if htb_user_details['machines']:
         to_assign.append(guild.get_role(RoleIDs.BOX_CREATOR))
     if htb_user_details['challenges']:
         to_assign.append(guild.get_role(RoleIDs.CHALLENGE_CREATOR))
     if set(to_remove) == set(to_assign):
-        # BOT_LOG.debug("Roles to Remove and Assign are the same; Doing nothing.")
+        STDOUT_LOG.debug("Roles to Remove and Assign are the same; Doing nothing.")
         return
     else:
         await member.remove_roles(*to_remove, atomic=True)
