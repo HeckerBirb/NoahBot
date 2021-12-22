@@ -15,7 +15,7 @@ from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABAS
 from src.cmds._proxy_helpers import Reply, get_user_id, parse_duration_str, member_is_staff
 
 """
-CREATE TABLE `ban_record` (
+CREATE TABLE IF NOT EXISTS `ban_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(42) NOT NULL,
   `reason` text NOT NULL,
@@ -25,6 +25,8 @@ CREATE TABLE `ban_record` (
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );
+
+TRUNCATE TABLE `ban_record`;
 
 INSERT INTO `ban_record`
 SELECT

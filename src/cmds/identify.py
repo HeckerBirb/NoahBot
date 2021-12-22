@@ -16,13 +16,15 @@ from src.conf import GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply
 
 """
-CREATE TABLE `htb_discord_link` (
+CREATE TABLE IF NOT EXISTS `htb_discord_link` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `account_identifier` varchar(255) NOT NULL,
   `discord_user_id` varchar(42) NOT NULL,
   `htb_user_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 );
+
+TRUNCATE TABLE `htb_discord_link`;
 
 INSERT INTO `htb_discord_link`
 SELECT

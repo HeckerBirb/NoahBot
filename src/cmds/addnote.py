@@ -9,7 +9,7 @@ from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABAS
 from src.cmds._proxy_helpers import Reply, get_user_id
 
 """
-CREATE TABLE `user_note` (
+CREATE TABLE IF NOT EXISTS `user_note` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(42) NOT NULL,
   `note` text NOT NULL,
@@ -17,6 +17,8 @@ CREATE TABLE `user_note` (
   `moderator` varchar(18) NOT NULL,
   PRIMARY KEY (`id`)
 );
+
+TRUNCATE TABLE `user_note`;
 
 INSERT INTO `user_note`
 SELECT

@@ -12,7 +12,7 @@ from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABAS
 from src.cmds._proxy_helpers import Reply, get_user_id, member_is_staff, parse_duration_str
 
 """
-CREATE TABLE `mute_record` (
+CREATE TABLE IF NOT EXISTS `mute_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(42) NOT NULL,
   `reason` text NOT NULL,
@@ -20,6 +20,8 @@ CREATE TABLE `mute_record` (
   `unmute_time` int(42) NOT NULL,
   PRIMARY KEY (`id`)
 );
+
+TRUNCATE TABLE `mute_record`;
 
 INSERT INTO `mute_record`
 SELECT

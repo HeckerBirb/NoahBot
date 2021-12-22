@@ -9,7 +9,7 @@ from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABAS
 from src.cmds._proxy_helpers import Reply, get_user_id
 
 """
-CREATE TABLE `infraction_record` (
+CREATE TABLE IF NOT EXISTS `infraction_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` varchar(42) NOT NULL,
   `reason` mediumtext NOT NULL,
@@ -18,6 +18,8 @@ CREATE TABLE `infraction_record` (
   `date` DATE NOT NULL DEFAULT CURRENT_DATE,
   PRIMARY KEY (`id`)
 );
+
+TRUNCATE TABLE `infraction_record`;
 
 INSERT INTO infraction_record
 SELECT
