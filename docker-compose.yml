@@ -1,0 +1,11 @@
+version: '3'
+services:
+  noahbot:
+    build:
+      context: ./
+      dockerfile: dockerfile
+    depends_on:
+      - db
+    env_file:
+      - ../docker-data/HotSnake.env
+    image: noahbot:latest
