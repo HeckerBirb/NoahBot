@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Dict, Union, Optional
 
 import aiohttp
 import discord
@@ -8,7 +10,7 @@ from discord.commands.context import ApplicationContext
 from discord.commands import Option
 from mysql.connector import connect
 
-from src.cmds import ban
+from src.cmds import tempban
 from src.cmds._error_handling import interruptable
 from src.noahbot import bot
 from src.conf import GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
@@ -173,30 +175,35 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
     await reply(ctx, f'Your Discord user has been successfully identified as HTB user {json_htb_user_id}.')
 
 
-async def _check_for_ban(uid) -> bool:
+async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:
     async with aiohttp.ClientSession() as session:
-        token_url = f'{API_URL}/discord/{uid}?secret={HTB_API_SECRET}'
+        token_url = f'{API_URL}/discord/{uid}/banned?secret={HTB_API_SECRET}'
         async with session.get(token_url) as r:
             if r.status == 200:
                 ban_details = await r.json()
-                return ban_details['banned']
+                return ban_details
             else:
                 # TODO: Error log
                 print("Couldn't fetch ban details")
-    return False
+                return None
 
 
 async def process_identification(ctx, reply, htb_user_details, user_id: int):
     htb_uid = htb_user_details['user_id']
     guild = bot.guilds[0]
     member = guild.get_member(user_id)
-    if await _check_for_ban(htb_uid):
-        reason = 'Banned across the platform.'
-        await ban.perform_action(ctx, reply, member.id, reason, banned_by_bot=True)
+    banned_details = await _check_for_ban(htb_uid)
+
+    if banned_details is not None and banned_details['banned']:
+        banned_until: str = banned_details['ends_at'][:10]  # Strip date e.g. from "2022-01-31T11:00:00.000000Z"
+        banned_until: datetime = datetime.strptime(banned_until, '%Y-%m-%d')
+        ban_duration: str = f'{(banned_until - datetime.now()).days}d'
+        reason = 'Banned on the HTB Platform. Please contact HTB Support to appeal.'
+        await tempban.perform_action(ctx, reply, member.id, ban_duration, reason, needs_approval=False, banned_by_bot=True)
 
         embed = discord.Embed(
             title="Identification error",
-            description=f"User {member.mention} was banned on the HTB platform and thus also here.",
+            description=f"User {member.mention} was platform banned HTB and thus also here.",
             color=0xff2429)
         await bot.get_channel(ChannelIDs.BOT_LOGS).send(embed=embed)
         return
