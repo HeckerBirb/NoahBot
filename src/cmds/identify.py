@@ -63,7 +63,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
         return
 
     await reply(ctx, 'Identification initiated, please wait...')
-    acc_id_url = f'{API_URL}/users/identifier/{account_identifier}'
+    acc_id_url = f'{API_URL}/users/identifier/{account_identifier}?secret={HTB_API_SECRET}'
 
     async with aiohttp.ClientSession() as session:
         async with session.get(acc_id_url) as r:
