@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `ban_record` (
   `moderator` varchar(42) NOT NULL,
   `unban_time` int(42) NOT NULL,
   `approved` boolean NOT NULL,
+  `unbanned` boolean NOT NULL DEFAULT 0,
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );
@@ -30,7 +31,7 @@ TRUNCATE TABLE `ban_record`;
 
 INSERT INTO `ban_record`
 SELECT
-    id, member, reason, moderator, unbanTime, CASE WHEN approved = 1 THEN 1 ELSE 0 END as approved, CURRENT_TIMESTAMP
+    id, member, reason, moderator, unbanTime, CASE WHEN approved = 1 THEN 1 ELSE 0 END as approved, 0, CURRENT_TIMESTAMP
 FROM hotbot.BanRecords;
 """
 

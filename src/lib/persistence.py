@@ -1,3 +1,0 @@
-# Generic implementation of a persistence layer transforming Python objects, e.g. a dict, to some kind of persisted data.
-# Implementation depends on the plugins developed meaning this should only contain the most generic functionality.
-# TODO: How to handle both DB tables as well as files with the same interface? Maybe not a good idea to make abstraction here...

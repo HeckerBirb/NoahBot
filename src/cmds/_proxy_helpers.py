@@ -76,6 +76,5 @@ def remove_record(delete_query: str, id_to_remove: Tuple[Any, ...]) -> None:
     """ Delete a record from the database, given a one tuple of values for the delete query to use. """
     with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
-            query_str = delete_query
-            cursor.execute(query_str, id_to_remove)
+            cursor.execute(delete_query, id_to_remove)
             connection.commit()
