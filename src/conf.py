@@ -21,8 +21,6 @@ HTB_API_SECRET = os.getenv('HTB_API_SECRET', None)
 HTB_URL = 'https://www.hackthebox.com'
 API_URL = f'{HTB_URL}/api'
 API_V4_URL = f'{API_URL}/v4'
-# PROFILE_BASE_URL = f'{HTB_URL}/home/users/profile'
-# TOURNAMENT_WINS_BASE_URL = f'{API_V4_URL}/bg/tournament/winners'
 
 JOINABLE_ROLES = {
     'Noah Gang': 915400469164220417,

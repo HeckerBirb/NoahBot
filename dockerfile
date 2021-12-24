@@ -10,4 +10,6 @@ RUN pip3 install -U git+https://github.com/Pycord-Development/pycord
 COPY . /noahbot
 WORKDIR /noahbot
 
+ENV PYTHONPATH "${PYTHONPATH}:/noahbot/src"
+
 ENTRYPOINT ["python3", "-u", "src/noahbot.py"]

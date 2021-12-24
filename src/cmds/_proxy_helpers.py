@@ -9,17 +9,24 @@ from typing import Union, Optional, Tuple, Any
 from mysql.connector import connect
 
 from src.conf import RoleIDs, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.log4noah import STDOUT_LOG
 
 
 class Reply:
+    @staticmethod
+    def _log_call_and_msg(ctx, msg, **kwargs):
+        STDOUT_LOG.debug(f'<Reply> cmd: {ctx.command.name}, user: {ctx.author.name} ({ctx.author.id}), msg: {msg}, kwargs: {kwargs}')
+
     """ Proxy for ctx.send and ctx.respond. Accepts same kwargs as the discord.InteractionResponse.send_message() does. """
     @staticmethod
     async def slash(ctx: ApplicationContext, msg=None, **kwargs):
         await ctx.respond(content=msg, **kwargs)
+        Reply._log_call_and_msg(ctx, msg, **kwargs)
 
     @staticmethod
     async def prefix(ctx: ApplicationContext, msg=None, **kwargs):
         await ctx.send(content=msg, **kwargs)
+        Reply._log_call_and_msg(ctx, msg, **kwargs)
 
 
 def get_user_id(user_id: Union[str, discord.Member]) -> Optional[int]:

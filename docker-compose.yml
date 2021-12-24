@@ -6,3 +6,4 @@ services:
     env_file:
       - ../docker-data/NoahBot.env
     image: noahbot:latest
+    network_mode: host

@@ -26,7 +26,7 @@ async def perform_action(ctx: ApplicationContext, reply, channel: Union[int, dis
             channel = ctx.guild.get_channel_or_thread(channel_id)
         except ValueError:
             await reply(ctx, f"""I don't know where "{channel}" is. Please use #channel-reference or a channel ID.""")
-        return
+            return
 
     await channel.send(message)
     await reply(ctx, f'Message sent to {channel.mention}.')

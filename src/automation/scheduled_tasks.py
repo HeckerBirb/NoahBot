@@ -8,9 +8,6 @@ from src.lib.schedule import schedule
 from src.log4noah import STDOUT_LOG
 
 
-LOADED_ONCE = False
-
-
 @tasks.loop(count=1)
 async def all_tasks():
     STDOUT_LOG.debug('Scheduling all automated tasks...')
@@ -35,7 +32,4 @@ async def auto_unban():
 
 
 def setup(_):
-    global LOADED_ONCE
-    if not LOADED_ONCE:
-        all_tasks.start()
-    LOADED_ONCE = True
+    all_tasks.start()
