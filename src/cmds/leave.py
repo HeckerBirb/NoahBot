@@ -29,13 +29,12 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
     await reply(ctx, f'You have left {the_role.name}.')
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
 async def action_slash(ctx: ApplicationContext, role_name: Option(str, 'The name of the role you want to join.')):
     await perform_action(ctx, Reply.slash, role_name)
 
 
 @commands.command(name=name(), help=description())
-@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
 async def action_prefix(ctx: ApplicationContext, *role_name):
     await perform_action(ctx, Reply.prefix, ' '.join(role_name))
 

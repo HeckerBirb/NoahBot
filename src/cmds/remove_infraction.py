@@ -21,13 +21,13 @@ async def perform_action(ctx: ApplicationContext, reply, infraction_id):
     await reply(ctx, f'Infraction record #{infraction_id} has been deleted.')
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN], name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
 async def action_slash(ctx: ApplicationContext, infraction_id: Option(str, 'ID of the infraction record to remove.')):
     await perform_action(ctx, Reply.slash, infraction_id)
 
 
 @commands.command(name=name(), help=description(), aliases=[name().replace('_', '')])
-@commands.has_any_role(*PrefixPerms.ALL_ADMINS)
+@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_SR_MODERATORS))
 async def action_prefix(ctx: ApplicationContext, infraction_id):
     await perform_action(ctx, Reply.prefix, infraction_id)
 
