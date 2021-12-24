@@ -15,7 +15,7 @@ from src.log4noah import STDOUT_LOG
 class Reply:
     @staticmethod
     def _log_call_and_msg(ctx, msg, **kwargs):
-        STDOUT_LOG.debug(f'<Reply> cmd: {ctx.command.name}, user: {ctx.author.name} ({ctx.author.id}), msg: {msg}, kwargs: {kwargs}')
+        STDOUT_LOG.debug(f'<Reply> cmd: "{ctx.command.name}", user: "{ctx.author.name}" ({ctx.author.id}), msg: "{msg}", kwargs: {kwargs}')
 
     """ Proxy for ctx.send and ctx.respond. Accepts same kwargs as the discord.InteractionResponse.send_message() does. """
     @staticmethod
