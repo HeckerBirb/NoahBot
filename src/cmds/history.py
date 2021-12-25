@@ -9,7 +9,7 @@ from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, get_user_id
 
 
@@ -103,7 +103,7 @@ Creation Date: **{creation_date}**
 
 def get_notes_of(user_id: Union[str, int]):
     notes = []
-    with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """SELECT * FROM user_note WHERE user_id = %s"""
             cursor.execute(query_str, (user_id, ))
@@ -116,7 +116,7 @@ def get_notes_of(user_id: Union[str, int]):
 
 def get_infractions_for(user_id: Union[str, int]):
     infractions = []
-    with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """SELECT * FROM infraction_record WHERE user_id = %s"""
             cursor.execute(query_str, (user_id, ))

@@ -4,7 +4,7 @@ from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, remove_record
 
 

@@ -8,7 +8,7 @@ from typing import Union, Optional, Tuple, Any
 
 from mysql.connector import connect
 
-from src.conf import RoleIDs, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import RoleIDs, MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.log4noah import STDOUT_LOG
 
 
@@ -81,7 +81,7 @@ def member_is_staff(member: discord.Member) -> bool:
 
 def remove_record(delete_query: str, id_to_remove: Tuple[Any, ...]) -> None:
     """ Delete a record from the database, given a one tuple of values for the delete query to use. """
-    with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             cursor.execute(delete_query, id_to_remove)
             connection.commit()

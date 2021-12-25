@@ -8,7 +8,7 @@ from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, RoleIDs
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, RoleIDs
 from src.cmds._proxy_helpers import Reply, get_user_id, member_is_staff, parse_duration_str
 
 """
@@ -64,7 +64,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
     if len(reason) == 0:
         reason = 'Time to shush, innit?'
 
-    with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """INSERT INTO mute_record (user_id, reason, moderator, unmute_time) VALUES (%s, %s, %s, %s)"""
             cursor.execute(query_str, (user_id, reason, ctx.author.id, dur))

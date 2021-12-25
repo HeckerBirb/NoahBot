@@ -10,7 +10,7 @@ from discord.errors import Forbidden, HTTPException
 from mysql.connector import connect
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, HTB_URL, \
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, HTB_URL, \
     ChannelIDs
 from src.cmds._proxy_helpers import Reply, get_user_id, parse_duration_str, member_is_staff
 
@@ -71,7 +71,7 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
         return
 
     ban_id = -1
-    with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """INSERT INTO ban_record (user_id, reason, moderator, unban_time, approved) VALUES (%s, %s, %s, %s, %s)"""
             cursor.execute(query_str, (user_id, reason, ctx.author.id, dur, 0 if needs_approval else 1))

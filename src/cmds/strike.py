@@ -5,7 +5,7 @@ from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_URI, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, get_user_id
 
 """
@@ -48,7 +48,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, weight, reason
         return
 
     moderator = ctx.author.id
-    with connect(host=MYSQL_URI, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """INSERT INTO infraction_record (user_id, reason, weight, moderator) VALUES (%s, %s, %s, %s)"""
             cursor.execute(query_str, (user_id, reason, weight, moderator))
