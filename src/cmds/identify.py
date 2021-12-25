@@ -60,10 +60,10 @@ def description():
 
 async def perform_action(ctx: ApplicationContext, reply, account_identifier):
     if len(account_identifier) != 60:
-        await reply(ctx, "This Account Identifier does not appear to be the right length (must be 60 characters long).")
+        await reply(ctx, "This Account Identifier does not appear to be the right length (must be 60 characters long).", ephemeral=True)
         return
 
-    await reply(ctx, 'Identification initiated, please wait...')
+    await reply(ctx, 'Identification initiated, please wait...', ephemeral=True)
     acc_id_url = f'{API_URL}/users/identifier/{account_identifier}?secret={HTB_API_SECRET}'
 
     async with aiohttp.ClientSession() as session:
@@ -73,7 +73,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             else:
                 # TODO: figure out HTTP error code if invalid id and handle default case + that case
                 embed = discord.Embed(title="Error: Invalid account identifier.", color=0xFF0000)
-                await reply(ctx, embed=embed)
+                await reply(ctx, embed=embed, ephemeral=True)
                 return
 
     json_htb_user_id = htb_user_details['user_id']
@@ -156,7 +156,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             embed = discord.Embed(title='Identification error', description=error_desc, color=0xff2429)
             await bot.get_channel(ChannelIDs.BOT_LOGS).send(embed=embed)
 
-            await reply(ctx, 'Identification error: please contact an online Moderator or Administrator for help.')
+            await reply(ctx, 'Identification error: please contact an online Moderator or Administrator for help.', ephemeral=True)
             return
 
         with connection.cursor() as cursor:
@@ -173,7 +173,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
         # TODO Fix this
         raise e
 
-    await reply(ctx, f'Your Discord user has been successfully identified as HTB user {json_htb_user_id}.')
+    await reply(ctx, f'Your Discord user has been successfully identified as HTB user {json_htb_user_id}.', ephemeral=True)
 
 
 async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:

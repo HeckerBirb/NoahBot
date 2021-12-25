@@ -19,16 +19,16 @@ API_URL = f'{HTB_URL}/api'
 API_V4_URL = f'{API_URL}/v4'
 
 JOINABLE_ROLES = {
-    'Noah Gang': 754405726432133261,
-    'Buddy Gang': 856506360999837737,
-    'Red Team': 703614597009113118,
-    'Blue Team': 703614467971350578
+    'Noah Gang': os.getenv('NOAH_GANG_ROLE'),
+    'Buddy Gang': os.getenv('BUDDY_GANG_ROLE'),
+    'Red Team': os.getenv('RED_TEAM_ROLE'),
+    'Blue Team': os.getenv('BLUE_TEAM_ROLE')
 }
 
 
 class ChannelIDs:
-    SR_MODERATOR = 732712216641667082
-    BOT_LOGS = 756974286081622136
+    SR_MODERATOR = os.getenv('SR_MOD_CHAN')
+    BOT_LOGS = os.getenv('BOT_LOGS_CHAN')
 
 
 def _allow(role_id):
@@ -37,44 +37,44 @@ def _allow(role_id):
 
 class RoleIDs:
     # Moderation
-    COMMUNITY_MANAGER = 707322172267560991
-    ADMINISTRATOR = 506943166365302789
-    SR_MODERATOR = 708371481448546354
-    MODERATOR = 486603600085123073
-    MUTED = 411882315141087232
+    COMMUNITY_MANAGER = os.getenv('COMMUNITY_MANAGER_ROLE')
+    ADMINISTRATOR = os.getenv('ADMINISTRATOR_ROLE')
+    SR_MODERATOR = os.getenv('SR_MODERATOR_ROLE')
+    MODERATOR = os.getenv('MODERATOR_ROLE')
+    MUTED = os.getenv('MUTED_ROLE')
 
     # Ranks
-    OMNISCIENT = 586528519459438592
-    GURU = 586528488346091520
-    ELITE_HACKER = 586528352655900673
-    PRO_HACKER = 586528166739443712
-    HACKER = 586528079363702801
-    SCRIPT_KIDDIE = 586529669491326976
-    NOOB = 586527620737269765
-    VIP = 586528637658988550
-    VIP_PLUS = 833723601336664085
+    OMNISCIENT = os.getenv('OMNISCIENT_ROLE')
+    GURU = os.getenv('GURU_ROLE')
+    ELITE_HACKER = os.getenv('ELITE_HACKER_ROLE')
+    PRO_HACKER = os.getenv('PRO_HACKER_ROLE')
+    HACKER = os.getenv('HACKER_ROLE')
+    SCRIPT_KIDDIE = os.getenv('SCRIPT_KIDDIE_ROLE')
+    NOOB = os.getenv('NOOB_ROLE')
+    VIP = os.getenv('VIP_ROLE')
+    VIP_PLUS = os.getenv('VIP_PLUS_ROLE')
 
     # Content Creation
-    CHALLENGE_CREATOR = 548239933454680096
-    BOX_CREATOR = 531205748592607232
+    CHALLENGE_CREATOR = os.getenv('CHALLENGE_CREATOR_ROLE')
+    BOX_CREATOR = os.getenv('BOX_CREATOR_ROLE')
 
     # Positions
-    ONE = 586529401156665364
-    FIVE = 586529381099372554
-    TEN = 586529358735474688
-    TWENTY_FIVE = 586529313579597844
-    FIFTY = 586529293207601162
-    HUNDRED = 586529258038493197
+    RANK_ONE = os.getenv('RANK_ONE_ROLE')
+    RANK_FIVE = os.getenv('RANK_FIVE_ROLE')
+    RANK_TEN = os.getenv('RANK_TEN_ROLE')
+    RANK_TWENTY_FIVE = os.getenv('RANK_TWENTY_FIVE_ROLE')
+    RANK_FIFTY = os.getenv('RANK_FIFTY_ROLE')
+    RANK_HUNDRED = os.getenv('RANK_HUNDRED_ROLE')
 
     @staticmethod
     def get_post_or_rank(what: int) -> int:
         return {
-            1: RoleIDs.ONE,
-            5: RoleIDs.FIVE,
-            10: RoleIDs.TEN,
-            25: RoleIDs.TWENTY_FIVE,
-            50: RoleIDs.FIFTY,
-            100: RoleIDs.HUNDRED,
+            1: RoleIDs.RANK_ONE,
+            5: RoleIDs.RANK_FIVE,
+            10: RoleIDs.RANK_TEN,
+            25: RoleIDs.RANK_TWENTY_FIVE,
+            50: RoleIDs.RANK_FIFTY,
+            100: RoleIDs.RANK_HUNDRED,
             'Omniscient': RoleIDs.OMNISCIENT,
             'Guru': RoleIDs.GURU,
             'Elite Hacker': RoleIDs.ELITE_HACKER,
@@ -94,7 +94,7 @@ class RoleIDs:
     ALL_MODS = [SR_MODERATOR, MODERATOR]
     ALL_RANKS = [OMNISCIENT, GURU, ELITE_HACKER, PRO_HACKER, HACKER, SCRIPT_KIDDIE, NOOB, VIP, VIP_PLUS]
     ALL_CREATORS = [BOX_CREATOR, CHALLENGE_CREATOR]
-    ALL_POSITIONS = [ONE, FIVE, TEN, TWENTY_FIVE, FIFTY, HUNDRED]
+    ALL_POSITIONS = [RANK_ONE, RANK_FIVE, RANK_TEN, RANK_TWENTY_FIVE, RANK_FIFTY, RANK_HUNDRED]
 
 
 class SlashPerms:
