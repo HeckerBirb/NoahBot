@@ -20,7 +20,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
         await reply(ctx, 'Error: malformed user ID.')
         return
 
-    remove_record('DELETE FROM token WHERE user = %s or htbuser = %s', (user_id, user_id))
+    remove_record('DELETE FROM htb_discord_link WHERE user = %s or htbuser = %s', (user_id, user_id))
     await reply(ctx, f'All tokens related to Discord and HTB ID {user_id} have been deleted.')
 
 
