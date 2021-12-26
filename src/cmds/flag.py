@@ -17,11 +17,6 @@ async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, '`+-------------+`\n`| Not a flag. |`\n`+-------------+`')
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
-async def action_slash(ctx: ApplicationContext):
-    await perform_action(ctx, Reply.slash)
-
-
 @commands.command(name=name(), help=description())
 async def action_prefix(ctx: ApplicationContext):
     await perform_action(ctx, Reply.prefix)
