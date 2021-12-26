@@ -13,6 +13,7 @@ services:
       com.noahbotdb.description: "NoahBot database"
   noahbot:
     build:
+      context: ./
       dockerfile: dockerfile
     depends_on:
       - noahbotdb
