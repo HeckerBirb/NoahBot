@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `ban_record` (
   `unbanned` boolean NOT NULL DEFAULT 0,
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `ban_record`;
 

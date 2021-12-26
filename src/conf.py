@@ -23,7 +23,9 @@ MYSQL_HOST = os.getenv('MYSQL_HOST', 'localhost')
 MYSQL_PORT = _get_int_env('MYSQL_PORT', '3306')
 MYSQL_DATABASE = os.getenv('MYSQL_DATABASE', 'noahbot')
 MYSQL_USER = os.getenv('MYSQL_USER', 'root')
-MYSQL_PASS = os.getenv('MYSQL_PASS', 'noah')
+MYSQL_PASS = os.getenv('MYSQL_PASSWORD', None)
+if MYSQL_PASS is None:
+    MYSQL_PASS = os.getenv('MYSQL_ROOT_PASSWORD', 'noah')
 
 HTB_API_SECRET = os.getenv('HTB_API_SECRET', None)
 HTB_URL = 'https://www.hackthebox.com'

@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `mute_record` (
   `moderator` varchar(42) NOT NULL,
   `unmute_time` int(42) NOT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `mute_record`;
 

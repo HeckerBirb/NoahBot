@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `infraction_record` (
   `moderator` varchar(18) NOT NULL,
   `date` DATE NOT NULL DEFAULT CURRENT_DATE,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `infraction_record`;
 

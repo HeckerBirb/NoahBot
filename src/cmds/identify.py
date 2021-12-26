@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `htb_discord_link` (
   `discord_user_id` varchar(42) NOT NULL,
   `htb_user_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `htb_discord_link`;
 

@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `user_note` (
   `date` date NOT NULL,
   `moderator` varchar(18) NOT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 TRUNCATE TABLE `user_note`;
 
