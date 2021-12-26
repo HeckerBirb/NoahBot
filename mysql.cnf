@@ -1,0 +1,3 @@
+[client-server]
+socket                  = /run/mysqld/mysqld.sock
+port                   = 3307
