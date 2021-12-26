@@ -2,7 +2,7 @@ from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID
 from src.cmds._proxy_helpers import Reply, remove_record, get_user_id
 
 
@@ -24,7 +24,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
     await reply(ctx, f'All tokens related to Discord and HTB ID {user_id} have been deleted.')
 
 
-@bot.slash_command(permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
 async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'ID of the Discord or HTB user for which all identification records should be removed.')):
     await perform_action(ctx, Reply.slash, user_id)
 

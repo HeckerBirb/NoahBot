@@ -4,7 +4,7 @@ from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply
 
 
@@ -25,7 +25,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id):
     await reply(ctx, f'Ban approval has been recorded.')
 
 
-@bot.slash_command(permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
 async def action_slash(ctx: ApplicationContext, ban_id: Option(int, 'ID of the ban record')):
     await perform_action(ctx, Reply.slash, ban_id)
 

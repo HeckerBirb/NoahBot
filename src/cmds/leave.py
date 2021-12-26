@@ -2,7 +2,7 @@ from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from src.noahbot import bot
-from src.conf import JOINABLE_ROLES
+from src.conf import GUILD_ID, JOINABLE_ROLES
 from src.cmds._proxy_helpers import Reply
 
 
@@ -29,7 +29,7 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
     await reply(ctx, f'You have left {the_role.name}.')
 
 
-@bot.slash_command(name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
 async def action_slash(ctx: ApplicationContext, role_name: Option(str, 'The name of the role you want to join.')):
     await perform_action(ctx, Reply.slash, role_name)
 

@@ -4,7 +4,7 @@ import time
 from discord.ext import commands
 from discord.commands.context import ApplicationContext
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID
 from src.cmds._proxy_helpers import Reply
 
 START_TIME: float
@@ -27,7 +27,7 @@ async def perform_action(ctx: ApplicationContext, reply):
     await reply(ctx, f'Uptime: {uptime}')
 
 
-@bot.slash_command(permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
 async def action_slash(ctx: ApplicationContext):
     await perform_action(ctx, Reply.slash)
 

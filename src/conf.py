@@ -16,6 +16,7 @@ def _get_int_env(env_var: str, default: str = None) -> int:
         exit(1)
 
 
+GUILD_ID = _get_int_env('GUILD_ID')
 ROOT_DIR = Path(dirname(dirname(abspath(__file__))))
 
 MYSQL_HOST = os.getenv('MYSQL_HOST', 'localhost')

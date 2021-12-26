@@ -14,7 +14,7 @@ from src.cmds import tempban
 from src.cmds._error_handling import interruptable
 from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
-from src.conf import MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
+from src.conf import GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
     HTB_API_SECRET, API_URL, RoleIDs
 from src.cmds._proxy_helpers import Reply
 
@@ -255,7 +255,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
     return to_assign
 
 
-@bot.slash_command(name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
 async def action_slash(ctx: ApplicationContext, account_identifier: Option(str, 'The Account Identifier from your HTB Platform profile page.')):
     await perform_action(ctx, Reply.slash, account_identifier)
 

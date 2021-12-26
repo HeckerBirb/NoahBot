@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID
 from src.cmds._proxy_helpers import Reply
 
 
@@ -32,7 +32,7 @@ async def perform_action(ctx: ApplicationContext, reply, channel: Union[int, dis
     await reply(ctx, f'Message sent to {channel.mention}.')
 
 
-@bot.slash_command(permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
 async def action_slash(
         ctx: ApplicationContext,
         channel: Option(discord.TextChannel, 'Channel to send the message to.'),
