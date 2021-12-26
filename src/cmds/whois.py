@@ -37,7 +37,7 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
     mention = bot.guilds[0].get_member(int(identification['discord_id']))
     msg = f"""**{mention}**
 Discord ID: {identification['discord_id']}
-HTB ID: {identification['htb_id']}"""
+HTB profile: <https://app.hackthebox.com/users/{identification['htb_id']}>"""
     await reply(ctx, msg)
 
 
