@@ -13,7 +13,7 @@ from mysql.connector import connect
 from src.cmds import tempban
 from src.cmds._error_handling import interruptable
 from src.log4noah import STDOUT_LOG
-from src.noahbot import bot, get_bot
+from src.noahbot import bot
 from src.conf import GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
     HTB_API_SECRET, API_URL, RoleIDs
 from src.cmds._proxy_helpers import Reply
@@ -64,7 +64,6 @@ async def remove_their_message(ctx: ApplicationContext):
 
 
 async def perform_action(ctx: ApplicationContext, reply, account_identifier):
-    _bot = get_bot()
     await remove_their_message(ctx)
     if len(account_identifier) != 60:
         await reply(ctx, "This Account Identifier does not appear to be the right length (must be 60 characters long).", ephemeral=True)
@@ -161,7 +160,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
                 error_desc = f'Case not supported. NaughtyList checks: {naughty_list}'
 
             embed = discord.Embed(title='Identification error', description=error_desc, color=0xff2429)
-            await _bot.get_channel(ChannelIDs.BOT_LOGS).send(embed=embed)
+            await bot.get_channel(ChannelIDs.BOT_LOGS).send(embed=embed)
 
             await reply(ctx, 'Identification error: please contact an online Moderator or Administrator for help.', ephemeral=True)
             return
@@ -197,9 +196,8 @@ async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:
 
 
 async def process_identification(ctx, reply, htb_user_details, user_id: int):
-    _bot = get_bot()
     htb_uid = htb_user_details['user_id']
-    guild = _bot.guilds[0]
+    guild = bot.guilds[0]
     member = guild.get_member(user_id)
     banned_details = await _check_for_ban(htb_uid)
 
@@ -214,7 +212,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
             title="Identification error",
             description=f"User {member.mention} was platform banned HTB and thus also here.",
             color=0xff2429)
-        await _bot.get_channel(ChannelIDs.BOT_LOGS).send(embed=embed)
+        await bot.get_channel(ChannelIDs.BOT_LOGS).send(embed=embed)
         return
 
     to_remove = []
