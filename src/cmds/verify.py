@@ -3,7 +3,6 @@ from discord.errors import Forbidden, HTTPException
 from discord.ext import commands
 from discord.commands.context import ApplicationContext
 from src.noahbot import bot
-from src.conf import GUILD_ID
 from src.cmds._proxy_helpers import Reply
 
 
@@ -55,7 +54,7 @@ async def perform_action(ctx: ApplicationContext, reply):
         return
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
+@bot.slash_command(name=name(), description=description())
 async def action_slash(ctx: ApplicationContext):
     await perform_action(ctx, Reply.slash)
 

@@ -3,7 +3,7 @@ from discord.commands import Option
 from discord.commands.context import ApplicationContext
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID
+from src.conf import SlashPerms, PrefixPerms
 from src.cmds._proxy_helpers import Reply, remove_record
 
 
@@ -20,7 +20,7 @@ async def perform_action(ctx: ApplicationContext, reply, infraction_id):
     await reply(ctx, f'Infraction record #{infraction_id} has been deleted.')
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
+@bot.slash_command(permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
 async def action_slash(ctx: ApplicationContext, infraction_id: Option(str, 'ID of the infraction record to remove.')):
     await perform_action(ctx, Reply.slash, infraction_id)
 

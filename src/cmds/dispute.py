@@ -7,7 +7,7 @@ from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import SlashPerms, PrefixPerms, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, parse_duration_str
 
 
@@ -50,7 +50,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
     await reply(ctx, f'Ban duration updated and approved. The member will be unbanned on {new_unban_at} UTC.')
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
+@bot.slash_command(permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
 async def action_slash(
         ctx: ApplicationContext,
         ban_id: Option(int, 'Ban ID from ban request.'),

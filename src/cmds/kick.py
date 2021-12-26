@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID
+from src.conf import SlashPerms, PrefixPerms
 from src.cmds._proxy_helpers import Reply, get_user_id
 
 
@@ -38,7 +38,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, reason):
     await reply(ctx, f'{member.name} got the boot!')
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
+@bot.slash_command(permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
 async def action_slash(
         ctx: ApplicationContext,
         user_id: Option(str, 'User ID or @mention name.'),
