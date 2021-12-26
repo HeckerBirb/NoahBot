@@ -55,6 +55,7 @@ class RoleIDs:
     ADMINISTRATOR = _get_int_env('ADMINISTRATOR_ROLE')
     SR_MODERATOR = _get_int_env('SR_MODERATOR_ROLE')
     MODERATOR = _get_int_env('MODERATOR_ROLE')
+    HTB_STAFF = _get_int_env('HTB_STAFF_ROLE')
     MUTED = _get_int_env('MUTED_ROLE')
 
     # Ranks
@@ -117,6 +118,7 @@ class SlashPerms:
     ADMIN = _allow(RoleIDs.ADMINISTRATOR)
     SR_MODERATOR = _allow(RoleIDs.SR_MODERATOR)
     MODERATOR = _allow(RoleIDs.MODERATOR)
+    HTB_STAFF = _allow(RoleIDs.HTB_STAFF)
 
 
 class PrefixPerms:
@@ -124,3 +126,4 @@ class PrefixPerms:
     ALL_ADMINS = RoleIDs.ALL_ADMINS
     ALL_SR_MODERATORS = RoleIDs.ALL_SR_MODERATOR
     ALL_MODS = RoleIDs.ALL_MODS
+    HTB_STAFF = RoleIDs.HTB_STAFF

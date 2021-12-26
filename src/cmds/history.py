@@ -174,13 +174,13 @@ Issued by <@{infraction.moderator}> on {infraction.date} ({expired_status}):
 {infraction.reason if len(infraction.reason) <= 300 else infraction.reason[:300] + '...'}"""
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR, SlashPerms.HTB_STAFF], name=name(), description=description())
 async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):
     await perform_action(ctx, Reply.slash, user_id)
 
 
 @commands.command(name=name(), help=description())
-@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
+@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS + PrefixPerms.HTB_STAFF))
 async def action_prefix(ctx: ApplicationContext, user_id):
     await perform_action(ctx, Reply.prefix, user_id)
 

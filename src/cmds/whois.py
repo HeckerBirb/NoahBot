@@ -41,13 +41,13 @@ HTB profile: <https://app.hackthebox.com/users/{identification['htb_id']}>"""
     await reply(ctx, msg)
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
+@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR, SlashPerms.HTB_STAFF], name=name(), description=description())
 async def whois_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):
     await _whois(ctx, user_id, Reply.slash)
 
 
 @commands.command(name=name(), help=description())
-@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
+@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS + PrefixPerms.HTB_STAFF))
 async def whois_prefix(ctx: ApplicationContext, user_id):
     await _whois(ctx, user_id, Reply.prefix)
 
