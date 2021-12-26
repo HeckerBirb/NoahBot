@@ -16,7 +16,7 @@ def description():
 
 async def perform_action(ctx: ApplicationContext, reply, role_name):
     if not ctx.guild:
-        reply(ctx, 'This command cannot be used in a DM.')
+        await reply(ctx, 'This command cannot be used in a DM.')
         return
 
     role_id = None
