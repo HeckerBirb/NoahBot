@@ -57,8 +57,8 @@ def description():
     return 'Identify yourself on the HTB Discord server by linking your HTB account ID to your Discord user ID.'
 
 
-async def remove_their_message(ctx: ApplicationContext):
-    if ctx.guild:
+async def remove_their_message(ctx: ApplicationContext, reply):
+    if ctx.guild and reply == Reply.prefix:
         await ctx.message.delete()
 
 
