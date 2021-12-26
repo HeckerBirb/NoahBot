@@ -4,7 +4,7 @@ from typing import List
 from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
-from src.noahbot import bot
+from src.noahbot import bot, get_bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, ROOT_DIR
 from src.cmds._proxy_helpers import Reply, get_user_id
 from discord.errors import Forbidden
@@ -22,6 +22,7 @@ def description():
 
 async def perform_action(ctx: ApplicationContext, reply, user_id: str):
     global baby_names
+    _bot = get_bot()
 
     user_id = get_user_id(user_id)
     if user_id is None:
@@ -30,7 +31,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id: str):
 
     member = ctx.guild.get_member(int(user_id))
     if member is None:
-        member = await bot.fetch_user(user_id)
+        member = await _bot.fetch_user(user_id)
 
     new_name = random.choice(baby_names) + ' McVerify'
 
