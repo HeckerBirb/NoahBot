@@ -1,14 +1,16 @@
 import calendar
 import re
 import time
+from datetime import datetime
 
 import discord
+from discord import Forbidden, HTTPException
 from discord.commands.context import ApplicationContext
 from typing import Union, Optional, Tuple, Any
 
 from mysql.connector import connect
 
-from src.conf import RoleIDs, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import RoleIDs, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, HTB_URL, ChannelIDs
 from src.log4noah import STDOUT_LOG
 
 
@@ -86,3 +88,72 @@ def remove_record(delete_query: str, id_to_remove: Tuple[Any, ...]) -> None:
         with connection.cursor() as cursor:
             cursor.execute(delete_query, id_to_remove)
             connection.commit()
+
+
+async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False):
+    user_id = get_user_id(user_id)
+    if user_id is None:
+        await reply(ctx, 'Error: malformed user ID.')
+        return
+    member = bot.guilds[0].get_member(user_id)
+
+    if len(reason) == 0:
+        reason = 'No reason given...'
+
+    if member_is_staff(member):
+        await reply(ctx, 'You cannot ban another staff member.')
+        return
+
+    dur = parse_duration_str(duration)
+    if dur is None:
+        reply(ctx, 'Invalid duration: could not parse.', delete_after=15)
+        return
+
+    epoch_time = calendar.timegm(time.gmtime())
+
+    if dur - epoch_time <= 0:
+        reply(ctx, 'Invalid duration: cannot be in the past.', delete_after=15)
+        return
+
+    ban_id = -1
+    with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+        with connection.cursor() as cursor:
+            query_str = """INSERT INTO ban_record (user_id, reason, moderator, unban_time, approved) VALUES (%s, %s, %s, %s, %s)"""
+            cursor.execute(query_str, (user_id, reason, ctx.author.id, dur, 0 if needs_approval else 1))
+            connection.commit()
+            cursor.execute('SELECT id FROM ban_record WHERE user_id = %s AND unban_time = %s', (user_id, dur))
+            for row in cursor.fetchall():
+                ban_id = row[0]
+
+            query_str = """INSERT INTO infraction_record (user_id, reason, weight, moderator, date) VALUES (%s, %s, %s, %s, %s)"""
+            banned_by = bot.user.id if banned_by_bot else ctx.author.id
+            cursor.execute(query_str, (user_id, f'Previously banned for: {reason}', 0, banned_by, datetime.date(datetime.now())))
+            connection.commit()
+
+    try:
+        await member.send(
+            f'You have been banned from {bot.guilds[0].name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
+            f'Following is the reason given:\n>>> {reason}\n')
+    except Forbidden:
+        await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
+    except HTTPException:
+        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
+        return
+
+    await bot.guilds[0].ban(member, reason=reason)
+
+    if not needs_approval:
+        await reply(ctx, f'{member.display_name} has been banned permanently.')
+        return
+
+    else:
+        await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.')
+        embed = discord.Embed(
+            title=f"Ban request #{ban_id}",
+            description=f'{ctx.author.name} would like to ban {member.name} for {duration}. Reason: {reason}'
+        )
+        embed.set_thumbnail(url=f'{HTB_URL}/images/logo600.png')
+        embed.add_field(name='Approve duration:', value=f'/approve {ban_id}', inline=True)
+        embed.add_field(name='Change duration:', value=f'/dispute {ban_id} <duration>', inline=True)
+        embed.add_field(name='Deny and unban:', value=f'/deny {ban_id}', inline=True)
+        await bot.guilds[0].get_channel(ChannelIDs.SR_MODERATOR).send(embed=embed)

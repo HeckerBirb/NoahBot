@@ -10,13 +10,12 @@ from discord.commands.context import ApplicationContext
 from discord.commands import Option
 from mysql.connector import connect
 
-from src.cmds import tempban
 from src.cmds._error_handling import interruptable
 from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 from src.conf import GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
     HTB_API_SECRET, API_URL, RoleIDs
-from src.cmds._proxy_helpers import Reply
+from src.cmds._proxy_helpers import Reply, perform_temp_ban
 
 """
 CREATE TABLE IF NOT EXISTS `htb_discord_link` (
@@ -206,7 +205,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
         banned_until: datetime = datetime.strptime(banned_until, '%Y-%m-%d')
         ban_duration: str = f'{(banned_until - datetime.now()).days}d'
         reason = 'Banned on the HTB Platform. Please contact HTB Support to appeal.'
-        await tempban.perform_action(ctx, reply, member.id, ban_duration, reason, needs_approval=False, banned_by_bot=True)
+        await perform_temp_ban(bot, ctx, reply, member.id, ban_duration, reason, needs_approval=False, banned_by_bot=True)
 
         embed = discord.Embed(
             title="Identification error",
