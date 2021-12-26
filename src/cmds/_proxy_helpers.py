@@ -34,6 +34,8 @@ class Reply:
 
 def get_user_id(user_id: Union[str, discord.Member]) -> Optional[int]:
     """ Get the user ID given a string of the ID, a string of the representation of the user mention, or a Discord Member object. """
+    if user_id is None:
+        return None
     if isinstance(user_id, discord.Member):
         user_id = user_id.id
     try:

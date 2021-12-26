@@ -20,7 +20,7 @@ def description():
 async def perform_action(ctx: ApplicationContext, reply, ban_id):
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
-            user_id = (-1)
+            user_id = None
             query_str = 'SELECT user_id FROM ban_record WHERE id = %s'
             cursor.execute(query_str, (ban_id, ))
 
