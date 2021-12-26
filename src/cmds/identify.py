@@ -59,7 +59,8 @@ def description():
 
 
 async def remove_their_message(ctx: ApplicationContext):
-    await ctx.message.delete()
+    if ctx.guild:
+        await ctx.message.delete()
 
 
 async def perform_action(ctx: ApplicationContext, reply, account_identifier):

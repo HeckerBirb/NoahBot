@@ -19,12 +19,13 @@ class Reply:
 
     """ Proxy for ctx.send and ctx.respond. Accepts same kwargs as the discord.InteractionResponse.send_message() does. """
     @staticmethod
-    async def slash(ctx: ApplicationContext, msg=None, **kwargs):
-        await ctx.respond(content=msg, **kwargs)
+    async def slash(ctx: ApplicationContext, msg=None, ephemeral=False, **kwargs):
+        await ctx.respond(content=msg, ephemeral=ephemeral, **kwargs)
         Reply._log_call_and_msg(ctx, msg, **kwargs)
 
     @staticmethod
-    async def prefix(ctx: ApplicationContext, msg=None, **kwargs):
+    async def prefix(ctx: ApplicationContext, msg=None, ephemeral=None, **kwargs):
+        # Note: ephemeral is unused purposefully (ctx.send doesn't support it, but I wanna stay DRY).
         await ctx.send(content=msg, **kwargs)
         Reply._log_call_and_msg(ctx, msg, **kwargs)
 
