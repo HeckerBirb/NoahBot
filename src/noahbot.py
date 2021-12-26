@@ -17,7 +17,7 @@ LOADED_ONCE = False
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Game(name='++help | /verify'))
+    await bot.change_presence(activity=discord.Game(name='++verify | ++help'))
 
     global LOADED_ONCE
     if not LOADED_ONCE:
