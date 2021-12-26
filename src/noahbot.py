@@ -26,15 +26,13 @@ async def on_ready():
     LOADED_ONCE = True
     STDOUT_LOG.debug('NoahBot has automatically reloaded and is now ready again.')
 
+cmds_path = Path(dirname(__file__)) / 'cmds'
+ignored_files = ['_proxy_helpers.py']
+extensions = [f.replace('.py', '') for f in listdir(cmds_path) if f not in ignored_files and not f.startswith('__')]
 
-if __name__ == '__main__':
-    cmds_path = Path(dirname(__file__)) / 'cmds'
-    ignored_files = ['_proxy_helpers.py']
-    extensions = [f.replace('.py', '') for f in listdir(cmds_path) if f not in ignored_files and not f.startswith('__')]
+for extension in extensions:
+    bot.load_extension('src.cmds.' + extension)
+    STDOUT_LOG.debug(f'Module loaded: {extension}')
 
-    for extension in extensions:
-        bot.load_extension('src.cmds.' + extension)
-        STDOUT_LOG.debug(f'Module loaded: {extension}')
-
-    STDOUT_LOG.info('Starting bot...')
-    bot.run(os.getenv('BOT_TOKEN', None))
+STDOUT_LOG.info('Starting bot...')
+bot.run(os.getenv('BOT_TOKEN', None))
