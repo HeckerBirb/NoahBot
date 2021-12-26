@@ -8,12 +8,6 @@ from discord.ext import commands
 
 from src.log4noah import STDOUT_LOG
 
-
-def get_bot():
-    global bot
-    return bot
-
-
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category='Available Commands')
 bot = commands.Bot(command_prefix='++', case_insensitive=True, help_command=help_command, intents=intents)

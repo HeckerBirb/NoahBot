@@ -44,7 +44,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
         return
-    member = ctx.guild.get_member(user_id)
+    member = bot.guilds[0].get_member(user_id)
 
     if member_is_staff(member):
         await reply(ctx, 'You cannot mute another staff member.')
@@ -70,7 +70,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
             cursor.execute(query_str, (user_id, reason, ctx.author.id, dur))
             connection.commit()
 
-    role = ctx.guild.get_role(RoleIDs.MUTED)
+    role = bot.guilds[0].get_role(RoleIDs.MUTED)
     await member.add_roles(role)
     await reply(ctx, f"{member.mention} has been muted for {duration}.")
     try:

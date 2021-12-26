@@ -172,7 +172,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
 
     await process_identification(ctx, reply, htb_user_details, ctx.author.id)
 
-    member = ctx.guild.get_member(ctx.author.id)
+    member = bot.guilds[0].get_member(ctx.author.id)
     try:
         await member.edit(nick=htb_user_details['user_name'])
     except Forbidden as e:

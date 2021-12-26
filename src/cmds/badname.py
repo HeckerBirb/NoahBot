@@ -28,7 +28,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id: str):
         await reply(ctx, 'Error: malformed user ID.')
         return
 
-    member = ctx.guild.get_member(int(user_id))
+    member = bot.guilds[0].get_member(int(user_id))
     if member is None:
         member = await bot.fetch_user(user_id)
 
