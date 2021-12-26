@@ -22,5 +22,5 @@ docker image rm $IMAGE
 
 docker-compose build && docker-compose up -d && docker ps -a
 
-CONTAINER=$(docker ps -a | grep noahbot | cut -d ' ' -f 1)
+CONTAINER=$(docker ps -a | grep noahbot:latest | cut -d ' ' -f 1)
 docker logs -f $CONTAINER
