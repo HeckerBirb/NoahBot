@@ -63,7 +63,7 @@ async def remove_their_message(ctx: ApplicationContext, reply):
 
 
 async def perform_action(ctx: ApplicationContext, reply, account_identifier):
-    await remove_their_message(ctx)
+    await remove_their_message(ctx, reply)
     if len(account_identifier) != 60:
         await reply(ctx, "This Account Identifier does not appear to be the right length (must be 60 characters long).", ephemeral=True)
         return
