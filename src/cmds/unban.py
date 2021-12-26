@@ -36,7 +36,7 @@ async def unban_user(user_id):
     user = bot.get_user(user_id)
 
     if user is None:
-        STDOUT_LOG.debug(f'User ID {user_id} not found on Discord. Consider removing entry from DB...')
+        STDOUT_LOG.info(f'User ID {user_id} not found on Discord. Consider removing entry from DB...')
         return
 
     try:
@@ -53,7 +53,6 @@ async def unban_user(user_id):
             cu.execute("""UPDATE ban_record SET unbanned = 1 WHERE user_id = %s""", (user_id,))
             co.commit()
             STDOUT_LOG.debug(f'Set unbanned=1 for user_id={user_id}')
-    STDOUT_LOG.info(f'User {user.mention} ({user_id}) automatically unbanned.')
     return user
 
 
