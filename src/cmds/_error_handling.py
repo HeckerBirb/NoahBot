@@ -3,6 +3,9 @@ from discord.ext.commands.errors import MissingRequiredArgument, MissingPermissi
 
 
 # Inspired by https://stackoverflow.com/a/23665658
+from src.log4noah import STDOUT_LOG
+
+
 class interruptable:
     """ Allow the ability to "break out of" a with-statement, just like how `break` will break out of a loop. """
     class Interrupt(Exception):
@@ -48,6 +51,7 @@ class ErrorHandler(commands.Cog):
         if message is None:
             raise error
         else:
+            STDOUT_LOG.info(f'A user caused and error which was handled. Message: "{message}".')
             await ctx.send(message, delete_after=15)
 
 

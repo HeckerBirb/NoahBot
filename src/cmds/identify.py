@@ -190,7 +190,7 @@ async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:
                 return ban_details
             else:
                 # TODO: Error log
-                print("Couldn't fetch ban details")
+                STDOUT_LOG.error(f"Could not fetch ban details for uid {uid}.")
                 return None
 
 
@@ -205,6 +205,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
         banned_until: datetime = datetime.strptime(banned_until, '%Y-%m-%d')
         ban_duration: str = f'{(banned_until - datetime.now()).days}d'
         reason = 'Banned on the HTB Platform. Please contact HTB Support to appeal.'
+        STDOUT_LOG.info(f'Discord user {member.name} ({member.id}) is platform banned. Banning from Discord...')
         await perform_temp_ban(bot, ctx, reply, member.id, ban_duration, reason, needs_approval=False, banned_by_bot=True)
 
         embed = discord.Embed(
