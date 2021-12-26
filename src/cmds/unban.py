@@ -5,7 +5,7 @@ from mysql.connector import connect
 
 from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, get_user_id
 from discord.errors import NotFound, Forbidden, HTTPException
 
@@ -48,7 +48,7 @@ async def unban_user(user_id):
     except HTTPException:
         STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}.')
         return None
-    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as co:
+    with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as co:
         with co.cursor() as cu:
             cu.execute("""UPDATE ban_record SET unbanned = 1 WHERE user_id = %s""", (user_id,))
             co.commit()

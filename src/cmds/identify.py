@@ -14,7 +14,7 @@ from src.cmds import tempban
 from src.cmds._error_handling import interruptable
 from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
-from src.conf import GUILD_ID, MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
+from src.conf import GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
     HTB_API_SECRET, API_URL, RoleIDs
 from src.cmds._proxy_helpers import Reply
 
@@ -79,7 +79,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
     json_htb_user_id = htb_user_details['user_id']
     naughty_list = NaughtyList()
 
-    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with interruptable(connection.cursor()) as cursor:
 
             # Step 1: Check if the Account Identifier has already been recorded and if they are the previous owner.

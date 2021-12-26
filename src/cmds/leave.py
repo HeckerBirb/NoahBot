@@ -2,7 +2,7 @@ from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, JOINABLE_ROLES
+from src.conf import GUILD_ID, JOINABLE_ROLES
 from src.cmds._proxy_helpers import Reply
 
 

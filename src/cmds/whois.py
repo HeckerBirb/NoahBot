@@ -2,7 +2,7 @@ from discord.ext import commands
 from discord.commands.context import ApplicationContext
 from discord.commands import Option
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE
 from src.cmds._proxy_helpers import Reply, get_user_id
 from mysql.connector import connect
 
@@ -22,7 +22,7 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
         await reply(ctx, 'Error: malformed user ID.')
         return
 
-    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """SELECT discord_user_id, htb_user_id FROM htb_discord_link WHERE discord_user_id = %s or htb_user_id = %s LIMIT 1"""
             cursor.execute(query_str, (user_id, user_id))

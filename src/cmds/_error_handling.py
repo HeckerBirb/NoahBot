@@ -1,5 +1,5 @@
 from discord.ext import commands
-from discord.ext.commands.errors import MissingRequiredArgument, MissingPermissions, UserInputError, CommandNotFound, NoPrivateMessage
+from discord.ext.commands.errors import MissingRequiredArgument, MissingPermissions, UserInputError, CommandNotFound, NoPrivateMessage, MissingAnyRole
 
 
 # Inspired by https://stackoverflow.com/a/23665658
@@ -38,6 +38,8 @@ class ErrorHandler(commands.Cog):
             message = f'Parameter "{error.param.name}" is required, but missing. Type `{ctx.clean_prefix}help {ctx.invoked_with}` for help.'
         elif isinstance(error, MissingPermissions):
             message = 'You are missing the required permissions to run this command.'
+        elif isinstance(error, MissingAnyRole):
+            message = 'You are not authorized to use that command.'
         elif isinstance(error, UserInputError):
             message = 'Something about your input was wrong, please check your input and try again.'
         elif isinstance(error, NoPrivateMessage):

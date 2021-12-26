@@ -7,7 +7,7 @@ from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, parse_duration_str
 
 
@@ -32,7 +32,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
         reply(ctx, 'Could not parse duration. Malformed.')
         return
 
-    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             unban_at: Optional[datetime] = None
             query_str = """SELECT timestamp FROM ban_record WHERE id = %s"""

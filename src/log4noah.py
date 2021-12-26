@@ -1,7 +1,8 @@
+import os
 from dataclasses import dataclass
 from datetime import datetime
 
-from src.conf import LOG_LEVEL
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
 
 
 @dataclass

@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from discord.ext import tasks
 from mysql.connector import connect
 from src.cmds.unban import unban_user
-from src.conf import MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.conf import MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.lib.schedule import schedule
 from src.log4noah import STDOUT_LOG
 
@@ -18,7 +18,7 @@ async def all_tasks():
 async def auto_unban():
     unban_tasks = []
     now = datetime.now()
-    with connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
+    with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """SELECT user_id, unban_time FROM ban_record WHERE unbanned = 0"""
             cursor.execute(query_str)

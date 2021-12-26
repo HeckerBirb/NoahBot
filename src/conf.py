@@ -4,12 +4,23 @@ from pathlib import Path
 
 from discord.commands import commands
 
-GUILD_ID = os.getenv('GUILD_ID', None)
-LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
+from src.log4noah import STDOUT_LOG
+
+
+def _get_int_env(env_var: str, default: str = None) -> int:
+    try:
+        STDOUT_LOG.debug(f'Loading {env_var} (default={default}).')
+        return int(os.getenv(env_var, default))
+    except KeyError:
+        STDOUT_LOG.critical(f'Environment variable {env_var} cannot be parsed as an int!')
+        exit(1)
+
+
+GUILD_ID = _get_int_env('GUILD_ID')
 ROOT_DIR = Path(dirname(dirname(abspath(__file__))))
 
 MYSQL_HOST = os.getenv('MYSQL_HOST', 'localhost')
-MYSQL_PORT = os.getenv('MYSQL_PORT', 'localhost')
+MYSQL_PORT = _get_int_env('MYSQL_PORT', '3306')
 MYSQL_DATABASE = os.getenv('MYSQL_DATABASE', 'noahbot')
 MYSQL_USER = os.getenv('MYSQL_USER', 'root')
 MYSQL_PASS = os.getenv('MYSQL_PASS', 'noah')
@@ -38,34 +49,34 @@ def _allow(role_id):
 
 class RoleIDs:
     # Moderation
-    COMMUNITY_MANAGER = os.getenv('COMMUNITY_MANAGER_ROLE')
-    ADMINISTRATOR = os.getenv('ADMINISTRATOR_ROLE')
-    SR_MODERATOR = os.getenv('SR_MODERATOR_ROLE')
-    MODERATOR = os.getenv('MODERATOR_ROLE')
-    MUTED = os.getenv('MUTED_ROLE')
+    COMMUNITY_MANAGER = _get_int_env('COMMUNITY_MANAGER_ROLE')
+    ADMINISTRATOR = _get_int_env('ADMINISTRATOR_ROLE')
+    SR_MODERATOR = _get_int_env('SR_MODERATOR_ROLE')
+    MODERATOR = _get_int_env('MODERATOR_ROLE')
+    MUTED = _get_int_env('MUTED_ROLE')
 
     # Ranks
-    OMNISCIENT = os.getenv('OMNISCIENT_ROLE')
-    GURU = os.getenv('GURU_ROLE')
-    ELITE_HACKER = os.getenv('ELITE_HACKER_ROLE')
-    PRO_HACKER = os.getenv('PRO_HACKER_ROLE')
-    HACKER = os.getenv('HACKER_ROLE')
-    SCRIPT_KIDDIE = os.getenv('SCRIPT_KIDDIE_ROLE')
-    NOOB = os.getenv('NOOB_ROLE')
-    VIP = os.getenv('VIP_ROLE')
-    VIP_PLUS = os.getenv('VIP_PLUS_ROLE')
+    OMNISCIENT = _get_int_env('OMNISCIENT_ROLE')
+    GURU = _get_int_env('GURU_ROLE')
+    ELITE_HACKER = _get_int_env('ELITE_HACKER_ROLE')
+    PRO_HACKER = _get_int_env('PRO_HACKER_ROLE')
+    HACKER = _get_int_env('HACKER_ROLE')
+    SCRIPT_KIDDIE = _get_int_env('SCRIPT_KIDDIE_ROLE')
+    NOOB = _get_int_env('NOOB_ROLE')
+    VIP = _get_int_env('VIP_ROLE')
+    VIP_PLUS = _get_int_env('VIP_PLUS_ROLE')
 
     # Content Creation
-    CHALLENGE_CREATOR = os.getenv('CHALLENGE_CREATOR_ROLE')
-    BOX_CREATOR = os.getenv('BOX_CREATOR_ROLE')
+    CHALLENGE_CREATOR = _get_int_env('CHALLENGE_CREATOR_ROLE')
+    BOX_CREATOR = _get_int_env('BOX_CREATOR_ROLE')
 
     # Positions
-    RANK_ONE = os.getenv('RANK_ONE_ROLE')
-    RANK_FIVE = os.getenv('RANK_FIVE_ROLE')
-    RANK_TEN = os.getenv('RANK_TEN_ROLE')
-    RANK_TWENTY_FIVE = os.getenv('RANK_TWENTY_FIVE_ROLE')
-    RANK_FIFTY = os.getenv('RANK_FIFTY_ROLE')
-    RANK_HUNDRED = os.getenv('RANK_HUNDRED_ROLE')
+    RANK_ONE = _get_int_env('RANK_ONE_ROLE')
+    RANK_FIVE = _get_int_env('RANK_FIVE_ROLE')
+    RANK_TEN = _get_int_env('RANK_TEN_ROLE')
+    RANK_TWENTY_FIVE = _get_int_env('RANK_TWENTY_FIVE_ROLE')
+    RANK_FIFTY = _get_int_env('RANK_FIFTY_ROLE')
+    RANK_HUNDRED = _get_int_env('RANK_HUNDRED_ROLE')
 
     @staticmethod
     def get_post_or_rank(what: int) -> int:
