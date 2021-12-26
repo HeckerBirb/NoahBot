@@ -2,8 +2,6 @@ version: '3'
 services:
   noahbotdb:
     image: mariadb:latest
-    ports:
-      - "3307:3307"
     env_file:
       - ../docker-data/noahbot/secrets.env
     volumes:
@@ -22,6 +20,5 @@ services:
       - ../docker-data/noahbot/channels.env
       - ../docker-data/noahbot/roles.env
     image: noahbot:latest
-    network_mode: host
     labels:
       com.noahbot.description: "NoahBot"
