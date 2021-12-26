@@ -8,7 +8,7 @@ from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
-from src.noahbot import bot, get_bot
+from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, get_user_id
 
@@ -41,7 +41,6 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply, user_id):
-    _bot = get_bot()
     left = False
     user_id = get_user_id(user_id)
     if user_id is None:
@@ -50,7 +49,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
 
     member = ctx.guild.get_member(int(user_id))
     if member is None:
-        member = await _bot.fetch_user(user_id)
+        member = await bot.fetch_user(user_id)
         left = True
 
     today_date = datetime.date(datetime.now())
