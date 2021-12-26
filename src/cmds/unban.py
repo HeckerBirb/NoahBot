@@ -7,7 +7,7 @@ from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, get_user_id
-from discord.errors import NotFound, Forbidden, HTTPException
+from discord.errors import Forbidden, HTTPException
 
 
 def name():
