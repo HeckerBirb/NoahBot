@@ -58,7 +58,12 @@ def description():
     return 'Identify yourself on the HTB Discord server by linking your HTB account ID to your Discord user ID.'
 
 
+async def remove_their_message(ctx: ApplicationContext):
+    await ctx.message.delete()
+
+
 async def perform_action(ctx: ApplicationContext, reply, account_identifier):
+    await remove_their_message(ctx)
     if len(account_identifier) != 60:
         await reply(ctx, "This Account Identifier does not appear to be the right length (must be 60 characters long).", ephemeral=True)
         return
@@ -260,11 +265,10 @@ async def action_slash(ctx: ApplicationContext, account_identifier: Option(str, 
     await perform_action(ctx, Reply.slash, account_identifier)
 
 
-# @commands.command(name=name(), help=description())
-# async def action_prefix(ctx: ApplicationContext, account_identifier):
-#     await perform_action(ctx, Reply.prefix, account_identifier)
+@commands.command(name=name(), help=description())
+async def action_prefix(ctx: ApplicationContext, account_identifier):
+    await perform_action(ctx, Reply.prefix, account_identifier)
 
 
 def setup(le_bot):
-    #le_bot.add_command(action_prefix)
-    pass
+    le_bot.add_command(action_prefix)
