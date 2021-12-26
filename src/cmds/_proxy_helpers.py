@@ -155,7 +155,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
             description=f'{ctx.author.name} would like to ban {member.name} for {duration}. Reason: {reason}'
         )
         embed.set_thumbnail(url=f'{HTB_URL}/images/logo600.png')
-        embed.add_field(name='Approve duration:', value=f'/approve {ban_id}', inline=True)
-        embed.add_field(name='Change duration:', value=f'/dispute {ban_id} <duration>', inline=True)
-        embed.add_field(name='Deny and unban:', value=f'/deny {ban_id}', inline=True)
+        embed.add_field(name='Approve duration:', value=f'++approve {ban_id}', inline=True)
+        embed.add_field(name='Change duration:', value=f'++dispute {ban_id} <duration>', inline=True)
+        embed.add_field(name='Deny and unban:', value=f'++deny {ban_id}', inline=True)
         await bot.guilds[0].get_channel(ChannelIDs.SR_MODERATOR).send(embed=embed)
