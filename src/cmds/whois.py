@@ -34,7 +34,7 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
         await reply(ctx, 'I cannot find that ID in our records.')
         return
 
-    mention = bot.guilds[0].get_member(int(identification['discord_id']))
+    mention = ctx.guild.get_member(int(identification['discord_id']))
     msg = f"""**{mention}**
 Discord ID: {identification['discord_id']}
 HTB profile: <https://app.hackthebox.com/users/{identification['htb_id']}>"""

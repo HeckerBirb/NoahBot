@@ -20,21 +20,21 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, reason):
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
         return
-    member = bot.guilds[0].get_member(user_id)
+    member = ctx.guild.get_member(user_id)
 
     if len(reason) == 0:
         reason = 'No reason given...'
 
     try:
         await member.send(
-            f'You have been kicked from {bot.guilds[0].name} for the following reason:\n>>> {reason}\n')
+            f'You have been kicked from {ctx.guild.name} for the following reason:\n>>> {reason}\n')
     except Forbidden:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to kick them...')
     except HTTPException:
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
         return
 
-    await bot.guilds[0].kick(user=member, reason=reason)
+    await ctx.guild.kick(user=member, reason=reason)
     await reply(ctx, f'{member.name} got the boot!')
 
 

@@ -50,7 +50,7 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
         return
-    member = bot.guilds[0].get_member(user_id)
+    member = ctx.guild.get_member(user_id)
 
     if len(reason) == 0:
         reason = 'No reason given...'
@@ -87,7 +87,7 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
 
     try:
         await member.send(
-            f'You have been banned from {bot.guilds[0].name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
+            f'You have been banned from {ctx.guild.name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
             f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
@@ -95,7 +95,7 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
         return
 
-    await bot.guilds[0].ban(member, reason=reason)
+    await ctx.guild.ban(member, reason=reason)
 
     if not needs_approval:
         await reply(ctx, f'{member.display_name} has been banned permanently.')
@@ -111,7 +111,7 @@ async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=T
         embed.add_field(name='Approve duration:', value=f'/approve {ban_id}', inline=True)
         embed.add_field(name='Change duration:', value=f'/dispute {ban_id} <duration>', inline=True)
         embed.add_field(name='Deny and unban:', value=f'/deny {ban_id}', inline=True)
-        await bot.guilds[0].get_channel(ChannelIDs.SR_MODERATOR).send(embed=embed)
+        await ctx.guild.get_channel(ChannelIDs.SR_MODERATOR).send(embed=embed)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
