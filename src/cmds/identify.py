@@ -266,5 +266,4 @@ async def action_prefix(ctx: ApplicationContext, account_identifier):
 
 
 def setup(le_bot):
-    # le_bot.add_command(action_prefix)
-    pass
+    le_bot.add_command(action_prefix)
