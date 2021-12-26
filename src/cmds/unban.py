@@ -4,7 +4,7 @@ from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
 from src.log4noah import STDOUT_LOG
-from src.noahbot import bot, get_bot
+from src.noahbot import get_bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, get_user_id
 from discord.errors import Forbidden, HTTPException
@@ -32,9 +32,9 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
 
 
 async def unban_user(user_id):
-    _bot = get_bot()
-    guild = _bot.guilds[0]
-    user = _bot.get_user(user_id)
+    bot = get_bot()
+    guild = bot.guilds[0]
+    user = bot.get_user(user_id)
 
     if user is None:
         STDOUT_LOG.debug(f'User ID {user_id} not found on Discord. Consider removing entry from DB...')
