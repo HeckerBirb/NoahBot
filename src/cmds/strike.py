@@ -41,7 +41,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, weight, reason
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
         return
-    member = ctx.guild.get_member(user_id)
+    member = bot.guilds[0].get_member(user_id)
 
     if len(reason) == 0:
         reply(ctx, 'The reason is empty. Try again...')
@@ -58,7 +58,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, weight, reason
 
     try:
         await member.send(
-            f'You have been warned on {ctx.guild.name} with a strike value of {weight}. After a total value of 3, permanent exclusion from the server may be enforced.\n'
+            f'You have been warned on {bot.guilds[0].name} with a strike value of {weight}. After a total value of 3, permanent exclusion from the server may be enforced.\n'
             f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')

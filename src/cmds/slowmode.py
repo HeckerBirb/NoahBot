@@ -22,7 +22,7 @@ async def perform_action(ctx: ApplicationContext, reply, channel: Union[int, Tex
     if isinstance(channel, str):
         try:
             channel_id = int(channel.replace('<#', '').replace('>', ''))
-            channel = ctx.guild.get_channel_or_thread(channel_id)
+            channel = bot.guilds[0].get_channel_or_thread(channel_id)
         except ValueError:
             await reply(ctx, f"""I don't know what "{channel.mention}" is. Please use #channel-reference or a channel ID.""")
             return
