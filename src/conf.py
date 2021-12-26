@@ -82,14 +82,14 @@ class RoleIDs:
     RANK_HUNDRED = _get_int_env('RANK_HUNDRED_ROLE')
 
     @staticmethod
-    def get_post_or_rank(what: int) -> int:
+    def get_post_or_rank(what: str) -> int:
         return {
-            1: RoleIDs.RANK_ONE,
-            5: RoleIDs.RANK_FIVE,
-            10: RoleIDs.RANK_TEN,
-            25: RoleIDs.RANK_TWENTY_FIVE,
-            50: RoleIDs.RANK_FIFTY,
-            100: RoleIDs.RANK_HUNDRED,
+            '1': RoleIDs.RANK_ONE,
+            '5': RoleIDs.RANK_FIVE,
+            '10': RoleIDs.RANK_TEN,
+            '25': RoleIDs.RANK_TWENTY_FIVE,
+            '50': RoleIDs.RANK_FIFTY,
+            '100': RoleIDs.RANK_HUNDRED,
             'Omniscient': RoleIDs.OMNISCIENT,
             'Guru': RoleIDs.GURU,
             'Elite Hacker': RoleIDs.ELITE_HACKER,
