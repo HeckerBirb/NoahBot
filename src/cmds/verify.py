@@ -16,7 +16,11 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply):
-    await reply(ctx, 'Please see your DMs for instructions on how to verify your HTB account.')
+    if ctx.guild:
+        await reply(ctx, 'Please see your DMs for instructions on how to verify your HTB account.')
+    else:
+        await reply(ctx, 'Please follow the below instructions on how to verify your HTB account.')
+
     member = ctx.author
 
     # Step one
