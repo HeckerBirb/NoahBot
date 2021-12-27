@@ -17,7 +17,7 @@ async def schedule(task, run_at: datetime):
         STDOUT_LOG.debug(f'Target execution is in the past. Setting sleep timer to 0.')
         seconds = 0
     else:
-        seconds = (run_at - now).total_seconds()
+        seconds = int((run_at - now).total_seconds())
         STDOUT_LOG.debug(f'Task will run after a {seconds} seconds long sleep.')
 
     await asyncio.sleep(seconds)
