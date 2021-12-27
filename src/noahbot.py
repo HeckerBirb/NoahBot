@@ -34,5 +34,6 @@ for extension in extensions:
     bot.load_extension('src.cmds.' + extension)
     STDOUT_LOG.debug(f'Module loaded: {extension}')
 
+STDOUT_LOG.debug(f'All pending application commands: {", ".join([c.name for c in bot.pending_application_commands])}')
 STDOUT_LOG.info('Starting bot...')
 bot.run(os.getenv('BOT_TOKEN', None))
