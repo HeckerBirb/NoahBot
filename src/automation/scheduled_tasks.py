@@ -26,15 +26,14 @@ async def auto_unban():
             for row in cursor.fetchall():
                 # row = id, user_id, unban_time
                 run_at = datetime.fromtimestamp(row[1])
-                run_at_str = run_at.strftime('%Y-%m-%d %H:%m:%S')
-                STDOUT_LOG.debug(f'Got unban timestamp from DB.', run_at=run_at, run_at_formatted=run_at_str)
+                STDOUT_LOG.debug(f'Got unban timestamp from DB.', run_at=run_at)
 
                 if (run_at - now).days > 365:
-                    STDOUT_LOG.info(f'Skipping scheduled unban for user_id {row[0]}: is over one years into the future ({run_at_str})')
+                    STDOUT_LOG.info(f'Skipping scheduled unban for user_id {row[0]}: is over one years into the future ({str(run_at)})')
                     continue
 
                 unban_tasks.append(schedule(unban_user(row[0]), run_at=run_at))
-                STDOUT_LOG.info(f'Scheduled unban task for user_id {row[0]} at {run_at_str}.')
+                STDOUT_LOG.info(f'Scheduled unban task for user_id {row[0]} at {str(run_at)}.')
 
     await asyncio.gather(*unban_tasks)
 
