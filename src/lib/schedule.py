@@ -1,12 +1,10 @@
 import asyncio
 from datetime import datetime
-from typing import Awaitable, TypeVar
+
+from src.log4noah import STDOUT_LOG
 
 
-T = TypeVar("T")
-
-
-async def schedule(task: Awaitable[T], at: datetime) -> T:
+async def schedule(task, run_at: datetime):
     """
     Schedule an "Awaitable" for future execution, i.e. an async function.
 
@@ -14,11 +12,13 @@ async def schedule(task: Awaitable[T], at: datetime) -> T:
     await schedule(foo(1, 2), at=(dt.datetime.now() + dt.timedelta(seconds=421337)))
     """
     now = datetime.now()
-
-    if at < now:
+    STDOUT_LOG.debug('Started scheduling...', target_exec=run_at, current_time=now)
+    if run_at < now:
+        STDOUT_LOG.debug(f'Target execution is in the past. Setting sleep timer to 0.')
         seconds = 0
     else:
-        seconds = (at - now).seconds
+        seconds = (run_at - now).seconds
+        STDOUT_LOG.debug(f'Task will run after a {seconds} seconds long sleep.')
 
     await asyncio.sleep(seconds)
     return await task

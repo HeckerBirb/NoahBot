@@ -1,6 +1,7 @@
 import os
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, List, Dict
 
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
 
@@ -9,52 +10,62 @@ LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
 class BotLogger:
     _log_level: int
 
-    def _log_msg(self, log_level: str, msg: str):
+    def _log_msg(self, log_level: str, msg: str, **kwargs):
+        var_values = ''
+        if len(kwargs) > 0:
+            var_values = 'Objects: ' + ', '.join([f'{var}={kwargs.get(var)}' for var in kwargs.keys()])
+        msg = f'{msg} {var_values}'
+
         if _get_log_level(log_level) < self._log_level:
             return
 
         now = str(datetime.now()).split('.')[0]
         print(f'{now} [{log_level}]: {msg}')
 
-    def debug(self, log_message: str = ''):
+    def debug(self, log_message: str = '', **kwargs: Dict[str, Any]):
         """
         Debug messages to help narrow down a particular problem with communication or the bot itself.
         Args:
             log_message: message to be logged.
+            kwargs: appends {var}={kwargs.get(var)} for each kw pair given.
         """
-        self._log_msg('DEBUG', log_message)
+        self._log_msg('DEBUG', log_message, **kwargs)
 
-    def info(self, log_message: str = ''):
+    def info(self, log_message: str = '', **kwargs: Dict[str, Any]):
         """
         Informational messages for example updates of regular program flows or successful, regular events.
         Args:
             log_message: message to be logged.
+            kwargs: appends {var}={kwargs.get(var)} for each kw pair given.
         """
-        self._log_msg('INFO', log_message)
+        self._log_msg('INFO', log_message, **kwargs)
 
-    def warn(self, log_message: str = ''):
+    def warn(self, log_message: str = '', **kwargs: Dict[str, Any]):
         """
         Warning messages indicating a potential problem which may at a later point cause an error of some magnitude.
         Args:
             log_message: message to be logged.
+            kwargs: appends {var}={kwargs.get(var)} for each kw pair given.
         """
-        self._log_msg('WARN', log_message)
+        self._log_msg('WARN', log_message, **kwargs)
 
-    def error(self, log_message: str = 'Error!'):
+    def error(self, log_message: str = 'Error!', **kwargs: Dict[str, Any]):
         """
         For errors which indicate a problem, however not one that causes downtime or security issues.
         Args:
             log_message: message to be logged.
+            kwargs: appends {var}={kwargs.get(var)} for each kw pair given.
         """
-        self._log_msg('ERROR', log_message)
+        self._log_msg('ERROR', log_message, **kwargs)
 
-    def critical(self, log_message: str = 'Critical error!'):
+    def critical(self, log_message: str = 'Critical error!', **kwargs: Dict[str, Any]):
         """
         For CRITICAL errors which cause immediate interruption of service or security threats. Consider pulling the plug!
         Args:
             log_message: message to be logged.
+            kwargs: appends {var}={kwargs.get(var)} for each kw pair given.
         """
-        self._log_msg('CRITICAL', log_message)
+        self._log_msg('CRITICAL', log_message, **kwargs)
 
 
 def _get_log_level(level):
