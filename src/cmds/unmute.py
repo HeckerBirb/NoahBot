@@ -19,14 +19,19 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
         return
+    await unmute_user(user_id)
+
+    member = bot.guilds[0].get_member(user_id)
+    await reply(ctx, f'{member.mention} has been unmuted.')
+
+
+async def unmute_user(user_id):
     member = bot.guilds[0].get_member(user_id)
 
     role = bot.guilds[0].get_role(RoleIDs.MUTED)
 
     await member.remove_roles(role)
-    remove_record('DELETE FROM mute_record where user_id = %s', (user_id, ))
-
-    await reply(ctx, f'{member.mention} has been unmuted.')
+    remove_record('DELETE FROM mute_record where user_id = %s', (user_id,))
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
