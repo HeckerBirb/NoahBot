@@ -1,6 +1,7 @@
 import calendar
 import re
 import time
+from dataclasses import dataclass
 from datetime import datetime
 
 import discord
@@ -12,6 +13,11 @@ from mysql.connector import connect
 
 from src.conf import RoleIDs, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, HTB_URL, ChannelIDs
 from src.log4noah import STDOUT_LOG
+
+
+@dataclass
+class PretendSnowflake:
+    id: int
 
 
 class Reply:
@@ -143,8 +149,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
         return
 
-    user = bot.get_user(user_id)
-    await bot.guilds[0].ban(user, reason=reason)
+    await bot.guilds[0].ban(PretendSnowflake(user_id), reason=reason)
 
     if not needs_approval:
         if member is not None:
