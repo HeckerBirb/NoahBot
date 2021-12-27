@@ -97,12 +97,12 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.')
         return
-    member = bot.guilds[0].get_member(user_id)
 
     if len(reason) == 0:
         reason = 'No reason given...'
 
-    if member_is_staff(member):
+    member = bot.guilds[0].get_member(user_id)
+    if member is not None and member_is_staff(member):
         await reply(ctx, 'You cannot ban another staff member.')
         return
 
@@ -133,26 +133,35 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
             connection.commit()
 
     try:
-        await member.send(
-            f'You have been banned from {bot.guilds[0].name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
-            f'Following is the reason given:\n>>> {reason}\n')
+        if member is not None:
+            await member.send(
+                f'You have been banned from {bot.guilds[0].name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
+                f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
     except HTTPException:
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
         return
 
-    await bot.guilds[0].ban(member, reason=reason)
+    user = bot.get_user(user_id)
+    await bot.guilds[0].ban(user, reason=reason)
 
     if not needs_approval:
-        await reply(ctx, f'{member.display_name} has been banned permanently.')
+        if member is not None:
+            await reply(ctx, f'{member.display_name} has been banned permanently.')
+        else:
+            await reply(ctx, f'{user_id} has been banned permanently.')
         return
 
     else:
-        await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.')
+        if member is not None:
+            await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.')
+        else:
+            await reply(ctx, f'{user_id} has been banned for a duration of {duration}.')
+        member_name = member.name if member is not None else user_id
         embed = discord.Embed(
             title=f"Ban request #{ban_id}",
-            description=f'{ctx.author.name} would like to ban {member.name} for {duration}. Reason: {reason}'
+            description=f'{ctx.author.name} would like to ban {member_name} for {duration}. Reason: {reason}'
         )
         embed.set_thumbnail(url=f'{HTB_URL}/images/logo600.png')
         embed.add_field(name='Approve duration:', value=f'++approve {ban_id}', inline=True)
