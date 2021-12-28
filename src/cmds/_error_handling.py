@@ -51,7 +51,7 @@ class ErrorHandler(commands.Cog):
         if message is None:
             raise error
         else:
-            STDOUT_LOG.info(f'A user caused and error which was handled. Message: "{message}".')
+            STDOUT_LOG.debug(f'A user caused and error which was handled. Message: "{message}".')
             await ctx.send(message, delete_after=15)
 
 
