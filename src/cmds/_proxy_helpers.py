@@ -29,13 +29,14 @@ class Reply:
     @staticmethod
     async def slash(ctx: ApplicationContext, msg=None, ephemeral=False, send_followup=False, **kwargs):
         if send_followup:
-            await ctx.followup(content=msg, ephemeral=ephemeral, **kwargs)
+            await ctx.send_followup(content=msg, ephemeral=ephemeral, **kwargs)
         else:
             await ctx.respond(content=msg, ephemeral=ephemeral, **kwargs)
         Reply._log_call_and_msg(ctx, msg, **kwargs)
 
     @staticmethod
-    async def prefix(ctx: ApplicationContext, msg=None, **kwargs):
+    async def prefix(ctx: ApplicationContext, msg=None, ephemeral=False, send_followup=False, **kwargs):
+        # DO NOT remove named params ephemeral or send_followup. ApplicationContext.send(...) does not like these, so they must be "filtered away".
         await ctx.send(content=msg, **kwargs)
         Reply._log_call_and_msg(ctx, msg, **kwargs)
 
