@@ -248,13 +248,13 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
             STDOUT_LOG.debug(f'User is Hall of Fame rank {position}. Assigning role Top-{pos_top}...')
             to_assign.append(guild.get_role(RoleIDs.get_post_or_rank(pos_top)))
         else:
-            STDOUT_LOG.debug(f'User is position {position}. No Hall of Fame roles for them. :)')
+            STDOUT_LOG.debug(f'User is position {position}. No Hall of Fame roles for them.')
     if htb_user_details['machines']:
         to_assign.append(guild.get_role(RoleIDs.BOX_CREATOR))
     if htb_user_details['challenges']:
         to_assign.append(guild.get_role(RoleIDs.CHALLENGE_CREATOR))
     if set(to_remove) == set(to_assign):
-        STDOUT_LOG.debug("Roles to Remove and Assign are the same; Doing nothing.")
+        STDOUT_LOG.debug("Roles to remove and assign are the same. Returning.")
         return
     else:
         await member.remove_roles(*to_remove, atomic=True)
