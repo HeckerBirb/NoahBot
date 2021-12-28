@@ -101,10 +101,10 @@ def remove_record(delete_query: str, id_to_remove: Tuple[Any, ...]) -> None:
             connection.commit()
 
 
-async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False):
+async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False, send_followup=False):
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=send_followup)
         return
 
     if len(reason) == 0:
@@ -112,7 +112,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
 
     member = bot.guilds[0].get_member(user_id)
     if member is not None and member_is_staff(member):
-        await reply(ctx, 'You cannot ban another staff member.')
+        await reply(ctx, 'You cannot ban another staff member.', send_followup=send_followup)
         return
 
     dur = parse_duration_str(duration)
@@ -147,25 +147,25 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
                 f'You have been banned from {bot.guilds[0].name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
                 f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden:
-        await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
+        await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...', send_followup=send_followup)
     except HTTPException:
-        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
+        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.", send_followup=send_followup)
         return
 
     await bot.guilds[0].ban(PretendSnowflake(user_id), reason=reason)
 
     if not needs_approval:
         if member is not None:
-            await reply(ctx, f'{member.display_name} has been banned permanently.')
+            await reply(ctx, f'{member.display_name} has been banned permanently.', send_followup=send_followup)
         else:
-            await reply(ctx, f'{user_id} has been banned permanently.')
+            await reply(ctx, f'{user_id} has been banned permanently.', send_followup=send_followup)
         return
 
     else:
         if member is not None:
-            await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.')
+            await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.', send_followup=send_followup)
         else:
-            await reply(ctx, f'{user_id} has been banned for a duration of {duration}.')
+            await reply(ctx, f'{user_id} has been banned for a duration of {duration}.', send_followup=send_followup)
         member_name = member.name if member is not None else user_id
         embed = discord.Embed(
             title=f"Ban request #{ban_id}",
