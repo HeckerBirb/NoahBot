@@ -78,7 +78,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             else:
                 # TODO: figure out HTTP error code if invalid id and handle default case + that case
                 embed = discord.Embed(title="Error: Invalid account identifier.", color=0xFF0000)
-                await reply(ctx, embed=embed, ephemeral=True, send_followup=True)
+                await reply(ctx, embed=embed, ephemeral=True, send_followup=False)
                 return
 
     json_htb_user_id = htb_user_details['user_id']
@@ -161,7 +161,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             embed = discord.Embed(title='Identification error', description=error_desc, color=0xff2429)
             await bot.get_channel(ChannelIDs.BOT_LOGS).send(embed=embed)
 
-            await reply(ctx, 'Identification error: please contact an online Moderator or Administrator for help.', ephemeral=True, send_followup=True)
+            await reply(ctx, 'Identification error: please contact an online Moderator or Administrator for help.', ephemeral=True, send_followup=False)
             return
 
         with connection.cursor() as cursor:
@@ -178,7 +178,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
         # TODO Fix this
         raise e
 
-    await reply(ctx, f'Your Discord user has been successfully identified as HTB user {json_htb_user_id}.', ephemeral=True, send_followup=True)
+    await reply(ctx, f'Your Discord user has been successfully identified as HTB user {json_htb_user_id}.', ephemeral=True, send_followup=False)
 
 
 async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:

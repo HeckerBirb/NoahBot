@@ -53,9 +53,9 @@ async def perform_action(ctx: ApplicationContext, reply):
         await member.send(embed=embed_step2)
         await member.send(embed=embed_step3)
     except Forbidden:
-        await reply(ctx, 'Whoops! I cannot DM you after all due to your privacy settings. Please allow DMs from other server members and try again.', send_followup=True)
+        await reply(ctx, 'Whoops! I cannot DM you after all due to your privacy settings. Please allow DMs from other server members and try again.', send_followup=False)
     except HTTPException:
-        await reply(ctx, 'An unexpected error happened (HTTP 400, bad request). Please contact an Administrator.', send_followup=True)
+        await reply(ctx, 'An unexpected error happened (HTTP 400, bad request). Please contact an Administrator.', send_followup=False)
         return
 
 
