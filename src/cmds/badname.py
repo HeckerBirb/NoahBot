@@ -25,7 +25,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id: str):
 
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
 
     member = bot.guilds[0].get_member(int(user_id))
@@ -37,7 +37,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id: str):
     try:
         await member.edit(nick=new_name)
     except Forbidden:
-        await reply(ctx, f'Cannot rename {member.mention}. Am I even allowed to?')
+        await reply(ctx, f'Cannot rename {member.mention}. Am I even allowed to?', send_followup=False)
         return
 
     try:
@@ -47,10 +47,10 @@ async def perform_action(ctx: ApplicationContext, reply, user_id: str):
             'HTB account (see #welcome for how) to have your name reset to your HTB username.'
         )
     except Forbidden:
-        await reply(ctx, f'Cannot DM user {member.mention}. Perhaps they do not allow DMs from strangers?')
+        await reply(ctx, f'Cannot DM user {member.mention}. Perhaps they do not allow DMs from strangers?', send_followup=False)
         return
 
-    await reply(ctx, f"{member.name}'s name has been updated to {new_name}")
+    await reply(ctx, f"{member.name}'s name has been updated to {new_name}", send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

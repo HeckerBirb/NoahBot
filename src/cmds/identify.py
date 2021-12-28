@@ -66,10 +66,10 @@ async def remove_their_message(ctx: ApplicationContext, reply):
 async def perform_action(ctx: ApplicationContext, reply, account_identifier):
     await remove_their_message(ctx, reply)
     if len(account_identifier) != 60:
-        await reply(ctx, "This Account Identifier does not appear to be the right length (must be 60 characters long).", ephemeral=True)
+        await reply(ctx, "This Account Identifier does not appear to be the right length (must be 60 characters long).", ephemeral=True, send_followup=False)
         return
 
-    await reply(ctx, 'Identification initiated, please wait...', ephemeral=True)
+    await reply(ctx, 'Identification initiated, please wait...', ephemeral=True, send_followup=False)
     acc_id_url = f'{API_URL}/discord/identifier/{account_identifier}?secret={HTB_API_SECRET}'
 
     async with aiohttp.ClientSession() as session:
@@ -207,7 +207,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
         ban_duration: str = f'{(banned_until - datetime.now()).days}d'
         reason = 'Banned on the HTB Platform. Please contact HTB Support to appeal.'
         STDOUT_LOG.info(f'Discord user {member.name} ({member.id}) is platform banned. Banning from Discord...')
-        await perform_temp_ban(bot, ctx, reply, member.id, ban_duration, reason, needs_approval=False, banned_by_bot=True)
+        await perform_temp_ban(bot, ctx, reply, member.id, ban_duration, reason, needs_approval=False, banned_by_bot=True, send_followup=True)
 
         embed = discord.Embed(
             title="Identification error",

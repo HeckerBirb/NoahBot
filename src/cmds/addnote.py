@@ -38,11 +38,11 @@ def description():
 async def perform_action(ctx: ApplicationContext, reply, user_id, note):
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
 
     if len(note) == 0:
-        reply(ctx, 'The note is empty. Try again...')
+        await reply(ctx, 'The note is empty. Try again...', send_followup=False)
         return
 
     moderator = ctx.author.id
@@ -53,7 +53,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, note):
             cursor.execute(query_str, (user_id, note, today, moderator))
             connection.commit()
 
-    await reply(ctx, 'Note added.')
+    await reply(ctx, 'Note added.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

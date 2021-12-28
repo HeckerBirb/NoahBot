@@ -21,14 +21,15 @@ def description():
 async def perform_action(ctx: ApplicationContext, reply, user_id):
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
 
     user = await unban_user(user_id)
     if user is None:
-        await reply(ctx, f'Failed to unban user {user_id}. See server logs for more info.')
+        await reply(ctx, f'Failed to unban user {user_id}. See server logs for more info.', send_followup=False)
+        return
 
-    await reply(ctx, f'Member {user.name} ({user.id}) has been unbanned.')
+    await reply(ctx, f'Member {user.name} ({user.id}) has been unbanned.', send_followup=False)
 
 
 async def unban_user(user_id):

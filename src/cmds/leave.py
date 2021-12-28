@@ -16,7 +16,7 @@ def description():
 
 async def perform_action(ctx: ApplicationContext, reply, role_name):
     if not ctx.guild:
-        await reply(ctx, 'This command cannot be used in a DM.')
+        await reply(ctx, 'This command cannot be used in a DM.', send_followup=False)
         return
 
     role_id = None
@@ -25,12 +25,12 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
             role_id = JOINABLE_ROLES.get(role)
 
     if role_id is None:
-        await reply(ctx, "I don't know what role that is. Did you spell it right?")
+        await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False)
         return
 
     the_role = ctx.guild.get_role(role_id)
     await ctx.author.remove_roles(the_role)
-    await reply(ctx, f'You have left {the_role.name}.')
+    await reply(ctx, f'You have left {the_role.name}.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())

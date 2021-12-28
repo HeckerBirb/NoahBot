@@ -39,12 +39,12 @@ def description():
 async def perform_action(ctx: ApplicationContext, reply, user_id, weight, reason):
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
     member = bot.guilds[0].get_member(user_id)
 
     if len(reason) == 0:
-        reply(ctx, 'The reason is empty. Try again...')
+        await reply(ctx, 'The reason is empty. Try again...', send_followup=False)
         return
 
     moderator = ctx.author.id
@@ -54,16 +54,16 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, weight, reason
             cursor.execute(query_str, (user_id, reason, weight, moderator))
             connection.commit()
 
-    await reply(ctx, f'{member.mention} has been warned with a strike weight of {weight}.')
+    await reply(ctx, f'{member.mention} has been warned with a strike weight of {weight}.', send_followup=False)
 
     try:
         await member.send(
             f'You have been warned on {bot.guilds[0].name} with a strike value of {weight}. After a total value of 3, permanent exclusion from the server may be enforced.\n'
             f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden:
-        await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...')
+        await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...', send_followup=True)
     except HTTPException:
-        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
+        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.", send_followup=True)
         return
 
 

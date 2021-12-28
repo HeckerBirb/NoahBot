@@ -117,13 +117,13 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
 
     dur = parse_duration_str(duration)
     if dur is None:
-        reply(ctx, 'Invalid duration: could not parse.', delete_after=15)
+        await reply(ctx, 'Invalid duration: could not parse.', delete_after=15)
         return
 
     epoch_time = calendar.timegm(time.gmtime())
 
     if dur - epoch_time <= 0:
-        reply(ctx, 'Invalid duration: cannot be in the past.', delete_after=15)
+        await reply(ctx, 'Invalid duration: cannot be in the past.', delete_after=15)
         return
 
     ban_id = -1

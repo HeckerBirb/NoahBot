@@ -18,7 +18,7 @@ def description():
 async def perform_action(ctx: ApplicationContext, reply, user_id, reason):
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
     member = bot.guilds[0].get_member(user_id)
 
@@ -29,13 +29,13 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, reason):
         await member.send(
             f'You have been kicked from {bot.guilds[0].name} for the following reason:\n>>> {reason}\n')
     except Forbidden:
-        await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to kick them...')
+        await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to kick them...', send_followup=False)
     except HTTPException:
-        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.")
+        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.", send_followup=False)
         return
 
     await bot.guilds[0].kick(user=member, reason=reason)
-    await reply(ctx, f'{member.name} got the boot!')
+    await reply(ctx, f'{member.name} got the boot!', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

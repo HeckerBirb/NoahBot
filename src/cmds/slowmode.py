@@ -24,13 +24,13 @@ async def perform_action(ctx: ApplicationContext, reply, channel: Union[int, Tex
             channel_id = int(channel.replace('<#', '').replace('>', ''))
             channel = bot.guilds[0].get_channel_or_thread(channel_id)
         except ValueError:
-            await reply(ctx, f"""I don't know what "{channel.mention}" is. Please use #channel-reference or a channel ID.""")
+            await reply(ctx, f"""I don't know what "{channel.mention}" is. Please use #channel-reference or a channel ID.""", send_followup=False)
             return
 
     try:
         seconds = int(seconds)
     except ValueError:
-        reply(ctx, f'Malformed amount of seconds: {seconds}.')
+        await reply(ctx, f'Malformed amount of seconds: {seconds}.')
         return
 
     if seconds < 0:
@@ -38,7 +38,7 @@ async def perform_action(ctx: ApplicationContext, reply, channel: Union[int, Tex
     if seconds > 30:
         seconds = 30
     await channel.edit(slowmode_delay=seconds)
-    await reply(ctx, f'Slowmode set in {channel.name} to {seconds} seconds.')
+    await reply(ctx, f'Slowmode set in {channel.name} to {seconds} seconds.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

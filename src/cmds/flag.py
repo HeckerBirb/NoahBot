@@ -14,7 +14,7 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply):
-    await reply(ctx, '`+-------------+`\n`| Not a flag. |`\n`+-------------+`')
+    await reply(ctx, '`+-------------+`\n`| Not a flag. |`\n`+-------------+`', send_followup=False)
 
 
 @commands.command(name=name(), help=description())

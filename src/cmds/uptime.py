@@ -24,7 +24,7 @@ async def perform_action(ctx: ApplicationContext, reply):
     now = time.time()
     difference = int(now - START_TIME)
     uptime = str(datetime.timedelta(seconds=difference))
-    await reply(ctx, f'Uptime: {uptime}')
+    await reply(ctx, f'Uptime: {uptime}', send_followup=False)
 
 
 @commands.command(name=name(), help=description())

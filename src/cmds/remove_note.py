@@ -16,7 +16,7 @@ def description():
 
 async def perform_action(ctx: ApplicationContext, reply, note_id):
     remove_record('DELETE FROM user_note WHERE id = %s', (note_id,))
-    await reply(ctx, f'Note #{note_id} has been deleted.')
+    await reply(ctx, f'Note #{note_id} has been deleted.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())

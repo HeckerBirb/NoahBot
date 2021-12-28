@@ -17,12 +17,12 @@ def description():
 async def perform_action(ctx: ApplicationContext, reply, user_id):
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
     await unmute_user(user_id)
 
     member = bot.guilds[0].get_member(user_id)
-    await reply(ctx, f'{member.mention} has been unmuted.')
+    await reply(ctx, f'{member.mention} has been unmuted.', send_followup=False)
 
 
 async def unmute_user(user_id):

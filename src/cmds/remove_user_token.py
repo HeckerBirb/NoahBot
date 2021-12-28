@@ -17,11 +17,11 @@ def description():
 async def perform_action(ctx: ApplicationContext, reply, user_id):
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
 
     remove_record('DELETE FROM htb_discord_link WHERE discord_user_id = %s or htb_user_id = %s', (user_id, user_id))
-    await reply(ctx, f'All tokens related to Discord or HTB ID "{user_id}" have been deleted.')
+    await reply(ctx, f'All tokens related to Discord or HTB ID "{user_id}" have been deleted.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

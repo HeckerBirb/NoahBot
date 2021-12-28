@@ -42,23 +42,23 @@ def description():
 async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reason):
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
     member = bot.guilds[0].get_member(user_id)
 
     if member_is_staff(member):
-        await reply(ctx, 'You cannot mute another staff member.')
+        await reply(ctx, 'You cannot mute another staff member.', send_followup=False)
         return
 
     dur = parse_duration_str(duration)
     if dur is None:
-        reply(ctx, 'Invalid duration: could not parse.', delete_after=15)
+        await reply(ctx, 'Invalid duration: could not parse.', delete_after=15, send_followup=False)
         return
 
     epoch_time = calendar.timegm(time.gmtime())
 
     if dur - epoch_time <= 0:
-        reply(ctx, 'Invalid duration: cannot be in the past.', delete_after=15)
+        await reply(ctx, 'Invalid duration: cannot be in the past.', delete_after=15, send_followup=False)
         return
 
     if len(reason) == 0:
@@ -72,11 +72,11 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
 
     role = bot.guilds[0].get_role(RoleIDs.MUTED)
     await member.add_roles(role)
-    await reply(ctx, f"{member.mention} has been muted for {duration}.")
+    await reply(ctx, f"{member.mention} has been muted for {duration}.", send_followup=False)
     try:
         await member.send(f"You have been muted for {duration}. Reason:\n>>> {reason}")
     except Forbidden:
-        await reply(ctx, f'Cannot DM {member.mention} due to their privacy settings.')
+        await reply(ctx, f'Cannot DM {member.mention} due to their privacy settings.', send_followup=True)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

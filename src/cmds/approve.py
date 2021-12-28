@@ -22,7 +22,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id):
             query_str = """UPDATE ban_record SET approved = 1 WHERE id = %s"""
             cursor.execute(query_str, (ban_id, ))
             connection.commit()
-    await reply(ctx, f'Ban approval has been recorded.')
+    await reply(ctx, f'Ban approval has been recorded.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())

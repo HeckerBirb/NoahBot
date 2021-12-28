@@ -44,7 +44,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
     left = False
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
 
     member = bot.guilds[0].get_member(int(user_id))
@@ -98,7 +98,7 @@ Creation Date: **{creation_date}**
         await ctx.send(content=f'History embed is too big to send ({len(embed)}/6000 allowed chars).')
     else:
         # await ctx.send(embed=embed)
-        await reply(ctx, embed=embed)
+        await reply(ctx, embed=embed, send_followup=False)
 
 
 def get_notes_of(user_id: Union[str, int]):

@@ -28,7 +28,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id):
                 user_id = row[0]
 
             if user_id is None:
-                await reply(ctx, 'Cannot find record of ban request. Has this user already been unbanned?')
+                await reply(ctx, 'Cannot find record of ban request. Has this user already been unbanned?', send_followup=False)
                 return
             await unban.perform_action(ctx, reply, user_id)
             query_str = 'DELETE FROM ban_record WHERE id = %s'

@@ -19,7 +19,7 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
     identification = dict()
     user_id = get_user_id(user_id)
     if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.')
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
 
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
@@ -31,14 +31,14 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
                 identification['htb_id'] = row[1]
 
     if len(identification) == 0:
-        await reply(ctx, 'I cannot find that ID in our records.')
+        await reply(ctx, 'I cannot find that ID in our records.', send_followup=False)
         return
 
     mention = bot.guilds[0].get_member(int(identification['discord_id']))
     msg = f"""**{mention}**
 Discord ID: {identification['discord_id']}
 HTB profile: <https://app.hackthebox.com/users/{identification['htb_id']}>"""
-    await reply(ctx, msg)
+    await reply(ctx, msg, send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR, SlashPerms.HTB_STAFF], name=name(), description=description())

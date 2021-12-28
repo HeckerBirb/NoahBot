@@ -14,7 +14,7 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply):
-    await reply(ctx, 'Pong!')
+    await reply(ctx, 'Pong!', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR, SlashPerms.HTB_STAFF], name=name(), description=description())

@@ -17,7 +17,7 @@ def description():
 
 async def perform_action(ctx: ApplicationContext, reply, infraction_id):
     remove_record('DELETE FROM infraction_record WHERE id = %s', (infraction_id, ))
-    await reply(ctx, f'Infraction record #{infraction_id} has been deleted.')
+    await reply(ctx, f'Infraction record #{infraction_id} has been deleted.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())

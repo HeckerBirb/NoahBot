@@ -25,11 +25,11 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
     try:
         ban_id = int(ban_id)
     except ValueError:
-        reply(ctx, 'Ban ID must be a number.')
+        await reply(ctx, 'Ban ID must be a number.')
         return
 
     if parse_duration_str(duration) is None:
-        reply(ctx, 'Could not parse duration. Malformed.')
+        await reply(ctx, 'Could not parse duration. Malformed.')
         return
 
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
@@ -47,7 +47,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
             connection.commit()
 
     new_unban_at = datetime.fromtimestamp(new_unban_time).strftime('%B %d, %Y')
-    await reply(ctx, f'Ban duration updated and approved. The member will be unbanned on {new_unban_at} UTC.')
+    await reply(ctx, f'Ban duration updated and approved. The member will be unbanned on {new_unban_at} UTC.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
