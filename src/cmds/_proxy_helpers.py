@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 import discord
-from discord import Forbidden, HTTPException
+from discord import Forbidden, HTTPException, NotFound
 from discord.commands.context import ApplicationContext
 from typing import Union, Optional, Tuple, Any
 
@@ -53,6 +53,18 @@ def get_user_id(user_id: Union[str, discord.Member]) -> Optional[int]:
         return None
 
     return user_id
+
+
+async def force_get_member(guild: discord.Guild, user_id: int) -> Optional[discord.Member]:
+    """ Query Discord forcefully (no cache) for the user and return, if found. Otherwise return None. """
+    try:
+        STDOUT_LOG.debug(f'Forcefully obtaining member with ID {user_id} (no cache).')
+        member = await guild.fetch_member(user_id)
+        STDOUT_LOG.debug(f'Got member "{member.mention}"')
+        return member
+    except NotFound as ex:
+        STDOUT_LOG.info(f'Could not find member with id {user_id} on the server. Exception: {ex}')
+        return None
 
 
 def parse_duration_str(duration: str, baseline_ts: int = None) -> Optional[int]:

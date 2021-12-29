@@ -6,7 +6,7 @@ from mysql.connector import connect
 from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
-from src.cmds._proxy_helpers import Reply, get_user_id
+from src.cmds._proxy_helpers import Reply, get_user_id, force_get_member
 from discord.errors import NotFound, Forbidden, HTTPException
 
 
@@ -34,7 +34,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
 
 async def unban_user(user_id):
     guild = bot.guilds[0]
-    user = await guild.fetch_member(user_id)
+    user = await force_get_member(guild, user_id)
 
     if user is None:
         STDOUT_LOG.info(f'User ID {user_id} not found on Discord. Consider removing entry from DB...')
