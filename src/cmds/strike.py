@@ -4,6 +4,7 @@ from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
+from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.cmds._proxy_helpers import Reply, get_user_id
@@ -62,8 +63,10 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, weight, reason
             f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...', send_followup=True)
-    except HTTPException:
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+    except HTTPException as ex:
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.", send_followup=True)
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
         return
 
 

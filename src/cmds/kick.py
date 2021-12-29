@@ -2,6 +2,8 @@ from discord.errors import Forbidden, HTTPException
 from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
+
+from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID
 from src.cmds._proxy_helpers import Reply, get_user_id
@@ -28,10 +30,12 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, reason):
     try:
         await member.send(
             f'You have been kicked from {bot.guilds[0].name} for the following reason:\n>>> {reason}\n')
-    except Forbidden:
+    except Forbidden as ex:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to kick them...', send_followup=False)
-    except HTTPException:
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+    except HTTPException as ex:
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.", send_followup=False)
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
         return
 
     await bot.guilds[0].kick(user=member, reason=reason)

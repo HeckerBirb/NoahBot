@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime
 from discord.ext import tasks
 from mysql.connector import connect
 from src.cmds.unban import unban_user
@@ -11,12 +11,18 @@ from src.log4noah import STDOUT_LOG
 
 @tasks.loop(count=1)
 async def all_tasks():
-    STDOUT_LOG.debug('Scheduling all automated tasks...')
-    await auto_unban()
+    STDOUT_LOG.debug('Gathering scheduled tasks...')
+    scheduled_tasks = []
+    scheduled_tasks = scheduled_tasks + auto_unban()
+    scheduled_tasks = scheduled_tasks + auto_unmute()
+    STDOUT_LOG.debug('Gathering of scheduled tasks complete.')
+
+    STDOUT_LOG.debug(f'Scheduling {len(scheduled_tasks)} tasks...')
+    await asyncio.gather(*scheduled_tasks)
     STDOUT_LOG.debug('Scheduling completed.')
 
 
-async def auto_unban():
+def auto_unban():
     unban_tasks = []
     now = datetime.now()
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
@@ -36,10 +42,10 @@ async def auto_unban():
                 unban_tasks.append(schedule(unban_user(row[0]), run_at=run_at))
                 STDOUT_LOG.info(f'Scheduled unban task for user_id {row[0]} at {str(run_at)}.')
 
-    await asyncio.gather(*unban_tasks)
+    return unban_tasks
 
 
-async def auto_unmute():
+def auto_unmute():
     unmute_tasks = []
     now = datetime.now()
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
@@ -59,7 +65,7 @@ async def auto_unmute():
                 unmute_tasks.append(schedule(unmute_user(row[0]), run_at=run_at))
                 STDOUT_LOG.info(f'Scheduled unmute task for user_id {row[0]} at {str(run_at)}.')
 
-    await asyncio.gather(*unmute_tasks)
+    return unmute_tasks
 
 
 def setup(_):

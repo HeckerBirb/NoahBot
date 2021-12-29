@@ -2,6 +2,8 @@ import discord
 from discord.errors import Forbidden, HTTPException
 from discord.ext import commands
 from discord.commands.context import ApplicationContext
+
+from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 from src.conf import GUILD_ID
 from src.cmds._proxy_helpers import Reply
@@ -52,10 +54,12 @@ async def perform_action(ctx: ApplicationContext, reply):
         await member.send(embed=embed_step1)
         await member.send(embed=embed_step2)
         await member.send(embed=embed_step3)
-    except Forbidden:
+    except Forbidden as ex:
         await reply(ctx, 'Whoops! I cannot DM you after all due to your privacy settings. Please allow DMs from other server members and try again.', send_followup=True)
-    except HTTPException:
+        STDOUT_LOG.error(f'Exception during verify call: {ex}')
+    except HTTPException as ex:
         await reply(ctx, 'An unexpected error happened (HTTP 400, bad request). Please contact an Administrator.', send_followup=True)
+        STDOUT_LOG.error(f'Exception during verify call: {ex}')
         return
 
 

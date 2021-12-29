@@ -146,10 +146,12 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
             await member.send(
                 f'You have been banned from {bot.guilds[0].name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
                 f'Following is the reason given:\n>>> {reason}\n')
-    except Forbidden:
+    except Forbidden as ex:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...', send_followup=send_followup)
-    except HTTPException:
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+    except HTTPException as ex:
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.", send_followup=send_followup)
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
         return
 
     await bot.guilds[0].ban(PretendSnowflake(user_id), reason=reason)

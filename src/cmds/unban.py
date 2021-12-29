@@ -34,7 +34,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
 
 async def unban_user(user_id):
     guild = bot.guilds[0]
-    user = bot.get_user(user_id)
+    user = await guild.fetch_member(user_id)
 
     if user is None:
         STDOUT_LOG.info(f'User ID {user_id} not found on Discord. Consider removing entry from DB...')
@@ -43,11 +43,11 @@ async def unban_user(user_id):
     try:
         await guild.unban(user)
         STDOUT_LOG.info(f'Unbanned user {user.mention} ({user_id}).')
-    except Forbidden:
-        STDOUT_LOG.error(f'Permission denied when trying to unban user with ID {user_id}.')
+    except Forbidden as ex:
+        STDOUT_LOG.error(f'Permission denied when trying to unban user with ID {user_id}: {ex}')
         return None
-    except HTTPException:
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}.')
+    except HTTPException as ex:
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
         return None
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as co:
         with co.cursor() as cu:
