@@ -24,7 +24,8 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
     await unmute_user(user_id)
 
     member = await force_get_member(bot.guilds[0], user_id)
-    await reply(ctx, f'{member.mention} has been unmuted.', send_followup=False)
+    if member is not None:
+        await reply(ctx, f'{member.mention} has been unmuted.', send_followup=False)
 
 
 async def unmute_user(user_id):
@@ -32,8 +33,10 @@ async def unmute_user(user_id):
     member = await force_get_member(guild, user_id)
     role = guild.get_role(RoleIDs.MUTED)
 
-    STDOUT_LOG.info(f'Unmuting {member}.')
-    await member.remove_roles(role)
+    if member is not None:
+        # No longer on the server - cleanup, but don't attempt to remove a role
+        STDOUT_LOG.info(f'Unmuting {member}.')
+        await member.remove_roles(role)
     remove_record('DELETE FROM mute_record where user_id = %s', (user_id,))
 
 
