@@ -23,7 +23,7 @@ async def action_slash(ctx: ApplicationContext):
 
 
 @commands.command(name=name(), help=description())
-@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS + PrefixPerms.HTB_STAFF))
+@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS + PrefixPerms.ALL_HTB_STAFF))
 async def action_prefix(ctx: ApplicationContext):
     await perform_action(ctx, Reply.prefix)
 

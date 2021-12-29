@@ -37,11 +37,16 @@ def description():
 
 
 # TODO: should have an auto-unban functionality
-async def perform_action(ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False):
+async def perform_action(ctx, reply, user_id, duration, reason):
     await perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False)
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
+@bot.slash_command(
+    guild_ids=[GUILD_ID],
+    permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR, SlashPerms.HTB_SUPPORT],
+    name=name(),
+    description=description()
+)
 async def action_slash(
         ctx: ApplicationContext,
         user_id: Option(str, 'User ID or @mention name.'),
@@ -52,7 +57,7 @@ async def action_slash(
 
 
 @commands.command(name=name(), help=description())
-@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
+@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS + PrefixPerms.ALL_HTB_SUPPORT))
 async def action_prefix(ctx: ApplicationContext, user_id: str, duration: str, *reason: str):
     await perform_action(ctx, Reply.prefix, user_id, duration, ' '.join(reason))
 

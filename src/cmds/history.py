@@ -180,7 +180,7 @@ async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or
 
 
 @commands.command(name=name(), help=description())
-@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS + PrefixPerms.HTB_STAFF))
+@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS + PrefixPerms.ALL_HTB_STAFF))
 async def action_prefix(ctx: ApplicationContext, user_id):
     await perform_action(ctx, Reply.prefix, user_id)
 

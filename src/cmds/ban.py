@@ -14,7 +14,7 @@ def description():
     return 'Ban a user from the server permanently.'
 
 
-async def perform_action(ctx, reply, user_id, reason, banned_by_bot=False):
+async def perform_action(ctx, reply, user_id, reason):
     await perform_temp_ban(bot, ctx, reply, user_id, '500w', reason, needs_approval=False, banned_by_bot=False)
 
 
