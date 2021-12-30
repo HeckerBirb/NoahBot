@@ -114,6 +114,7 @@ def remove_record(delete_query: str, id_to_remove: Tuple[Any, ...]) -> None:
 
 
 async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False, send_followup=False):
+    guild = bot.guilds[0]
     user_id = get_user_id(user_id)
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.', send_followup=send_followup)
@@ -122,7 +123,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
     if len(reason) == 0:
         reason = 'No reason given...'
 
-    member = bot.guilds[0].get_member(user_id)
+    member = guild.get_member(user_id)
     if member is not None and member_is_staff(member):
         await reply(ctx, 'You cannot ban another staff member.', send_followup=send_followup)
         return
@@ -156,7 +157,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
     try:
         if member is not None:
             await member.send(
-                f'You have been banned from {bot.guilds[0].name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
+                f'You have been banned from {guild.name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
                 f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden as ex:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...', send_followup=send_followup)
@@ -166,7 +167,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
         STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
         return
 
-    await bot.guilds[0].ban(PretendSnowflake(user_id), reason=reason)
+    await guild.ban(PretendSnowflake(user_id), reason=reason)
 
     if not needs_approval:
         if member is not None:
@@ -189,4 +190,74 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
         embed.add_field(name='Approve duration:', value=f'++approve {ban_id}', inline=True)
         embed.add_field(name='Change duration:', value=f'++dispute {ban_id} <duration>', inline=True)
         embed.add_field(name='Deny and unban:', value=f'++deny {ban_id}', inline=True)
-        await bot.guilds[0].get_channel(ChannelIDs.SR_MODERATOR).send(embed=embed)
+        await guild.get_channel(ChannelIDs.SR_MODERATOR).send(embed=embed)
+
+
+async def perform_unban_user(guild, user_id):
+    user = await force_get_member(guild, user_id)
+
+    if user is None:
+        STDOUT_LOG.info(f'User ID {user_id} not found on Discord. Consider removing entry from DB...')
+        return
+
+    try:
+        await guild.unban(user)
+        STDOUT_LOG.info(f'Unbanned user {user.mention} ({user_id}).')
+    except Forbidden as ex:
+        STDOUT_LOG.error(f'Permission denied when trying to unban user with ID {user_id}: {ex}')
+        return None
+    except HTTPException as ex:
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        return None
+    with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as co:
+        with co.cursor() as cu:
+            cu.execute("""UPDATE ban_record SET unbanned = 1 WHERE user_id = %s""", (user_id,))
+            co.commit()
+            STDOUT_LOG.debug(f'Set unbanned=1 for user_id={user_id}')
+    return user
+
+
+async def perform_unmute_user(guild, user_id):
+    member = await force_get_member(guild, user_id)
+    role = guild.get_role(RoleIDs.MUTED)
+
+    if member is not None:
+        # No longer on the server - cleanup, but don't attempt to remove a role
+        STDOUT_LOG.info(f'Unmuting {member}.')
+        await member.remove_roles(role)
+    remove_record('DELETE FROM mute_record where user_id = %s', (user_id,))
+
+
+async def perform_infraction_record(ctx, reply, guild, user_id, weight, reason):
+    user_id = get_user_id(user_id)
+    if user_id is None:
+        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
+        return
+    member = guild.get_member(user_id)
+
+    if len(reason) == 0:
+        await reply(ctx, 'The reason is empty. Try again...', send_followup=False)
+        return
+
+    moderator = ctx.author.id
+    with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER,
+                 password=MYSQL_PASS) as connection:
+        with connection.cursor() as cursor:
+            query_str = """INSERT INTO infraction_record (user_id, reason, weight, moderator) VALUES (%s, %s, %s, %s)"""
+            cursor.execute(query_str, (user_id, reason, weight, moderator))
+            connection.commit()
+
+    await reply(ctx, f'{member.mention} has been warned with a strike weight of {weight}.', send_followup=False)
+
+    try:
+        await member.send(
+            f'You have been warned on {guild.name} with a strike value of {weight}. After a total value of 3, permanent exclusion from the server may be enforced.\n'
+            f'Following is the reason given:\n>>> {reason}\n')
+    except Forbidden as ex:
+        await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...',
+                    send_followup=True)
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+    except HTTPException as ex:
+        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.",
+                    send_followup=True)
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')

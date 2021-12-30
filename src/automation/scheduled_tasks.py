@@ -2,11 +2,12 @@ import asyncio
 from datetime import datetime
 from discord.ext import tasks
 from mysql.connector import connect
-from src.cmds.unban import unban_user
-from src.cmds.unmute import unmute_user
+
+from src.cmds._proxy_helpers import perform_unban_user, perform_unmute_user
 from src.conf import MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.lib.schedule import schedule
 from src.log4noah import STDOUT_LOG
+from src.noahbot import bot
 
 
 @tasks.loop(count=1)
@@ -39,7 +40,7 @@ def auto_unban():
                     STDOUT_LOG.info(f'Skipping scheduled unban for user_id {row[0]}: is over one years into the future ({str(run_at)})')
                     continue
 
-                unban_tasks.append(schedule(unban_user(row[0]), run_at=run_at))
+                unban_tasks.append(schedule(perform_unban_user(bot.guilds[0], row[0]), run_at=run_at))
                 STDOUT_LOG.info(f'Scheduled unban task for user_id {row[0]} at {str(run_at)}.')
 
     return unban_tasks
@@ -62,7 +63,7 @@ def auto_unmute():
                     STDOUT_LOG.info(f'Skipping scheduled unmute for user_id {row[0]}: is over one years into the future ({str(run_at)})')
                     continue
 
-                unmute_tasks.append(schedule(unmute_user(row[0]), run_at=run_at))
+                unmute_tasks.append(schedule(perform_unmute_user(bot.guilds[0], row[0]), run_at=run_at))
                 STDOUT_LOG.info(f'Scheduled unmute task for user_id {row[0]} at {str(run_at)}.')
 
     return unmute_tasks

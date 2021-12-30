@@ -3,10 +3,9 @@ from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
-from src.cmds import unban
 from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
-from src.cmds._proxy_helpers import Reply
+from src.cmds._proxy_helpers import Reply, perform_unban_user
 
 
 def name():
@@ -30,7 +29,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id):
             if user_id is None:
                 await reply(ctx, 'Cannot find record of ban request. Has this user already been unbanned?', send_followup=False)
                 return
-            await unban.perform_action(ctx, reply, user_id)
+            await perform_unban_user(bot.guilds[0], user_id)
             query_str = 'DELETE FROM ban_record WHERE id = %s'
             cursor.execute(query_str, (ban_id,))
             connection.commit()

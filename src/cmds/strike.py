@@ -1,13 +1,10 @@
-from discord.errors import Forbidden, HTTPException
 from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
-from mysql.connector import connect
 
-from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
-from src.cmds._proxy_helpers import Reply, get_user_id
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID
+from src.cmds._proxy_helpers import Reply, perform_infraction_record
 
 """
 CREATE TABLE IF NOT EXISTS `infraction_record` (
@@ -38,36 +35,7 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply, user_id, weight, reason):
-    user_id = get_user_id(user_id)
-    if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
-        return
-    member = bot.guilds[0].get_member(user_id)
-
-    if len(reason) == 0:
-        await reply(ctx, 'The reason is empty. Try again...', send_followup=False)
-        return
-
-    moderator = ctx.author.id
-    with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
-        with connection.cursor() as cursor:
-            query_str = """INSERT INTO infraction_record (user_id, reason, weight, moderator) VALUES (%s, %s, %s, %s)"""
-            cursor.execute(query_str, (user_id, reason, weight, moderator))
-            connection.commit()
-
-    await reply(ctx, f'{member.mention} has been warned with a strike weight of {weight}.', send_followup=False)
-
-    try:
-        await member.send(
-            f'You have been warned on {bot.guilds[0].name} with a strike value of {weight}. After a total value of 3, permanent exclusion from the server may be enforced.\n'
-            f'Following is the reason given:\n>>> {reason}\n')
-    except Forbidden:
-        await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...', send_followup=True)
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
-    except HTTPException as ex:
-        await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.", send_followup=True)
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
-        return
+    await perform_infraction_record(ctx, reply, bot.guilds[0], user_id, weight, reason)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

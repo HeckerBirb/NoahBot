@@ -2,10 +2,9 @@ from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 
-from src.cmds import strike
 from src.noahbot import bot
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID
-from src.cmds._proxy_helpers import Reply
+from src.cmds._proxy_helpers import Reply, perform_infraction_record
 
 
 def name():
@@ -17,7 +16,7 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply, user_id, reason):
-    await strike.perform_action(ctx, reply, user_id, 0, reason)
+    await perform_infraction_record(ctx, reply, bot.guilds[0], user_id, 0, reason)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
