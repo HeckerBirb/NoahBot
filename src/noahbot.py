@@ -1,9 +1,9 @@
 import os
+from os import listdir
+from os.path import dirname
 from pathlib import Path
 
 import discord
-from os import listdir
-from os.path import dirname
 from discord.ext import commands
 
 from src.log4noah import STDOUT_LOG

@@ -3,12 +3,11 @@ import re
 import time
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Union, Optional, Tuple, Any
 
 import discord
 from discord import Forbidden, HTTPException, NotFound
 from discord.commands.context import ApplicationContext
-from typing import Union, Optional, Tuple, Any
-
 from mysql.connector import connect
 
 from src.conf import RoleIDs, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, HTB_URL, ChannelIDs

@@ -1,15 +1,16 @@
 import calendar
 import time
 
-from discord.errors import Forbidden
-from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
+from discord.errors import Forbidden
+from discord.ext import commands
 from mysql.connector import connect
 
-from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, RoleIDs
 from src.cmds._proxy_helpers import Reply, get_user_id, member_is_staff, parse_duration_str
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, \
+    RoleIDs
+from src.noahbot import bot
 
 """
 CREATE TABLE IF NOT EXISTS `mute_record` (

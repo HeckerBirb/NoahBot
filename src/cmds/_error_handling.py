@@ -1,6 +1,6 @@
 from discord.ext import commands
-from discord.ext.commands.errors import MissingRequiredArgument, MissingPermissions, UserInputError, CommandNotFound, NoPrivateMessage, MissingAnyRole
-
+from discord.ext.commands.errors import MissingRequiredArgument, MissingPermissions, UserInputError, CommandNotFound, \
+    NoPrivateMessage, MissingAnyRole
 
 # Inspired by https://stackoverflow.com/a/23665658
 from src.log4noah import STDOUT_LOG

@@ -1,22 +1,22 @@
-import asyncio
+from dataclasses import dataclass
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Union, Optional
 
 import aiohttp
 import discord
+from discord.commands import Option
+from discord.commands.context import ApplicationContext
 from discord.errors import Forbidden
 from discord.ext import commands
-from discord.commands.context import ApplicationContext
-from discord.commands import Option
 from mysql.connector import connect
 
 from src.cmds._error_handling import interruptable
-from src.log4noah import STDOUT_LOG
-from src.noahbot import bot
+from src.cmds._proxy_helpers import Reply, perform_temp_ban
 from src.conf import GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
     HTB_API_SECRET, API_URL, RoleIDs
-from src.cmds._proxy_helpers import Reply, perform_temp_ban
+from src.log4noah import STDOUT_LOG
+from src.noahbot import bot
 
 """
 CREATE TABLE IF NOT EXISTS `htb_discord_link` (

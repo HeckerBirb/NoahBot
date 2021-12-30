@@ -1,10 +1,10 @@
-from discord.ext import commands
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
+from discord.ext import commands
 
-from src.noahbot import bot
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID
 from src.cmds._proxy_helpers import Reply, perform_infraction_record
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID
+from src.noahbot import bot
 
 """
 CREATE TABLE IF NOT EXISTS `infraction_record` (
