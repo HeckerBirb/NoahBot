@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Union, Optional
 
@@ -77,7 +76,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             if r.status == 200:
                 htb_user_details = await r.json()
             else:
-                # TODO: figure out HTTP error code if invalid id and handle default case + that case
+                STDOUT_LOG.error(f'Non-OK HTTP status code returned from identifier lookup: {r.status}. Body: {r.content}')
                 embed = discord.Embed(title="Error: Invalid account identifier.", color=0xFF0000)
                 await reply(ctx, embed=embed, ephemeral=True, send_followup=True)
                 return
@@ -176,8 +175,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
     try:
         await member.edit(nick=htb_user_details['user_name'])
     except Forbidden as e:
-        # TODO Fix this
-        raise e
+        STDOUT_LOG.error(f'Exception whe trying to edit the nick-name of the user: {e}')
 
     await reply(ctx, f'Your Discord user has been successfully identified as HTB user {json_htb_user_id}.', ephemeral=True, send_followup=True)
 
@@ -190,8 +188,7 @@ async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:
                 ban_details = await r.json()
                 return ban_details
             else:
-                # TODO: Error log
-                STDOUT_LOG.error(f"Could not fetch ban details for uid {uid}.")
+                STDOUT_LOG.error(f"Could not fetch ban details for uid {uid}: non-OK status code returned ({r.status}). Body: {r.content}")
                 return None
 
 

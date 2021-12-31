@@ -36,7 +36,6 @@ def description():
     return 'Ban a user from the server temporarily.'
 
 
-# TODO: should have an auto-unban functionality
 async def perform_action(ctx, reply, user_id, duration, reason):
     await perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False)
 

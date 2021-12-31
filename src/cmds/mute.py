@@ -41,7 +41,6 @@ def description():
     return 'Mute a person (adds the Muted role to person).'
 
 
-# TODO: should have an auto-unmute functionality
 async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reason):
     user_id = get_user_id(user_id)
     if user_id is None:

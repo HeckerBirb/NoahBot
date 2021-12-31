@@ -21,8 +21,6 @@ def description():
 
 
 async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
-    # TODO: should also set "approved" to 1
-    # TODO: when calculating the new "unban time", use `timestamp` from DB as baseline
     try:
         ban_id = int(ban_id)
     except ValueError:
