@@ -1,5 +1,6 @@
 import calendar
 import time
+from datetime import datetime
 
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
@@ -7,9 +8,10 @@ from discord.errors import Forbidden
 from discord.ext import commands
 from mysql.connector import connect
 
-from src.cmds._proxy_helpers import Reply, get_user_id, member_is_staff, parse_duration_str
+from src.cmds._proxy_helpers import Reply, get_user_id, member_is_staff, parse_duration_str, perform_unmute_user
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, \
     RoleIDs
+from src.lib.schedule import schedule
 from src.noahbot import bot
 
 """
@@ -57,7 +59,6 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
         return
 
     epoch_time = calendar.timegm(time.gmtime())
-
     if dur - epoch_time <= 0:
         await reply(ctx, 'Invalid duration: cannot be in the past.', delete_after=15, send_followup=False)
         return
@@ -78,6 +79,9 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
         await member.send(f"You have been muted for {duration}. Reason:\n>>> {reason}")
     except Forbidden:
         await reply(ctx, f'Cannot DM {member.mention} due to their privacy settings.', send_followup=True)
+
+    run_at = datetime.fromtimestamp(dur)
+    bot.loop.create_task(schedule(perform_unmute_user(bot.guilds[0], user_id), run_at=run_at))
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

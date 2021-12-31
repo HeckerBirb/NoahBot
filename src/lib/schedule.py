@@ -1,10 +1,11 @@
 import asyncio
 from datetime import datetime
+from typing import Coroutine
 
 from src.log4noah import STDOUT_LOG
 
 
-async def schedule(task, run_at: datetime):
+async def schedule(task: Coroutine, run_at: datetime):
     """
     Schedule an "Awaitable" for future execution, i.e. an async function.
 
@@ -17,7 +18,7 @@ async def schedule(task, run_at: datetime):
         seconds = 0
     else:
         seconds = int((run_at - now).total_seconds())
-        STDOUT_LOG.debug(f'Task will run after a {seconds} seconds long sleep.', target_exec=run_at, current_time=now)
+        STDOUT_LOG.debug(f'Task {task.__name__} will run after {seconds} seconds.', target_exec=run_at, current_time=now)
 
     await asyncio.sleep(seconds)
     return await task

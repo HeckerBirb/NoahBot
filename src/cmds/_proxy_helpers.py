@@ -11,6 +11,7 @@ from discord.commands.context import ApplicationContext
 from mysql.connector import connect
 
 from src.conf import RoleIDs, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, HTB_URL, ChannelIDs
+from src.lib.schedule import schedule
 from src.log4noah import STDOUT_LOG
 
 
@@ -160,10 +161,10 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
                 f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden as ex:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...', send_followup=send_followup)
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        STDOUT_LOG.warn(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
     except HTTPException as ex:
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.", send_followup=send_followup)
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        STDOUT_LOG.warn(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
         return
 
     await guild.ban(PretendSnowflake(user_id), reason=reason)
@@ -172,7 +173,10 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
         if member is not None:
             await reply(ctx, f'{member.display_name} has been banned permanently.', send_followup=send_followup)
         else:
-            await reply(ctx, f'{user_id} has been banned permanently.', send_followup=send_followup)
+            await reply(ctx, f'User {user_id} has been banned permanently.', send_followup=send_followup)
+        STDOUT_LOG.info(f'User {user_id} has been banned permanently.')
+        run_at = datetime.fromtimestamp(dur)
+        bot.loop.create_task(schedule(perform_unban_user(bot.guilds[0], user_id), run_at=run_at))
         return
 
     else:
@@ -206,7 +210,7 @@ async def perform_unban_user(guild, user_id):
         STDOUT_LOG.error(f'Permission denied when trying to unban user with ID {user_id}: {ex}')
         return None
     except HTTPException as ex:
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        STDOUT_LOG.warn(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
         return None
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as co:
         with co.cursor() as cu:
@@ -255,8 +259,8 @@ async def perform_infraction_record(ctx, reply, guild, user_id, weight, reason):
     except Forbidden as ex:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...',
                     send_followup=True)
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        STDOUT_LOG.warn(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
     except HTTPException as ex:
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.",
                     send_followup=True)
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        STDOUT_LOG.warn(f'HTTPException when trying to unban user with ID {user_id}: {ex}')

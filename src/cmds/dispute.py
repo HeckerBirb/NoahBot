@@ -6,8 +6,9 @@ from discord.commands.context import ApplicationContext
 from discord.ext import commands
 from mysql.connector import connect
 
-from src.cmds._proxy_helpers import Reply, parse_duration_str
+from src.cmds._proxy_helpers import Reply, parse_duration_str, perform_unban_user
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
+from src.lib.schedule import schedule
 from src.noahbot import bot
 
 
@@ -34,17 +35,21 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
 
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
-            unban_at: Optional[datetime] = None
-            query_str = """SELECT timestamp FROM ban_record WHERE id = %s"""
+            baseline_ts: Optional[datetime] = None
+            query_str = """SELECT user_id, timestamp FROM ban_record WHERE id = %s"""
             cursor.execute(query_str, (ban_id, ))
             for row in cursor.fetchall():
-                unban_at = row[0]
+                user_id = row[0]
+                baseline_ts = row[1]
 
-            new_unban_time = parse_duration_str(duration, int(unban_at.timestamp()))
+            new_unban_time = parse_duration_str(duration, int(baseline_ts.timestamp()))
 
             query_str = """UPDATE ban_record SET unban_time = %s, approved = 1 WHERE id = %s"""
             cursor.execute(query_str, (new_unban_time, ban_id))
             connection.commit()
+
+            run_at = datetime.fromtimestamp(new_unban_time)
+        bot.loop.create_task(schedule(perform_unban_user(bot.guilds[0], user_id), run_at=run_at))
 
     new_unban_at = datetime.fromtimestamp(new_unban_time).strftime('%B %d, %Y')
     await reply(ctx, f'Ban duration updated and approved. The member will be unbanned on {new_unban_at} UTC.', send_followup=False)

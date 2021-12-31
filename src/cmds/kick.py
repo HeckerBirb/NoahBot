@@ -32,10 +32,10 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, reason):
             f'You have been kicked from {bot.guilds[0].name} for the following reason:\n>>> {reason}\n')
     except Forbidden as ex:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to kick them...', send_followup=False)
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        STDOUT_LOG.warn(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
     except HTTPException as ex:
         await reply(ctx, "Here's a 400 Bad Request for you. Just like when you tried to ask me out, last week.", send_followup=False)
-        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        STDOUT_LOG.warn(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
         return
 
     await bot.guilds[0].kick(user=member, reason=reason)
