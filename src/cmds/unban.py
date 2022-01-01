@@ -29,13 +29,18 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
     await reply(ctx, f'Member {user.name} ({user.id}) has been unbanned.', send_followup=False)
 
 
-@bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
+@bot.slash_command(
+    guild_ids=[GUILD_ID],
+    permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR, SlashPerms.HTB_SUPPORT],
+    name=name(),
+    description=description()
+)
 async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):
     await perform_action(ctx, Reply.slash, user_id)
 
 
 @commands.command(name=name(), help=description())
-@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_SR_MODERATORS))
+@commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS + PrefixPerms.ALL_HTB_SUPPORT))
 async def action_prefix(ctx: ApplicationContext, user_id):
     await perform_action(ctx, Reply.prefix, user_id)
 
