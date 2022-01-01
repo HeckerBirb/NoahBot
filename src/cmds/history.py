@@ -90,8 +90,9 @@ Creation Date: **{creation_date}**
     if strike_value >= 3:
         summary_text += f"\n**Review needed** by Sr. Mod or Admin: **{strike_value}/3 strikes**."
 
-    embed = Embed(title=f'Moderation history of {member.name}', description=f"{summary_text}", color=0xb98700)
-    embed.set_thumbnail(url=member.avatar)
+    embed = Embed(title=f'Moderation History', description=f"{summary_text}", color=0xb98700)
+    if member.avatar is not None:
+        embed.set_thumbnail(url=member.avatar)
     _embed_titles_of(embed, entry_type='infractions', history_entries=infractions, today_date=today_date, entry_handler=produce_inf_text)
     _embed_titles_of(embed, entry_type='notes', history_entries=notes, today_date=today_date, entry_handler=produce_note_text)
 

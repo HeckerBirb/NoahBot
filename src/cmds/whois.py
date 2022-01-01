@@ -36,11 +36,14 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
         await reply(ctx, 'I cannot find that ID in our records.', send_followup=False)
         return
 
-    member = bot.guilds[0].get_member(int(identification['discord_id']))
+    member = bot.guilds[0].fetch_user(int(identification['discord_id']))
 
     embed = discord.Embed(title=" ", color=0xb98700)
-    embed.set_author(name=member.name, icon_url=member.avatar)
-    embed.set_thumbnail(url=member.avatar)
+    if member.avatar is not None:
+        embed.set_author(name=member, icon_url=member.avatar)
+        embed.set_thumbnail(url=member.avatar)
+    else:
+        embed.set_author(name=member)
     embed.add_field(name="Username:", value=member, inline=True)
     embed.add_field(name="Discord ID:", value=member.id, inline=True)
     embed.add_field(name="HTB Profile:", value=f"<https://app.hackthebox.com/users/{identification['htb_id']}>", inline=False)
