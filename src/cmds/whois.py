@@ -36,7 +36,7 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
         await reply(ctx, 'I cannot find that ID in our records.', send_followup=False)
         return
 
-    member = bot.guilds[0].fetch_user(int(identification['discord_id']))
+    member = bot.fetch_user(int(identification['discord_id']))
 
     embed = discord.Embed(title=" ", color=0xb98700)
     if member.avatar is not None:
