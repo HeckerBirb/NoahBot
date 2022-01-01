@@ -90,7 +90,8 @@ Creation Date: **{creation_date}**
     if strike_value >= 3:
         summary_text += f"\n**Review needed** by Sr. Mod or Admin: **{strike_value}/3 strikes**."
 
-    embed = Embed(title="Summary", description=f"{summary_text}", color=0x115599)
+    embed = Embed(title=f'Moderation history of {member.name}', description=f"{summary_text}", color=0xb98700)
+    embed.set_thumbnail(url=member.avatar)
     _embed_titles_of(embed, entry_type='infractions', history_entries=infractions, today_date=today_date, entry_handler=produce_inf_text)
     _embed_titles_of(embed, entry_type='notes', history_entries=notes, today_date=today_date, entry_handler=produce_note_text)
 
@@ -146,11 +147,11 @@ def _embed_titles_of(embed, entry_type: str, history_entries, today_date, entry_
             entry_records[current_row].append(entry_text)
 
     if len(entry_records[0]) == 0:
-        embed.add_field(name=f"{entry_type.capitalize()}", value=f'No {entry_type.lower()}.', inline=False)
+        embed.add_field(name=f"{entry_type.capitalize()}:", value=f'No {entry_type.lower()}.', inline=False)
     else:
         for i in range(0, len(entry_records)):
             embed.add_field(
-                name=f"{entry_type.capitalize()} ({i + 1}/{len(entry_records)})",
+                name=f"{entry_type.capitalize()} ({i + 1}/{len(entry_records)}):",
                 value='\n\n'.join(entry_records[i]),
                 inline=False
             )

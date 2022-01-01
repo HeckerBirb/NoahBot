@@ -1,3 +1,4 @@
+import discord
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from discord.ext import commands
@@ -35,11 +36,16 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
         await reply(ctx, 'I cannot find that ID in our records.', send_followup=False)
         return
 
-    mention = bot.guilds[0].get_member(int(identification['discord_id']))
-    msg = f"""**{mention}**
-Discord ID: {identification['discord_id']}
-HTB profile: <https://app.hackthebox.com/users/{identification['htb_id']}>"""
-    await reply(ctx, msg, send_followup=False)
+    member = bot.guilds[0].get_member(int(identification['discord_id']))
+
+    embed = discord.Embed(title=" ", color=0xb98700)
+    embed.set_author(name=member.name, icon_url=member.avatar)
+    embed.set_thumbnail(url=member.avatar)
+    embed.add_field(name="Username:", value=member, inline=True)
+    embed.add_field(name="Discord ID:", value=member.id, inline=True)
+    embed.add_field(name="HTB Profile:", value=identification['htb_id'], inline=False)
+    embed.set_footer(text=f"More info: ++history {member.id}")
+    await reply(ctx, embed=embed, send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR, SlashPerms.HTB_STAFF], name=name(), description=description())
