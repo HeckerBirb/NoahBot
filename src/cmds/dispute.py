@@ -27,6 +27,10 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
         await reply(ctx, 'Ban ID must be a number.')
         return
 
+    if duration.isnumeric():
+        await reply(ctx, 'Duration requires units (e.g. 666w, 14d).')
+        return
+
     if parse_duration_str(duration) is None:
         await reply(ctx, 'Could not parse duration. Malformed.')
         return

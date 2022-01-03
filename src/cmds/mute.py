@@ -52,6 +52,10 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
         await reply(ctx, 'You cannot mute another staff member.', send_followup=False)
         return
 
+    if duration.isnumeric():
+        await reply(ctx, 'Duration requires units (e.g. 666w, 14d).', delete_after=15)
+        return
+
     dur = parse_duration_str(duration)
     if dur is None:
         await reply(ctx, 'Invalid duration: could not parse.', delete_after=15, send_followup=False)
