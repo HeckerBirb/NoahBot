@@ -128,6 +128,10 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
         await reply(ctx, 'You cannot ban another staff member.', send_followup=send_followup)
         return
 
+    if duration.isnumeric():
+        await reply(ctx, 'Duration requires units (e.g. 666w, 14d).', delete_after=15)
+        return
+
     dur = parse_duration_str(duration)
     if dur is None:
         await reply(ctx, 'Invalid duration: could not parse.', delete_after=15)
@@ -138,7 +142,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
     if dur - epoch_time <= 0:
         await reply(ctx, 'Invalid duration: cannot be in the past.', delete_after=15)
         return
-
+    end_date: str = datetime.utcfromtimestamp(dur).strftime('%Y-%m-%d %H:%M:%S')
     ban_id = -1
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
@@ -157,7 +161,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
     try:
         if member is not None:
             await member.send(
-                f'You have been banned from {guild.name} for a duration of {duration}. To appeal the ban, please reach out to an Administrator.\n'
+                f'You have been banned from {guild.name} until {end_date} (UTC). To appeal the ban, please reach out to an Administrator.\n'
                 f'Following is the reason given:\n>>> {reason}\n')
     except Forbidden as ex:
         await reply(ctx, 'Could not DM member due to privacy settings, however will still attempt to ban them...', send_followup=send_followup)
@@ -181,13 +185,13 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
 
     else:
         if member is not None:
-            await reply(ctx, f'{member.display_name} has been banned for a duration of {duration}.', send_followup=send_followup)
+            await reply(ctx, f'{member.display_name} has been banned until {end_date} (UTC).', send_followup=send_followup)
         else:
-            await reply(ctx, f'{user_id} has been banned for a duration of {duration}.', send_followup=send_followup)
+            await reply(ctx, f'{user_id} has been banned until {end_date} (UTC).', send_followup=send_followup)
         member_name = member.name if member is not None else user_id
         embed = discord.Embed(
             title=f"Ban request #{ban_id}",
-            description=f'{ctx.author.name} would like to ban {member_name} for {duration}. Reason: {reason}'
+            description=f'{ctx.author.name} would like to ban {member_name} until {end_date} (UTC). Reason: {reason}'
         )
         embed.set_thumbnail(url=f'{HTB_URL}/images/logo600.png')
         embed.add_field(name='Approve duration:', value=f'++approve {ban_id}', inline=True)
