@@ -74,10 +74,10 @@ def parse_duration_str(duration: str, baseline_ts: int = None) -> Optional[int]:
     """
     dur = re.compile(r'(-?(?:\d+\.?\d*|\d*\.?\d+)(?:e[-+]?\d+)?)\s*([a-z]*)', re.IGNORECASE)
     units = {'s': 1}
-    units['m'] = units['s'] * 60
-    units['h'] = units['hr'] = units['m'] * 60
-    units['d'] = units['day'] = units['h'] * 24
-    units['wk'] = units['w'] = units['d'] * 7
+    units['m'] = units['min'] = units['mins'] = units['s'] * 60
+    units['h'] = units['hr'] = units['hour'] = units['hours'] = units['m'] * 60
+    units['d'] = units['day'] = units['days'] = units['h'] * 24
+    units['wk'] = units['w'] = units['week'] = units['weeks'] = units['d'] * 7
     units['month'] = units['months'] = units['mo'] = units['d'] * 30
     units['y'] = units['yr'] = units['d'] * 365
     sum_seconds = 0
