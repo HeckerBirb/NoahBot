@@ -31,7 +31,8 @@ async def perform_action(ctx: ApplicationContext, reply, user_id: str):
 
     member = bot.guilds[0].get_member(int(user_id))
     if member is None:
-        member = await bot.fetch_user(user_id)
+        reply(ctx, f'Cannot find the member on the server. This may be due to caching (try again in a minute).', send_followup=False)
+        return
 
     new_name = random.choice(baby_names) + ' McVerify'
 
