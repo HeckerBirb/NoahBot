@@ -63,7 +63,7 @@ async def force_get_member(guild: discord.Guild, user_id: int) -> Optional[disco
         STDOUT_LOG.debug(f'Got member "{member.mention}"')
         return member
     except NotFound as ex:
-        STDOUT_LOG.info(f'Could not find member with id {user_id} on the server. Exception: {ex}')
+        STDOUT_LOG.debug(f'Could not find member with id {user_id} on the server. Exception: {ex}')
         return None
 
 
@@ -204,7 +204,8 @@ async def perform_unban_user(guild, user_id):
     user = await force_get_member(guild, user_id)
 
     if user is None:
-        STDOUT_LOG.info(f'User ID {user_id} not found on Discord. Consider removing entry from DB...')
+        STDOUT_LOG.info(f'User ID {user_id} not found on Discord. Deleting from DB...')
+        remove_record('DELETE FROM ban_record WHERE user_id = %s', (user_id, ))
         return
 
     try:
@@ -232,7 +233,7 @@ async def perform_unmute_user(guild, user_id):
         # No longer on the server - cleanup, but don't attempt to remove a role
         STDOUT_LOG.info(f'Unmuting {member}.')
         await member.remove_roles(role)
-    remove_record('DELETE FROM mute_record where user_id = %s', (user_id,))
+    remove_record('DELETE FROM mute_record WHERE user_id = %s', (user_id,))
 
 
 async def perform_infraction_record(ctx, reply, guild, user_id, weight, reason):
