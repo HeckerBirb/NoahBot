@@ -63,7 +63,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
     if infractions is not None:
         for inf in infractions:
             diff = inf.date - today_date
-            if diff.days >= -14:
+            if diff.days >= -90:
                 active_infractions = active_infractions + 1
             else:
                 expired_infractions = expired_infractions + 1
