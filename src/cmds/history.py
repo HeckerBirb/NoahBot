@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime, date
 from typing import Union
 
-from discord import Embed
+from discord import Embed, NotFound
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from discord.ext import commands
@@ -49,7 +49,11 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
 
     member = bot.guilds[0].get_member(int(user_id))
     if member is None:
-        member = await bot.fetch_user(user_id)
+        try:
+            member = await bot.fetch_user(user_id)
+        except NotFound:
+            await reply(ctx, 'Error: cannot get history - user was deleted from Discord entirely.', send_followup=False, delete_after=15)
+            return
         left = True
 
     today_date = datetime.date(datetime.now())
