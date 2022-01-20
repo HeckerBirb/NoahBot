@@ -41,7 +41,8 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
     member = guild.get_member(user_id)
     banned_details = await _check_for_ban(htb_uid)
 
-    if banned_details is not None and banned_details['banned']:
+    # In an automated context, `ctx` is `None`, will need a refactor for autobans
+    if ctx is not None and banned_details is not None and banned_details['banned']:
         banned_until: str = banned_details['ends_at'][:10]  # Strip date e.g. from "2022-01-31T11:00:00.000000Z"
         banned_until: datetime = datetime.strptime(banned_until, '%Y-%m-%d')
         ban_duration: str = f'{(banned_until - datetime.now()).days}d'
@@ -100,7 +101,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
         await member.remove_roles(*to_remove, atomic=True)
         await member.add_roles(*to_assign, atomic=True)
 
-    member = guild.get_member(ctx.author.id)
+    member = guild.get_member(user_id)
     try:
         await member.edit(nick=htb_user_details['user_name'])
     except Forbidden as e:
