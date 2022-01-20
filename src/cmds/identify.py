@@ -12,7 +12,7 @@ from src.cmds._error_handling import interruptable
 from src.cmds._proxy_helpers import Reply
 from src.conf import GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
     HTB_API_SECRET, API_URL
-from src.lib.verification import process_identification
+from src.lib.verification import process_identification, get_user_details
 from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 
@@ -68,17 +68,10 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
         return
 
     await reply(ctx, 'Identification initiated, please wait...', ephemeral=True, send_followup=False)
-    acc_id_url = f'{API_URL}/discord/identifier/{account_identifier}?secret={HTB_API_SECRET}'
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(acc_id_url) as r:
-            if r.status == 200:
-                htb_user_details = await r.json()
-            else:
-                STDOUT_LOG.error(f'Non-OK HTTP status code returned from identifier lookup: {r.status}. Body: {r.content}')
-                embed = discord.Embed(title="Error: Invalid account identifier.", color=0xFF0000)
-                await reply(ctx, embed=embed, ephemeral=True, send_followup=True)
-                return
+    htb_user_details = await get_user_details(account_identifier)
+    if htb_user_details is None:
+        embed = discord.Embed(title="Error: Invalid account identifier.", color=0xFF0000)
+        return await reply(ctx, embed=embed, ephemeral=True, send_followup=True)
 
     json_htb_user_id = htb_user_details['user_id']
     naughty_list = NaughtyList()

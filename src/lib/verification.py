@@ -11,6 +11,18 @@ from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 
 
+async def get_user_details(account_identifier) -> Optional[Dict]:
+    acc_id_url = f'{API_URL}/discord/identifier/{account_identifier}?secret={HTB_API_SECRET}'
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(acc_id_url) as r:
+            if r.status == 200:
+                return await r.json()
+            else:
+                STDOUT_LOG.error(f'Non-OK HTTP status code returned from identifier lookup: {r.status}. Body: {r.content}')
+                return None
+
+
 async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:
     async with aiohttp.ClientSession() as session:
         token_url = f'{API_URL}/discord/{uid}/banned?secret={HTB_API_SECRET}'

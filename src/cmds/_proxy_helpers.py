@@ -114,6 +114,12 @@ def remove_record(delete_query: str, id_to_remove: Tuple[Any, ...]) -> None:
 
 
 async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False, send_followup=False):
+    async def dummy_reply(*args, **kwargs):
+        pass
+    # `reply` can  be `None` if called from an automated action like updating roles
+    # Switch it out for a dummy function
+    reply = reply or dummy_reply
+
     guild = bot.guilds[0]
     user_id = get_user_id(user_id)
     if user_id is None:
