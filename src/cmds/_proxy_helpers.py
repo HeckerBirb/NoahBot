@@ -202,15 +202,11 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
 
 async def perform_unban_user(guild, user_id):
     user = await force_get_member(guild, user_id)
-
-    if user is None:
-        STDOUT_LOG.info(f'User ID {user_id} not found on Discord. Deleting from DB...')
-        remove_record('DELETE FROM ban_record WHERE user_id = %s', (user_id, ))
-        return
-
+    # If we couldn't fetch a member get a mock version
+    user = user or discord.Object(user_id)
     try:
         await guild.unban(user)
-        STDOUT_LOG.info(f'Unbanned user {user.mention} ({user_id}).')
+        STDOUT_LOG.info(f'Unbanned user {user_id}.')
     except Forbidden as ex:
         STDOUT_LOG.error(f'Permission denied when trying to unban user with ID {user_id}: {ex}')
         return None
