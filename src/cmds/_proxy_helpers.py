@@ -207,9 +207,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
 
 
 async def perform_unban_user(guild, user_id):
-    user = await force_get_member(guild, user_id)
-    # If we couldn't fetch a member get a mock version
-    user = user or discord.Object(user_id)
+    user = discord.Object(user_id)
     try:
         await guild.unban(user)
         STDOUT_LOG.info(f'Unbanned user {user_id}.')
@@ -217,7 +215,10 @@ async def perform_unban_user(guild, user_id):
         STDOUT_LOG.error(f'Permission denied when trying to unban user with ID {user_id}: {ex}')
         return None
     except HTTPException as ex:
-        STDOUT_LOG.warn(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
+        return None
+    except NotFound as ex:
+        STDOUT_LOG.error(f'NotFound when trying to unban user with ID {user_id}: {ex}')
         return None
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as co:
         with co.cursor() as cu:
