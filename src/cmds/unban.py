@@ -23,7 +23,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
 
     user = await perform_unban_user(bot.guilds[0], user_id)
     if user is None:
-        await reply(ctx, f'Failed to unban user {user_id}. See server logs for more info.', send_followup=False)
+        await reply(ctx, f'Failed to unban user {user_id}. Are they perhaps not banned at all?', send_followup=False)
         return
 
     await reply(ctx, f'User #{user.id} has been unbanned.', send_followup=False)

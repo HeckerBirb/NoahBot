@@ -214,11 +214,11 @@ async def perform_unban_user(guild, user_id):
     except Forbidden as ex:
         STDOUT_LOG.error(f'Permission denied when trying to unban user with ID {user_id}: {ex}')
         return None
+    except NotFound as ex:
+        STDOUT_LOG.error(f'NotFound when trying to unban user with ID {user_id}. This could indicate that the user is not currently banned. Exception: {ex}')
+        return None
     except HTTPException as ex:
         STDOUT_LOG.error(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
-        return None
-    except NotFound as ex:
-        STDOUT_LOG.error(f'NotFound when trying to unban user with ID {user_id}: {ex}')
         return None
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as co:
         with co.cursor() as cu:
