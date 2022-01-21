@@ -26,7 +26,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
         await reply(ctx, f'Failed to unban user {user_id}. See server logs for more info.', send_followup=False)
         return
 
-    await reply(ctx, f'Member {user.name} ({user.id}) has been unbanned.', send_followup=False)
+    await reply(ctx, f'User #{user.id} has been unbanned.', send_followup=False)
 
 
 @bot.slash_command(
