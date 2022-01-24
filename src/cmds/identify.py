@@ -264,7 +264,7 @@ async def action_slash(ctx: ApplicationContext, account_identifier: Option(str, 
     await perform_action(ctx, Reply.slash, account_identifier)
 
 
-@commands.command(name=name(), help=description())
+@commands.command(name=name(), help=description(), aliases=['identity', 'idenfity'])
 async def action_prefix(ctx: ApplicationContext, account_identifier):
     await perform_action(ctx, Reply.prefix, account_identifier)
 
