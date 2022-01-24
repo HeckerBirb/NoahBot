@@ -268,6 +268,10 @@ async def action_slash(ctx: ApplicationContext, account_identifier: Option(str, 
 async def action_prefix(ctx: ApplicationContext, account_identifier):
     await perform_action(ctx, Reply.prefix, account_identifier)
 
+@commands.command(name="identity", help=description())
+async def action_prefix(ctx: ApplicationContext, account_identifier):
+    await perform_action(ctx, Reply.prefix, account_identifier)
+
 
 def setup(le_bot):
     le_bot.add_command(action_prefix)
