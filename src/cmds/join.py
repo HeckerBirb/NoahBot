@@ -1,7 +1,7 @@
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from discord.ext import commands
-
+import discord
 from src.cmds._proxy_helpers import Reply
 from src.conf import GUILD_ID, JOINABLE_ROLES
 from src.noahbot import bot
@@ -27,9 +27,15 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
 
     if role_id is None:
         await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False)
+        # print all the roles available to join using embed
+        embed = discord.Embed(title=" ", color=0x3d85c6)
+        embed.set_author(name="Joinable Roles")
+        embed.set_footer(text="Use the command `++join <role>` to join a role.")
+        for role in JOINABLE_ROLES.keys():
+            embed.add_field(name=role, value=JOINABLE_ROLES.get(role), inline=False)
+        await reply(ctx, embed=embed, send_followup=False)
         return
 
-        
     # Fix Auto assign of Blue team
     if role_id is not None:
         the_role = ctx.guild.get_role(role_id)
