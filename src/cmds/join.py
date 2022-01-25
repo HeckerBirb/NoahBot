@@ -1,3 +1,4 @@
+import discord
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from discord.ext import commands
@@ -20,18 +21,25 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
         await reply(ctx, 'This command cannot be used in a DM.', send_followup=False)
         return
 
-    role_id = None
-    for role in JOINABLE_ROLES.keys():
-        if role_name.lower() in role.lower():
-            role_id = JOINABLE_ROLES.get(role)
+    # No role or empty role name passed
+    if not role_name or role_name.isspace():
+        embed = discord.Embed(title=" ", color=0x3d85c6)
+        embed.set_author(name="Joinable Roles")
+        embed.set_footer(text="Use the command ++join <role> to join a role.")
+        for role, value in JOINABLE_ROLES.items():
+            embed.add_field(name=role, value=value[1], inline=True)
+        return await reply(ctx, embed=embed, send_followup=False)
 
-    if role_id is None:
-        await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False)
-        return
-
-    the_role = ctx.guild.get_role(role_id)
-    await ctx.author.add_roles(the_role)
-    await reply(ctx, f'Welcome to {the_role.name}!', send_followup=False)
+    filtered = [(k, v) for k,v in JOINABLE_ROLES.items() if role_name.lower() in k.lower()]
+    if not filtered:
+        return await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False)
+    if len(filtered) > 1:
+        return await reply(ctx, "Matched multiple roles, try being more specific", send_followup=False)
+    name, details = filtered[0]
+    rid, _ = details
+    role = ctx.guild.get_role(rid)
+    await ctx.author.add_roles(role)
+    await reply(ctx, f'Welcome to {role.name}!', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
