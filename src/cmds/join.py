@@ -29,9 +29,12 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
         await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False)
         return
 
-    the_role = ctx.guild.get_role(role_id)
-    await ctx.author.add_roles(the_role)
-    await reply(ctx, f'Welcome to {the_role.name}!', send_followup=False)
+        
+    # Fix Auto assign of Blue team
+    if role_id is not None:
+        the_role = ctx.guild.get_role(role_id)
+        await ctx.author.add_roles(the_role)
+        await reply(ctx, f'Welcome to {the_role.name}!', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
