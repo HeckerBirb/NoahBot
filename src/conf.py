@@ -33,10 +33,10 @@ API_URL = f'{HTB_URL}/api'
 API_V4_URL = f'{API_URL}/v4'
 
 JOINABLE_ROLES = {
-    'Noah Gang': _get_int_env('NOAH_GANG_ROLE'),
-    'Buddy Gang': _get_int_env('BUDDY_GANG_ROLE'),
-    'Red Team': _get_int_env('RED_TEAM_ROLE'),
-    'Blue Team': _get_int_env('BLUE_TEAM_ROLE')
+    'Noah Gang': (_get_int_env('NOAH_GANG_ROLE'), "Get pinged when Fugl posts pictures of his cute bird"),
+    'Buddy Gang': (_get_int_env('BUDDY_GANG_ROLE'), "Get pinged when Legacyy posts pictures of his cute dog"),
+    'Red Team': (_get_int_env('RED_TEAM_ROLE'), "Red team fans. Also gives access to the Red and Blue team channels"),
+    'Blue Team': (_get_int_env('BLUE_TEAM_ROLE'), "Blue team fans. Also gives access to the Red and Blue team channels")
 }
 
 
