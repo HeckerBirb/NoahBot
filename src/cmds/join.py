@@ -1,3 +1,4 @@
+import discord
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from discord.ext import commands
