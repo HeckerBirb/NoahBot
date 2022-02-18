@@ -22,10 +22,17 @@ async def process_reverify(member: Member):
     htb_details = await get_user_details(details[0])
     await process_identification(None, None, htb_details, member.id)
     await set_cooldown(member)
-
+    await clear_cooldowns()
 
 async def on_cooldown(member: Member):
     return cooldowns.get(member.id) is not None && cooldowns[member.id] >= time.time()
 
 async def set_cooldown(member: Member):
     cooldowns[member.id] = time.time() + 5 * 60
+
+async def clear_cooldowns():
+    # Get expired cooldowns
+    expired = list(filter(lambda val: val[1] <= time.time, cooldowns.items()))
+    for i, _ in expired:
+        del cooldowns[i]
+
