@@ -25,7 +25,7 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
     if not role_name or role_name.isspace():
         embed = discord.Embed(title=" ", color=0x3d85c6)
         embed.set_author(name="Joinable Roles")
-        embed.set_footer(text="Use the command `++join <role>` to join a role.")
+        embed.set_footer(text="Use the command ++join <role> to join a role.")
         for role, value in JOINABLE_ROLES.items():
             embed.add_field(name=role, value=value[1], inline=True)
         return await reply(ctx, embed=embed, send_followup=False)
