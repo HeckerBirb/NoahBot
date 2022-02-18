@@ -1,3 +1,5 @@
+import time
+
 from discord import Member
 from mysql.connector import connect
 
@@ -5,6 +7,7 @@ from src.cmds._error_handling import interruptable
 from src.conf import MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.lib.verification import process_identification, get_user_details
 
+cooldowns: dict[int, int] = {}
 
 async def process_reverify(member: Member):
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
@@ -22,10 +25,7 @@ async def process_reverify(member: Member):
 
 
 async def on_cooldown(member: Member):
-    # TODO: Introduce DB table
-    return False
-
+    return cooldowns.get(member.id) is not None && cooldowns[member.id] >= time.time()
 
 async def set_cooldown(member: Member):
-    # TODO: Set cooldown for member in DB
-    return False
+    cooldowns[member.id] = time.time() + 5 * 60
