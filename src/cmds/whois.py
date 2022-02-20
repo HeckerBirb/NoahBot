@@ -46,7 +46,7 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
         embed.set_author(name=user)
     embed.add_field(name="Username:", value=user, inline=True)
     embed.add_field(name="Discord ID:", value=user.id, inline=True)
-    embed.add_field(name="HTB Profile:", value=f"<https://app.hackthebox.com/users/{identification['htb_id']}>", inline=False)
+    embed.add_field(name="HTB Profile:", value=f"<https://www.hackthebox.com/home/users/profile/{identification['htb_id']}>", inline=False)
     embed.set_footer(text=f"More info: ++history {user.id}")
     await reply(ctx, embed=embed, send_followup=False)
 
