@@ -42,16 +42,15 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, weight, reason
 async def action_slash(
         ctx: ApplicationContext,
         user_id: Option(str, 'User ID or @mention name.'),
-        weight: Option(str, 'Weight of the strike: 1 = hard slap on the wrist, 3 = final warning; consider banning.'),
         reason: Option(str, 'Strike reason. Will be sent to the user in a DM as well.')
 ):
-    await perform_action(ctx, Reply.slash, user_id, weight, reason)
+    await perform_action(ctx, Reply.slash, user_id, '1', reason)
 
 
 @commands.command(name=name(), help=description())
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
-async def action_prefix(ctx: ApplicationContext, user_id: str, weight: str, *reason: str):
-    await perform_action(ctx, Reply.prefix, user_id, weight, ' '.join(reason))
+async def action_prefix(ctx: ApplicationContext, user_id: str, *reason: str):
+    await perform_action(ctx, Reply.prefix, user_id, '1', ' '.join(reason))
 
 
 def setup(le_bot):
