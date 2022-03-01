@@ -1,8 +1,9 @@
+from discord import Member
 from discord.ext import commands
 from discord.ext.commands.errors import MissingRequiredArgument, MissingPermissions, UserInputError, CommandNotFound, \
     NoPrivateMessage, MissingAnyRole
 
-# Inspired by https://stackoverflow.com/a/23665658
+from src.automation.auto_verify import process_reverify
 from src.log4noah import STDOUT_LOG
 
 
@@ -55,5 +56,23 @@ class ErrorHandler(commands.Cog):
             await ctx.send(message, delete_after=15)
 
 
+class MessageHandler(commands.Cog):
+    """A cog for global error handling."""
+
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_message(self, ctx: commands.Context):
+        STDOUT_LOG.debug(f'Got a message from {ctx.author}.')
+        await process_reverify(ctx.author)
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member: Member):
+        STDOUT_LOG.debug(f'Member joined: {member.name} ({member.id}). Processing...')
+        await process_reverify(member)
+
+
 def setup(bot: commands.Bot):
     bot.add_cog(ErrorHandler(bot))
+    bot.add_cog(MessageHandler(bot))

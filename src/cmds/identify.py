@@ -1,19 +1,15 @@
 from dataclasses import dataclass
 
-import aiohttp
 import discord
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
-from discord.errors import Forbidden
 from discord.ext import commands
 from mysql.connector import connect
 
-from src.cmds._error_handling import interruptable
+from src.cmds._event_handling import interruptable
 from src.cmds._proxy_helpers import Reply
-from src.conf import GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs, \
-    HTB_API_SECRET, API_URL
+from src.conf import GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS, ChannelIDs
 from src.lib.verification import process_identification, get_user_details
-from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
 
 """
