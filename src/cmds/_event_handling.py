@@ -64,12 +64,10 @@ class MessageHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, ctx: commands.Context):
-        STDOUT_LOG.debug(f'Got a message from {ctx.author}.')
         await process_reverify(ctx.author)
 
     @commands.Cog.listener()
     async def on_member_join(self, member: Member):
-        STDOUT_LOG.debug(f'Member joined: {member.name} ({member.id}). Processing...')
         await process_reverify(member)
 
 
