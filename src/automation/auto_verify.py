@@ -7,7 +7,8 @@ from src.cmds._error_handling import interruptable
 from src.conf import MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.lib.verification import process_identification, get_user_details
 
-cooldowns: dict[int, int] = {}
+cooldowns: dict[int, float] = {}
+
 
 async def process_reverify(member: Member):
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
@@ -24,15 +25,19 @@ async def process_reverify(member: Member):
     await set_cooldown(member)
     await clear_cooldowns()
 
+
 async def on_cooldown(member: Member):
-    return cooldowns.get(member.id) is not None && cooldowns[member.id] >= time.time()
+    return cooldowns.get(member.id) is not None and cooldowns[member.id] >= time.time()
+
 
 async def set_cooldown(member: Member):
+    global cooldowns
     cooldowns[member.id] = time.time() + 5 * 60
 
+
 async def clear_cooldowns():
-    # Get expired cooldowns
-    expired = list(filter(lambda val: val[1] <= time.time, cooldowns.items()))
-    for i, _ in expired:
+    global cooldowns
+    expired_cooldowns = list(filter(lambda val: val[1] <= time.time, cooldowns.items()))
+    for i, _ in expired_cooldowns:
         del cooldowns[i]
 
