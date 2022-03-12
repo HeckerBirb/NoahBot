@@ -13,9 +13,9 @@ cooldowns: dict[int, float] = {}
 async def process_reverify(member: Member):
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
-            query_str = """SELECT account_identifier FROM htb_discord_link WHERE discord_user_id = %s"""
+            query_str = """SELECT account_identifier FROM htb_discord_link WHERE discord_user_id = %s ORDER BY id DESC LIMIT 1"""
             cursor.execute(query_str, (member.id, ))
-            details = cursor.fetchone()
+            details = cursor.fetchall()
             if details is None:
                 return
     if await on_cooldown(member):
