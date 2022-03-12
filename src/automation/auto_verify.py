@@ -11,6 +11,7 @@ cooldowns: dict[int, float] = {}
 
 
 async def process_reverify(member: Member):
+    member_token = None
     if await on_cooldown(member):
         return
 
@@ -18,12 +19,14 @@ async def process_reverify(member: Member):
         with connection.cursor() as cursor:
             query_str = """SELECT account_identifier FROM htb_discord_link WHERE discord_user_id = %s ORDER BY id DESC LIMIT 1"""
             cursor.execute(query_str, (member.id, ))
-            details = cursor.fetchall()
-            if len(details) == 0:
-                return
+            for row in cursor.fetchall():
+                member_token = row[0]
+
+    if member_token is None:
+        return
 
     STDOUT_LOG.debug(f'Processing reverify of member {member.name}.')
-    htb_details = await get_user_details(details[0])
+    htb_details = await get_user_details(member_token)
     if htb_details is None:
         return
 
