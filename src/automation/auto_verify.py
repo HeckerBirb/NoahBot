@@ -11,17 +11,22 @@ cooldowns: dict[int, float] = {}
 
 
 async def process_reverify(member: Member):
+    if await on_cooldown(member):
+        return
+
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             query_str = """SELECT account_identifier FROM htb_discord_link WHERE discord_user_id = %s ORDER BY id DESC LIMIT 1"""
             cursor.execute(query_str, (member.id, ))
             details = cursor.fetchall()
-            if details is None:
+            if len(details) == 0:
                 return
-    if await on_cooldown(member):
-        return
+
     STDOUT_LOG.debug(f'Processing reverify of member {member.name}.')
     htb_details = await get_user_details(details[0])
+    if htb_details is None:
+        return
+
     await process_identification(None, None, htb_details, member.id)
     await set_cooldown(member)
     await clear_cooldowns()
