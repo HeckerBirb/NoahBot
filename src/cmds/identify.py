@@ -132,15 +132,15 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
 
         if any(naughty_list.__dict__.values()):
             if naughty_list.known_token_belongs_to_different_discord_user:
-                error_desc=f'Verified user {ctx.author.mention} tried to identify as another identified user.\n' \
+                error_desc = f'Verified user {ctx.author.mention} tried to identify as another identified user.\n' \
                            f'Discord UID: {most_recent_rec.dis_user_id}, HTB UID: {most_recent_rec.htb_user_id}'
 
             elif naughty_list.htb_user_from_lookup_resolves_to_different_discord_user:
-                error_desc=f'The HTB account {json_htb_user_id} was attempted identified by user <@{ctx.author.id}>, but is tied to another Discord account.\n' \
+                error_desc = f'The HTB account {json_htb_user_id} was attempted identified by user <@{ctx.author.id}>, but is tied to another Discord account.\n' \
                            f'Original Discord UID: <@{orig_discord_id}>, shared HTB UID: {json_htb_user_id}).'
 
             elif naughty_list.discord_user_resolves_to_different_htb_user:
-                error_desc=f'User {ctx.author.mention} (Discord UID {ctx.author.id}) tried to verify with a different HTB account.\n' \
+                error_desc = f'User {ctx.author.mention} (Discord UID {ctx.author.id}) tried to verify with a different HTB account.\n' \
                            f'Original HTB UID: {orig_htb_id}, new HTB UID: {json_htb_user_id}.'
 
             else:

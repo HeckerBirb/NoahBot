@@ -18,8 +18,11 @@ async def get_user_details(account_identifier) -> Optional[Dict]:
         async with session.get(acc_id_url) as r:
             if r.status == 200:
                 return await r.json()
+            elif r.status == 404:
+                STDOUT_LOG.error(f'Account identifier has been regenerated since last identification. Cannot re-verify.')
+                return None
             else:
-                STDOUT_LOG.error(f'Non-OK HTTP status code returned from identifier lookup: {r.status}. Body: {r.content}')
+                STDOUT_LOG.error(f'Non-OK HTTP status code returned from identifier lookup: {r.status}.')
                 return None
 
 
