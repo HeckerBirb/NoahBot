@@ -43,6 +43,7 @@ JOINABLE_ROLES = {
 class ChannelIDs:
     SR_MODERATOR = _get_int_env('SR_MOD_CHAN')
     BOT_LOGS = _get_int_env('BOT_LOGS_CHAN')
+    SPOILER_CHAN = _get_int_env('SPOILER_CHAN')
 
 
 def _allow(role_id):
