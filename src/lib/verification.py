@@ -1,11 +1,10 @@
 from datetime import datetime
+from typing import List
 from typing import Optional, Dict, Union
 
 import aiohttp
 import discord
 from discord import Forbidden, Role
-
-from typing import List
 
 from src.cmds._proxy_helpers import perform_temp_ban
 from src.conf import API_URL, HTB_API_SECRET, ChannelIDs, RoleIDs
@@ -40,7 +39,7 @@ async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:
                 return None
 
 
-async def process_identification(ctx, reply, htb_user_details, user_id: int) -> List[Role]:
+async def process_identification(ctx, reply, htb_user_details, user_id: int) -> Optional[List[Role]]:
     """
     Returns true if identification was successfully processed
     """
@@ -108,7 +107,6 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
             await member.edit(nick=htb_user_details['user_name'])
         except Forbidden as e:
             STDOUT_LOG.error(f'Exception whe trying to edit the nick-name of the user: {e}')
-
 
     if set(to_remove) == set(to_assign):
         STDOUT_LOG.debug("Roles to remove and assign are the same. Returning.")

@@ -1,8 +1,8 @@
 import time
+from typing import Dict
 
 from discord import Member
 from mysql.connector import connect
-from typing import Dict
 
 from src.conf import MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.lib.verification import process_identification, get_user_details
@@ -31,10 +31,9 @@ async def process_reverify(member: Member):
     if htb_details is None:
         await set_cooldown(member, timeout=120)
         return
-    # TODO: This returns a list of roles to be assigned, we should tell the user which
-    if await process_identification(None, None, htb_details, member.id) is not None:
-        await set_cooldown(member, timeout=30)
- 
+
+    await process_identification(None, None, htb_details, member.id)
+    await set_cooldown(member, timeout=30)
     await clear_cooldowns()
 
 
