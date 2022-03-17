@@ -97,17 +97,19 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
         to_assign.append(guild.get_role(RoleIDs.BOX_CREATOR))
     if htb_user_details['challenges']:
         to_assign.append(guild.get_role(RoleIDs.CHALLENGE_CREATOR))
+
+    if member.nick != htb_user_details['user_name']:
+        try:
+            await member.edit(nick=htb_user_details['user_name'])
+        except Forbidden as e:
+            STDOUT_LOG.error(f'Exception whe trying to edit the nick-name of the user: {e}')
+
+
     if set(to_remove) == set(to_assign):
         STDOUT_LOG.debug("Roles to remove and assign are the same. Returning.")
         return
     else:
         await member.remove_roles(*to_remove, atomic=True)
         await member.add_roles(*to_assign, atomic=True)
-
-    member = guild.get_member(user_id)
-    try:
-        await member.edit(nick=htb_user_details['user_name'])
-    except Forbidden as e:
-        STDOUT_LOG.error(f'Exception whe trying to edit the nick-name of the user: {e}')
 
     return to_assign
