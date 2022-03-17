@@ -31,8 +31,10 @@ async def process_reverify(member: Member):
     if htb_details is None:
         await set_cooldown(member, timeout=120)
         return
-
-    await process_identification(None, None, htb_details, member.id)
+    # TODO: This returns a list of roles to be assigned, we should tell the user which
+    if await process_identification(None, None, htb_details, member.id) is not None:
+        await set_cooldown(member, timeout=30)
+ 
     await clear_cooldowns()
 
 
