@@ -1,8 +1,7 @@
 #!/bin/bash
 
-GITOUT=$(git pull)
-echo 
-echo $GITOUT
+git pull
+
 while true; do
     read -p "Do you wish to redeploy NoahBot with these git changes? This will replace the image noahbot:latest [Y/n]: " yn
     case $yn in
@@ -11,7 +10,7 @@ while true; do
         * ) echo "Please answer Y or n.";;
     esac
 done
-./discord.sh --webhook-url="https://discord.com/api/webhooks/954046692259422249/L5XcMDMdgiB6S04N3Q-fu1vWkw90y6_QD_oI4NBV9wrs_tFvRPCeokaKihkOhZWOxKNZ" --text=GITOUT
+./discord.sh --webhook-url="https://discord.com/api/webhooks/954046692259422249/L5XcMDMdgiB6S04N3Q-fu1vWkw90y6_QD_oI4NBV9wrs_tFvRPCeokaKihkOhZWOxKNZ" --text="Redeploying NoahBot" --username="NoahBot" --timestamp
 echo
 
 CONTAINER=$(docker ps -a | grep noahbot | cut -d ' ' -f 1)
