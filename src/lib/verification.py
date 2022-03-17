@@ -3,7 +3,9 @@ from typing import Optional, Dict, Union
 
 import aiohttp
 import discord
-from discord import Forbidden
+from discord import Forbidden, Role
+
+from typing import List
 
 from src.cmds._proxy_helpers import perform_temp_ban
 from src.conf import API_URL, HTB_API_SECRET, ChannelIDs, RoleIDs
@@ -38,7 +40,10 @@ async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:
                 return None
 
 
-async def process_identification(ctx, reply, htb_user_details, user_id: int):
+async def process_identification(ctx, reply, htb_user_details, user_id: int) -> List[Role]:
+    """
+    Returns true if identification was successfully processed
+    """
     htb_uid = htb_user_details['user_id']
     guild = bot.guilds[0]
     member = guild.get_member(user_id)
@@ -58,7 +63,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
             description=f"User {member.mention} was platform banned HTB and thus also here.",
             color=0xff2429)
         await bot.get_channel(ChannelIDs.BOT_LOGS).send(embed=embed)
-        return
+        return None
 
     to_remove = []
 
@@ -97,17 +102,19 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int):
         to_assign.append(guild.get_role(RoleIDs.BOX_CREATOR))
     if htb_user_details['challenges']:
         to_assign.append(guild.get_role(RoleIDs.CHALLENGE_CREATOR))
+
+    if member.nick != htb_user_details['user_name']:
+        try:
+            await member.edit(nick=htb_user_details['user_name'])
+        except Forbidden as e:
+            STDOUT_LOG.error(f'Exception whe trying to edit the nick-name of the user: {e}')
+
+
     if set(to_remove) == set(to_assign):
         STDOUT_LOG.debug("Roles to remove and assign are the same. Returning.")
-        return
+        return None
     else:
         await member.remove_roles(*to_remove, atomic=True)
         await member.add_roles(*to_assign, atomic=True)
-
-    member = guild.get_member(user_id)
-    try:
-        await member.edit(nick=htb_user_details['user_name'])
-    except Forbidden as e:
-        STDOUT_LOG.error(f'Exception whe trying to edit the nick-name of the user: {e}')
 
     return to_assign
