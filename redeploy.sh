@@ -2,7 +2,7 @@
 
 GITOUT=$(git pull)
 echo 
-ECHO $GITOUT
+echo $GITOUT
 while true; do
     read -p "Do you wish to redeploy NoahBot with these git changes? This will replace the image noahbot:latest [Y/n]: " yn
     case $yn in
