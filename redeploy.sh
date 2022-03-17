@@ -10,7 +10,7 @@ while true; do
         * ) echo "Please answer Y or n.";;
     esac
 done
-./discord.sh --webhook-url="https://discord.com/api/webhooks/954046692259422249/L5XcMDMdgiB6S04N3Q-fu1vWkw90y6_QD_oI4NBV9wrs_tFvRPCeokaKihkOhZWOxKNZ" --text="Redeploying NoahBot" --username="NoahBot" --timestamp
+./discord.sh --webhook-url="https://discord.com/api/webhooks/954046692259422249/L5XcMDMdgiB6S04N3Q-fu1vWkw90y6_QD_oI4NBV9wrs_tFvRPCeokaKihkOhZWOxKNZ" --title="Important NoahBot Status Update" --description="A Redeploy has been started uwu" --username="NoahBot" --timestamp
 echo
 
 CONTAINER=$(docker ps -a | grep noahbot | cut -d ' ' -f 1)
