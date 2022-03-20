@@ -105,12 +105,15 @@ def member_is_staff(member: discord.Member) -> bool:
     return False
 
 
-def remove_record(delete_query: str, id_to_remove: Tuple[Any, ...]) -> None:
+def remove_record(delete_query: str, id_to_remove: Tuple[Any, ...]) -> int:
     """ Delete a record from the database, given a one tuple of values for the delete query to use. """
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
         with connection.cursor() as cursor:
             cursor.execute(delete_query, id_to_remove)
+            cursor.execute('SELECT ROW_COUNT()')
+            deleted_rows = cursor.fetchone()[0]
             connection.commit()
+            return deleted_rows
 
 
 async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_approval=True, banned_by_bot=False, send_followup=False):

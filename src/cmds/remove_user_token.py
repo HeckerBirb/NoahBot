@@ -1,9 +1,10 @@
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from discord.ext import commands
+from mysql.connector import connect
 
 from src.cmds._proxy_helpers import Reply, remove_record, get_user_id
-from src.conf import SlashPerms, PrefixPerms, GUILD_ID
+from src.conf import SlashPerms, PrefixPerms, GUILD_ID, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.noahbot import bot
 
 
@@ -21,8 +22,11 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
         await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
 
-    remove_record('DELETE FROM htb_discord_link WHERE discord_user_id = %s or htb_user_id = %s', (user_id, user_id))
-    await reply(ctx, f'All tokens related to Discord or HTB ID "{user_id}" have been deleted.', send_followup=False)
+    deleted_rows = remove_record('DELETE FROM htb_discord_link WHERE discord_user_id = %s or htb_user_id = %s', (user_id, user_id))
+    if deleted_rows > 0:
+        await reply(ctx, f'All tokens related to Discord or HTB ID "{user_id}" have been deleted.', send_followup=False)
+    else:
+        await reply(ctx, f'Could not find "{user_id}" as a Discord or HTB ID in the records.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
