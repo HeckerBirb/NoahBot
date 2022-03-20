@@ -34,7 +34,7 @@ async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'ID of the 
     await perform_action(ctx, Reply.slash, user_id)
 
 
-@commands.command(name=name(), help=description(), aliases=[name().replace('_', '')])
+@commands.command(name=name(), help=description(), aliases=[name().replace('_', ''), 'rut'])
 @commands.has_any_role(*(PrefixPerms.ALL_ADMINS + PrefixPerms.ALL_MODS))
 async def action_prefix(ctx: ApplicationContext, user_id):
     await perform_action(ctx, Reply.prefix, user_id)
