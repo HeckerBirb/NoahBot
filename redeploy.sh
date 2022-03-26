@@ -12,7 +12,7 @@ while true; do
 done
 ./discord.sh --webhook-url="https://discord.com/api/webhooks/954046692259422249/L5XcMDMdgiB6S04N3Q-fu1vWkw90y6_QD_oI4NBV9wrs_tFvRPCeokaKihkOhZWOxKNZ" \
              --title="NoahBot Update" \
-             --description="Redeployment has being" \
+             --description="Redeployment has begun..." \
              --username="NoahBot" \
              --timestamp
 echo
