@@ -32,7 +32,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
         return
 
     if parse_duration_str(duration) is None:
-        await reply(ctx, 'Could not parse duration. Malformed.')
+        await reply(ctx, 'Malformed duration. Please use integers, e.g. 12h.')
         return
 
     with connect(host=MYSQL_HOST, port=MYSQL_PORT, database=MYSQL_DATABASE, user=MYSQL_USER, password=MYSQL_PASS) as connection:
@@ -43,6 +43,10 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
             for row in cursor.fetchall():
                 user_id = row[0]
                 baseline_ts = row[1]
+
+            if baseline_ts is None:
+                await reply(ctx, f'Cannot dispute ban: record not found.', send_followup=False)
+                return
 
             new_unban_time = parse_duration_str(duration, int(baseline_ts.timestamp()))
 

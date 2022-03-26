@@ -87,7 +87,10 @@ def parse_duration_str(duration: str, baseline_ts: int = None) -> Optional[int]:
         if not m:
             return None
         duration = duration[m.end():]
-        sum_seconds += int(m.groups()[0]) * units.get(m.groups()[1], 1)
+        try:
+            sum_seconds += int(m.groups()[0]) * units.get(m.groups()[1], 1)
+        except ValueError:
+            return None
 
     if baseline_ts is None:
         epoch_time = calendar.timegm(time.gmtime())
