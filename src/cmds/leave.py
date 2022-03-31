@@ -2,6 +2,7 @@ from discord.commands import Option
 from discord.commands.context import ApplicationContext
 from discord.ext import commands
 
+from log4noah import STDOUT_LOG
 from src.cmds._proxy_helpers import Reply
 from src.conf import GUILD_ID, JOINABLE_ROLES
 from src.noahbot import bot
@@ -23,7 +24,7 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
     role_id = None
     for role in JOINABLE_ROLES.keys():
         if role_name.lower() in role.lower():
-            role_id = JOINABLE_ROLES.get(role)
+            role_id = JOINABLE_ROLES.get(role)[0]
 
     if role_id is None:
         await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False)
