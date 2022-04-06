@@ -183,7 +183,7 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
         STDOUT_LOG.warn(f'HTTPException when trying to unban user with ID {user_id}: {ex}')
         return
 
-    await guild.ban(PretendSnowflake(user_id), reason=reason)
+    await guild.ban(PretendSnowflake(user_id), reason=reason, delete_message_days=0)
 
     if not needs_approval:
         if member is not None:
