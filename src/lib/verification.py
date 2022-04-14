@@ -59,7 +59,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
 
         embed = discord.Embed(
             title="Identification error",
-            description=f"User {member.mention} was platform banned HTB and thus also here.",
+            description=f"User {member.mention} ({member.id}) was platform banned HTB and thus also here.",
             color=0xff2429)
         await bot.get_channel(ChannelIDs.BOT_LOGS).send(embed=embed)
         return None

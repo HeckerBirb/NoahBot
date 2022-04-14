@@ -26,7 +26,7 @@ async def process_reverify(member: Member):
     if member_token is None:
         return
 
-    STDOUT_LOG.debug(f'Processing reverify of member {member.name}.')
+    STDOUT_LOG.debug(f'Processing reverify of member {member.name} ({member.id}).')
     htb_details = await get_user_details(member_token)
     if htb_details is None:
         await set_cooldown(member, timeout=120)

@@ -197,10 +197,10 @@ async def perform_temp_ban(bot, ctx, reply, user_id, duration, reason, needs_app
 
     else:
         if member is not None:
-            await reply(ctx, f'{member.display_name} has been banned until {end_date} (UTC).', send_followup=send_followup)
+            await reply(ctx, f'{member.display_name} ({member.id}) has been banned until {end_date} (UTC).', send_followup=send_followup)
         else:
             await reply(ctx, f'{user_id} has been banned until {end_date} (UTC).', send_followup=send_followup)
-        member_name = member.name if member is not None else user_id
+        member_name = f'{member.name} ({member.id})' if member is not None else user_id
         embed = discord.Embed(
             title=f"Ban request #{ban_id}",
             description=f'{ctx.author.name} would like to ban {member_name} until {end_date} (UTC). Reason: {reason}'
@@ -264,7 +264,7 @@ async def perform_infraction_record(ctx, reply, guild, user_id, weight, reason):
             cursor.execute(query_str, (user_id, reason, weight, moderator))
             connection.commit()
 
-    await reply(ctx, f'{member.mention} has been warned with a strike weight of {weight}.', send_followup=False)
+    await reply(ctx, f'{member.mention} ({member.id}) has been warned with a strike weight of {weight}.', send_followup=False)
 
     try:
         await member.send(

@@ -25,7 +25,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
 
     member = await force_get_member(guild, user_id)
     if member is not None:
-        await reply(ctx, f'{member.mention} has been unmuted.', send_followup=False)
+        await reply(ctx, f'{member.mention} ({member.id}) has been unmuted.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

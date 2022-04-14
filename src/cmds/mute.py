@@ -77,11 +77,11 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
 
     role = bot.guilds[0].get_role(RoleIDs.MUTED)
     await member.add_roles(role)
-    await reply(ctx, f"{member.mention} has been muted for {duration}.", send_followup=False)
+    await reply(ctx, f"{member.mention} ({member.id}) has been muted for {duration}.", send_followup=False)
     try:
         await member.send(f"You have been muted for {duration}. Reason:\n>>> {reason}")
     except Forbidden:
-        await reply(ctx, f'Cannot DM {member.mention} due to their privacy settings.', send_followup=True)
+        await reply(ctx, f'Cannot DM {member.mention} ({member.id}) due to their privacy settings.', send_followup=True)
 
     run_at = datetime.fromtimestamp(dur)
     bot.loop.create_task(schedule(perform_unmute_user(bot.guilds[0], user_id), run_at=run_at))

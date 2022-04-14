@@ -39,7 +39,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id: str):
     try:
         await member.edit(nick=new_name)
     except Forbidden:
-        await reply(ctx, f'Cannot rename {member.mention}. Am I even allowed to?', send_followup=False)
+        await reply(ctx, f'Cannot rename {member.mention} ({member.id}). Am I even allowed to?', send_followup=False)
         return
 
     try:
@@ -49,7 +49,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id: str):
             'HTB account (see #welcome for how) to have your name reset to your HTB username.'
         )
     except Forbidden:
-        await reply(ctx, f'Cannot DM user {member.mention}. Perhaps they do not allow DMs from strangers?', send_followup=False)
+        await reply(ctx, f'Cannot DM user {member.mention} ({member.id}). Perhaps they do not allow DMs from strangers?', send_followup=False)
         return
 
     await reply(ctx, f"{member.name}'s name has been updated to {new_name}", send_followup=False)
