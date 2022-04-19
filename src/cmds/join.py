@@ -39,7 +39,7 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
     rid, _ = details
     role = ctx.guild.get_role(rid)
     await ctx.author.add_roles(role)
-    await reply(ctx, f'Welcome to {role.name}!', send_followup=False)
+    await reply(ctx, f'Welcome to {role.name}!', send_followup=False, ephemeral=True)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
