@@ -37,7 +37,10 @@ class Reply:
     @staticmethod
     async def prefix(ctx: ApplicationContext, msg=None, ephemeral=False, send_followup=False, **kwargs):
         # DO NOT remove named params ephemeral or send_followup. ApplicationContext.send(...) does not like these, so they must be "filtered away".
-        await ctx.send(content=msg, **kwargs)
+        if ephemeral:
+            await ctx.send(content=msg, delete_after=5**kwargs)
+        else:
+            await ctx.send(content=msg, **kwargs)
         Reply._log_call_and_msg(ctx, msg, **kwargs)
 
 
