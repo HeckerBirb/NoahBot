@@ -1,6 +1,5 @@
 from datetime import datetime
-from typing import List
-from typing import Optional, Dict, Union
+from typing import Optional, Dict, Union, List, cast
 
 import aiohttp
 import discord
@@ -50,9 +49,10 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
 
     # In an automated context, `ctx` is `None`, will need a refactor for autobans
     if ctx is not None and banned_details is not None and banned_details['banned']:
-        banned_until: str = banned_details['ends_at'][:10]  # Strip date e.g. from "2022-01-31T11:00:00.000000Z"
-        banned_until: datetime = datetime.strptime(banned_until, '%Y-%m-%d')
-        ban_duration: str = f'{(banned_until - datetime.now()).days}d'
+        # If user is banned, this field must be a string
+        banned_until: str = cast(str, banned_details['ends_at'])[:10]  # Strip date e.g. from "2022-01-31T11:00:00.000000Z"
+        banned_until_dt: datetime = datetime.strptime(banned_until, '%Y-%m-%d')
+        ban_duration: str = f'{(banned_until_dt - datetime.now()).days}d'
         reason = 'Banned on the HTB Platform. Please contact HTB Support to appeal.'
         STDOUT_LOG.info(f'Discord user {member.name} ({member.id}) is platform banned. Banning from Discord...')
         await perform_temp_ban(bot, ctx, reply, member.id, ban_duration, reason, needs_approval=False, banned_by_bot=True, send_followup=True)
@@ -78,6 +78,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
         to_assign.append(guild.get_role(RoleIDs.VIP_PLUS))
     if htb_user_details['hof_position'] != "unranked":
         position = int(htb_user_details['hof_position'])
+        pos_top = None
         if position == 1:
             pos_top = '1'
         elif position <= 5:
@@ -90,9 +91,8 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
             pos_top = '50'
         elif position <= 100:
             pos_top = '100'
-        else:
-            pos_top = position
-        if int(pos_top) <= 100:
+
+        if pos_top:
             STDOUT_LOG.debug(f'User is Hall of Fame rank {position}. Assigning role Top-{pos_top}...')
             to_assign.append(guild.get_role(RoleIDs.get_post_or_rank(pos_top)))
         else:

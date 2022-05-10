@@ -25,7 +25,7 @@ async def perform_action(ctx: ApplicationContext, reply, channel: Union[int, Tex
             channel_id = int(channel.replace('<#', '').replace('>', ''))
             channel = bot.guilds[0].get_channel_or_thread(channel_id)
         except ValueError:
-            await reply(ctx, f"""I don't know what "{channel.mention}" is. Please use #channel-reference or a channel ID.""", send_followup=False)
+            await reply(ctx, f"""I don't know what "{channel}" is. Please use #channel-reference or a channel ID.""", send_followup=False)
             return
 
     try:
@@ -45,8 +45,8 @@ async def perform_action(ctx: ApplicationContext, reply, channel: Union[int, Tex
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
 async def action_slash(
         ctx: ApplicationContext,
-        channel: Option(TextChannel, 'Channel to enable slowmode on.'),
-        seconds: Option(int, 'Amount of seconds to set slowmode as so that 0 < x < 30.')
+        channel: Option(TextChannel, 'Channel to enable slowmode on.'),  # type: ignore
+        seconds: Option(int, 'Amount of seconds to set slowmode as so that 0 < x < 30.')  # type: ignore
 ):
     await perform_action(ctx, Reply.slash, channel, seconds)
 

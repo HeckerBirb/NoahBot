@@ -14,11 +14,11 @@ async def schedule(task: Coroutine, run_at: datetime):
     """
     now = datetime.now()
     if run_at < now:
-        STDOUT_LOG.debug(f'Target execution is in the past. Setting sleep timer to 0.', target_exec=run_at, current_time=now)
+        STDOUT_LOG.debug(f'Target execution is in the past. Setting sleep timer to 0.', target_exec=repr(run_at), current_time=repr(now))
         seconds = 0
     else:
         seconds = int((run_at - now).total_seconds())
-        STDOUT_LOG.debug(f'Task {task.__name__} will run after {seconds} seconds.', target_exec=run_at, current_time=now)
+        STDOUT_LOG.debug(f'Task {task.__name__} will run after {seconds} seconds.', target_exec=repr(run_at), current_time=repr(now))
 
     await asyncio.sleep(seconds)
     return await task

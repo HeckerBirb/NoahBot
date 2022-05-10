@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 import discord
 from discord.commands import Option
@@ -80,7 +81,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             #   - I create a new Discord account.
             #   - I reuse my previous Account Identifier.
             #   - I now have an "alt account" with the same roles.
-            most_recent_rec = None
+            most_recent_rec: Optional[HtbDiscordLink] = None
             query_str = """SELECT * FROM htb_discord_link WHERE account_identifier = %s ORDER BY id DESC LIMIT 1"""
             cursor.execute(query_str, (account_identifier, ))
             for row in cursor.fetchall():
@@ -133,7 +134,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
         if any(naughty_list.__dict__.values()):
             if naughty_list.known_token_belongs_to_different_discord_user:
                 error_desc = f'Verified user {ctx.author.mention} tried to identify as another identified user.\n' \
-                           f'Other Discord UID: {most_recent_rec.dis_user_id}, related HTB UID: {most_recent_rec.htb_user_id}'
+                           f'Other Discord UID: {most_recent_rec.dis_user_id}, related HTB UID: {most_recent_rec.htb_user_id}'  # type: ignore
 
             elif naughty_list.htb_user_from_lookup_resolves_to_different_discord_user:
                 error_desc = f'The HTB account {json_htb_user_id} was attempted identified by user <@{ctx.author.id}>, but is tied to another Discord account.\n' \
@@ -163,7 +164,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
-async def action_slash(ctx: ApplicationContext, account_identifier: Option(str, 'The Account Identifier from your HTB Platform profile page.')):
+async def action_slash(ctx: ApplicationContext, account_identifier: Option(str, 'The Account Identifier from your HTB Platform profile page.')):  # type: ignore
     await perform_action(ctx, Reply.slash, account_identifier)
 
 

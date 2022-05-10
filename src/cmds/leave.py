@@ -21,14 +21,14 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
         await reply(ctx, 'This command cannot be used in a DM.', send_followup=False)
         return
 
-    role_id = None
     for role in JOINABLE_ROLES.keys():
         if role_name.lower() in role.lower():
-            role_id = JOINABLE_ROLES.get(role)[0]
-
-    if role_id is None:
-        await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False)
-        return
+            r = JOINABLE_ROLES.get(role)
+            if r:
+                role_id = r[0]
+                break
+    else:
+        return await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False)
 
     the_role = ctx.guild.get_role(role_id)
     await ctx.author.remove_roles(the_role)
@@ -36,7 +36,7 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
-async def action_slash(ctx: ApplicationContext, role_name: Option(str, 'The name of the role you want to join.')):
+async def action_slash(ctx: ApplicationContext, role_name: Option(str, 'The name of the role you want to leave.')):  # type: ignore
     await perform_action(ctx, Reply.slash, role_name)
 
 

@@ -35,7 +35,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
     name=name(),
     description=description()
 )
-async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):
+async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):  # type: ignore
     await perform_action(ctx, Reply.slash, user_id)
 
 

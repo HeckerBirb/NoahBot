@@ -52,7 +52,7 @@ async def _whois(ctx: ApplicationContext, user_id, reply):
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR, SlashPerms.HTB_STAFF], name=name(), description=description())
-async def whois_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):
+async def whois_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):  # type: ignore
     await _whois(ctx, user_id, Reply.slash)
 
 

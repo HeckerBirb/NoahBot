@@ -31,7 +31,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
 async def action_slash(
         ctx: ApplicationContext,
-        user_id: Option(str, 'User ID or @mention name.')
+        user_id: Option(str, 'User ID or @mention name.')  # type: ignore
 ):
     await perform_action(ctx, Reply.slash, user_id)
 

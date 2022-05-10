@@ -90,9 +90,9 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
 async def action_slash(
         ctx: ApplicationContext,
-        user_id: Option(str, 'User ID or @mention name.'),
-        duration: Option(str, 'Duration of the mute in human-friendly notation, e.g. 10m for ten minutes or 1d for one day.'),
-        reason: Option(str, 'Mute reason. Will be sent to the user in a DM as well.')
+        user_id: Option(str, 'User ID or @mention name.'),  # type: ignore
+        duration: Option(str, 'Duration of the mute in human-friendly notation, e.g. 10m for ten minutes or 1d for one day.'),  # type: ignore
+        reason: Option(str, 'Mute reason. Will be sent to the user in a DM as well.')  # type: ignore
 ):
     await perform_action(ctx, Reply.slash, user_id, duration, reason)
 

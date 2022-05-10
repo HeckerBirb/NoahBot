@@ -49,6 +49,8 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
                 return
 
             new_unban_time = parse_duration_str(duration, int(baseline_ts.timestamp()))
+            if not new_unban_time:
+                return await reply(ctx, f'Could not parse timestamp', send_followup=False)
 
             query_str = """UPDATE ban_record SET unban_time = %s, approved = 1 WHERE id = %s"""
             cursor.execute(query_str, (new_unban_time, ban_id))
@@ -64,8 +66,8 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id, duration):
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
 async def action_slash(
         ctx: ApplicationContext,
-        ban_id: Option(int, 'Ban ID from ban request.'),
-        duration: Option(str, 'New duration of the temporary ban, from the point in time of the ban.')
+        ban_id: Option(int, 'Ban ID from ban request.'),  # type: ignore
+        duration: Option(str, 'New duration of the temporary ban, from the point in time of the ban.')  # type: ignore
 ):
     await perform_action(ctx, Reply.slash, ban_id, duration)
 
