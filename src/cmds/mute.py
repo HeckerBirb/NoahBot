@@ -75,8 +75,6 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
             cursor.execute(query_str, (user_id, reason, ctx.author.id, dur))
             connection.commit()
 
-    role = bot.guilds[0].get_role(RoleIDs.MUTED)
-    await member.add_roles(role)
     await member.timeout(datetime.fromtimestamp(dur), reason= reason)
     await reply(ctx, f"{member.mention} ({member.id}) has been muted for {duration}.", send_followup=False)
     try:
@@ -84,8 +82,6 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
     except Forbidden:
         await reply(ctx, f'Cannot DM {member.mention} ({member.id}) due to their privacy settings.', send_followup=True)
 
-    run_at = datetime.fromtimestamp(dur)
-    bot.loop.create_task(schedule(perform_unmute_user(bot.guilds[0], user_id), run_at=run_at))
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())

@@ -21,7 +21,6 @@ async def perform_action(ctx: ApplicationContext, reply, user_id):
     if user_id is None:
         await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
-    await perform_unmute_user(guild, user_id)
     await member.remove_timeout()
 
     member = await force_get_member(guild, user_id)
