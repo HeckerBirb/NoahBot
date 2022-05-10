@@ -4,7 +4,7 @@ from datetime import datetime
 from discord.ext import tasks
 from mysql.connector import connect
 
-from src.cmds._proxy_helpers import perform_unban_user, perform_unmute_user
+from src.cmds._proxy_helpers import perform_unban_user, perform_unmute_user, perform_timeout_transfer_user
 from src.conf import MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASS
 from src.lib.schedule import schedule
 from src.log4noah import STDOUT_LOG
@@ -63,9 +63,8 @@ def auto_unmute():
                 if (run_at - now).days > 365:
                     STDOUT_LOG.info(f'Skipping scheduled unmute for user_id {row[0]}: is over one years into the future ({str(run_at)})')
                     continue
-
-                unmute_tasks.append(schedule(perform_unmute_user(bot.guilds[0], row[0]), run_at=run_at))
-                STDOUT_LOG.info(f'Scheduled unmute task for user_id {row[0]} at {str(run_at)}.')
+                perform_timeout_transfer(bot.guilds[0], row[0]. run_at)
+                STDOUT_LOG.info(f'Transfered unmute for user_id {row[0]} at {str(run_at)}.')
 
     return unmute_tasks
 

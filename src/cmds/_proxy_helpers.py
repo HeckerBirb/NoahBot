@@ -244,6 +244,17 @@ async def perform_unmute_user(guild, user_id):
         await member.remove_roles(role)
     remove_record('DELETE FROM mute_record WHERE user_id = %s', (user_id,))
 
+async def perform_timeout_user_transfer(guild, user_id, time_until):
+    member = await force_get_member(guild, user_id)
+    
+    role = guild.get_role(RoleIDs.MUTED)
+
+    await member.timeout(datetime.fromtimestamp(time_until))
+    if member is not None:
+        # No longer on the server - cleanup, but don't attempt to remove a role
+        STDOUT_LOG.info(f'Unmuting {member}.')
+        await member.remove_roles(role)
+    remove_record('DELETE FROM mute_record WHERE user_id = %s', (user_id,))
 
 async def perform_infraction_record(ctx, reply, guild, user_id, weight, reason):
     user_id = get_user_id(user_id)
