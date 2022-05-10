@@ -22,8 +22,8 @@ async def perform_action(ctx, reply, user_id, reason):
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
 async def action_slash(
         ctx: ApplicationContext,
-        user_id: Option(str, 'User ID or @mention name.'),
-        reason: Option(str, 'Ban reason. Will be sent to the user in a DM as well.')
+        user_id: Option(str, 'User ID or @mention name.'),  # type: ignore
+        reason: Option(str, 'Ban reason. Will be sent to the user in a DM as well.')  # type: ignore
 ):
     await perform_action(ctx, Reply.slash, user_id, reason)
 

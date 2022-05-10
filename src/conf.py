@@ -1,6 +1,7 @@
 import os
 from os.path import dirname, abspath
 from pathlib import Path
+from typing import Optional
 
 from discord.commands import commands
 
@@ -10,7 +11,14 @@ from src.log4noah import STDOUT_LOG
 def _get_int_env(env_var: str, default: str = None) -> int:
     try:
         STDOUT_LOG.debug(f'Loading {env_var} (default={default}).')
-        return int(os.getenv(env_var, default))
+        if default:
+            return int(os.getenv(env_var, default))
+        var = os.getenv(env_var)
+        if var:
+            return int(var)
+        else:
+            STDOUT_LOG.critical(f'Environment variable {env_var} was not present!')
+            exit(1)
     except KeyError:
         STDOUT_LOG.critical(f'Environment variable {env_var} cannot be parsed as an int!')
         exit(1)
@@ -86,7 +94,7 @@ class RoleIDs:
     RANK_HUNDRED = _get_int_env('RANK_HUNDRED_ROLE')
 
     @staticmethod
-    def get_post_or_rank(what: str) -> int:
+    def get_post_or_rank(what: str) -> Optional[int]:
         return {
             '1': RoleIDs.RANK_ONE,
             '5': RoleIDs.RANK_FIVE,

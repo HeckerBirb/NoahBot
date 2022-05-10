@@ -1,7 +1,7 @@
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, TypedDict
 
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
 
@@ -22,7 +22,7 @@ class BotLogger:
         now = str(datetime.now()).split('.')[0]
         print(f'{now} [{log_level}]: {msg}')
 
-    def debug(self, log_message: str = '', **kwargs: Dict[str, Any]):
+    def debug(self, log_message: str = '', **kwargs):
         """
         Debug messages to help narrow down a particular problem with communication or the bot itself.
         Args:
@@ -31,7 +31,7 @@ class BotLogger:
         """
         self._log_msg('DEBUG', log_message, **kwargs)
 
-    def info(self, log_message: str = '', **kwargs: Dict[str, Any]):
+    def info(self, log_message: str = '', **kwargs):
         """
         Informational messages for example updates of regular program flows or successful, regular events.
         Args:
@@ -40,7 +40,7 @@ class BotLogger:
         """
         self._log_msg('INFO', log_message, **kwargs)
 
-    def warn(self, log_message: str = '', **kwargs: Dict[str, Any]):
+    def warn(self, log_message: str = '', **kwargs):
         """
         Warning messages indicating a potential problem which may at a later point cause an error of some magnitude.
         Args:
@@ -49,7 +49,7 @@ class BotLogger:
         """
         self._log_msg('WARN', log_message, **kwargs)
 
-    def error(self, log_message: str = 'Error!', **kwargs: Dict[str, Any]):
+    def error(self, log_message: str = 'Error!', **kwargs):
         """
         For errors which indicate a problem, however not one that causes downtime or security issues.
         Args:
@@ -58,7 +58,7 @@ class BotLogger:
         """
         self._log_msg('ERROR', log_message, **kwargs)
 
-    def critical(self, log_message: str = 'Critical error!', **kwargs: Dict[str, Any]):
+    def critical(self, log_message: str = 'Critical error!', **kwargs):
         """
         For CRITICAL errors which cause immediate interruption of service or security threats. Consider pulling the plug!
         Args:

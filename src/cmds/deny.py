@@ -36,7 +36,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id):
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
-async def action_slash(ctx: ApplicationContext, ban_id: Option(int, 'Ban ID from ban request.')):
+async def action_slash(ctx: ApplicationContext, ban_id: Option(int, 'Ban ID from ban request.')):  # type: ignore
     await perform_action(ctx, Reply.slash, ban_id)
 
 

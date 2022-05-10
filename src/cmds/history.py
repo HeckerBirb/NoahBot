@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime, date
-from typing import Union
+from typing import Union, List
 
 from discord import Embed, NotFound
 from discord.commands import Option
@@ -140,7 +140,7 @@ def _embed_titles_of(embed, entry_type: str, history_entries, today_date, entry_
     way regardless of if the text is an infraction, a note or something third.
     Important: this function mutates the provided "embed"!
     """
-    entry_records = [[]]
+    entry_records: List[List[str]] = [[]]
     if history_entries is not None:
         current_row = 0
         for entry in history_entries:
@@ -181,7 +181,7 @@ Issued by <@{infraction.moderator}> on {infraction.date} ({expired_status}):
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR, SlashPerms.HTB_STAFF], name=name(), description=description())
-async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):
+async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):  # type: ignore
     await perform_action(ctx, Reply.slash, user_id)
 
 

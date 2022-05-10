@@ -21,7 +21,7 @@ async def perform_action(ctx: ApplicationContext, reply, note_id):
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
-async def action_slash(ctx: ApplicationContext, note_id: Option(str, 'ID of the note record to remove.')):
+async def action_slash(ctx: ApplicationContext, note_id: Option(str, 'ID of the note record to remove.')):  # type: ignore
     await perform_action(ctx, Reply.slash, note_id)
 
 

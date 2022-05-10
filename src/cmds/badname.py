@@ -21,26 +21,23 @@ def description():
     return 'Changes the nickname of a user to ChangeMe.'
 
 
-async def perform_action(ctx: ApplicationContext, reply, user_id: str):
+async def perform_action(ctx: ApplicationContext, reply, user_id_str: str):
     global baby_names
 
-    user_id = get_user_id(user_id)
-    if user_id is None:
-        await reply(ctx, 'Error: malformed user ID.', send_followup=False)
-        return
+    user_id = get_user_id(user_id_str)
+    if not user_id:
+        return await reply(ctx, 'Error: malformed user ID.', send_followup=False)
 
-    member = bot.guilds[0].get_member(int(user_id))
-    if member is None:
-        await reply(ctx, f'Cannot find the member on the server. This may be due to caching (try again in a minute).', send_followup=False)
-        return
+    member = bot.guilds[0].get_member(user_id)
+    if not member:
+        return await reply(ctx, f'Cannot find the member on the server. This may be due to caching (try again in a minute).', send_followup=False)
 
     new_name = random.choice(baby_names) + ' McVerify'
 
     try:
         await member.edit(nick=new_name)
     except Forbidden:
-        await reply(ctx, f'Cannot rename {member.mention} ({member.id}). Am I even allowed to?', send_followup=False)
-        return
+        return await reply(ctx, f'Cannot rename {member.mention} ({member.id}). Am I even allowed to?', send_followup=False)
 
     try:
         await member.send(
@@ -56,7 +53,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id: str):
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.MODERATOR], name=name(), description=description())
-async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):
+async def action_slash(ctx: ApplicationContext, user_id: Option(str, 'User ID or @mention name.')):  # type: ignore
     await perform_action(ctx, Reply.slash, user_id)
 
 
