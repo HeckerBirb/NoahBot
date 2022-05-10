@@ -63,7 +63,7 @@ def auto_unmute():
                 if (run_at - now).days > 365:
                     STDOUT_LOG.info(f'Skipping scheduled unmute for user_id {row[0]}: is over one years into the future ({str(run_at)})')
                     continue
-                perform_timeout_transfer(bot.guilds[0], row[0]. run_at)
+                await perform_timeout_transfer(bot.guilds[0], row[0]. run_at)
                 STDOUT_LOG.info(f'Transfered unmute for user_id {row[0]} at {str(run_at)}.')
 
     return unmute_tasks
