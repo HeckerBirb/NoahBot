@@ -77,6 +77,7 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, duration, reas
 
     role = bot.guilds[0].get_role(RoleIDs.MUTED)
     await member.add_roles(role)
+    await member.timeout(dur, reason= reason)
     await reply(ctx, f"{member.mention} ({member.id}) has been muted for {duration}.", send_followup=False)
     try:
         await member.send(f"You have been muted for {duration}. Reason:\n>>> {reason}")
