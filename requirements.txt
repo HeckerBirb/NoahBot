@@ -1,3 +1,4 @@
 # pip install -U git+https://github.com/Pycord-Development/pycord@1c17e64c2d78ba6740f3a1234c95f230be13ea83
 mysql-connector-python
 aiohttp
+sentry_sdk
