@@ -24,7 +24,7 @@ async def on_ready():
     if not LOADED_ONCE:
         STDOUT_LOG.info('NoahBot has come online and is ready.')
         bot.load_extension('automation.scheduled_tasks')
-        sentry_sdk.init("https://c1cb4fa1b9594d28abcaf5651a28985d@o478171.ingest.sentry.io/6410289", traces_sample_rate=1.0)
+        sentry_sdk.init("https://560d7d4a261f46daa9ae3146845a6d61@o415800.ingest.sentry.io/6410280", traces_sample_rate=1.0)
 
     LOADED_ONCE = True
     STDOUT_LOG.debug('NoahBot has automatically reloaded and is now ready again.')
