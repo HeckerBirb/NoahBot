@@ -33,7 +33,7 @@ async def perform_action(ctx: ApplicationContext, reply, ban_id):
             query_str = 'DELETE FROM ban_record WHERE id = %s'
             cursor.execute(query_str, (ban_id,))
             connection.commit()
-    reply(ctx, 'Ban request denied. The user has been unbanned.', send_followup=False)
+    await reply(ctx, 'Ban request denied. The user has been unbanned.', send_followup=False)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], permissions=[SlashPerms.ADMIN, SlashPerms.SR_MODERATOR], name=name(), description=description())
