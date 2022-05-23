@@ -26,6 +26,8 @@ services:
   queue_server:
     depends_on:
       - noahbotdb
+    env_file:
+      - ../docker-data/noahbot/secrets.env
     build: ./web
     ports:
-      - "5000:5000"
+      - "6000:5000"

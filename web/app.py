@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import mariadb
+from os import environ
 
 app = Flask(__name__)
 
@@ -16,7 +17,7 @@ COLUMNS = [
 
 """
 CREATE TABLE users (
-    discord_id INT NOT NULL,
+    discord_id BIGINT NOT NULL,
     time TIMESTAMP NOT NULL DEFAULT current_timestamp(),
     name VARCHAR(255),
     hof_pos INT,
@@ -32,7 +33,7 @@ CREATE TABLE users (
 @app.route("/queue", methods=["GET", "POST"])
 def queue():
     conn = mariadb.connect(
-        user="root", password="password", host="db", database="noahbot"
+        user="root", password=environ['MYSQL_ROOT_PASSWORD'], host=environ['MYSQL_HOST'], database=environ['MYSQL_DATABASE']
     )
     cur = conn.cursor()
     if request.method == "GET":
