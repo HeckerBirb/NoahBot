@@ -70,9 +70,10 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
         if role.id in RoleIDs.ALL_RANKS + RoleIDs.ALL_POSITIONS:
             to_remove.append(guild.get_role(role.id))
 
+    to_assign = []
     STDOUT_LOG.debug('Getting role "rank":', role_id=RoleIDs.get_post_or_rank(htb_user_details['rank']), role_obj=guild.get_role(RoleIDs.get_post_or_rank(htb_user_details['rank'])), htb_rank=htb_user_details['rank'])
     if htb_user_details['rank'] != 'Deleted':
-        to_assign = [guild.get_role(RoleIDs.get_post_or_rank(htb_user_details['rank']))]
+        to_assign.append(guild.get_role(RoleIDs.get_post_or_rank(htb_user_details['rank'])))
 
     if htb_user_details['vip']:
         STDOUT_LOG.debug('Getting role "VIP":', role_id=RoleIDs.VIP, role_obj=guild.get_role(RoleIDs.VIP))
