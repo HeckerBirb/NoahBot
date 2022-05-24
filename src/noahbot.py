@@ -36,6 +36,8 @@ extensions = [f.replace('.py', '') for f in listdir(cmds_path) if f not in ignor
 for extension in extensions:
     bot.load_extension('src.cmds.' + extension)
     STDOUT_LOG.debug(f'Module loaded: {extension}')
+bot.load_extension('src.webhooks')
+STDOUT_LOG.debug("Loaded webhook module")
 
 STDOUT_LOG.debug(f'All pending application commands: {", ".join([c.name for c in bot.pending_application_commands])}')
 STDOUT_LOG.info('Starting bot...')

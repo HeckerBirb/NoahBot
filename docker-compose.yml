@@ -20,14 +20,8 @@ services:
       - ../docker-data/noahbot/secrets.env
       - ../docker-data/noahbot/channels.env
       - ../docker-data/noahbot/roles.env
+    ports:
+      - "5000:5000"
     image: noahbot:latest
     labels:
       com.noahbot.description: "NoahBot"
-  queue_server:
-    depends_on:
-      - noahbotdb
-    env_file:
-      - ../docker-data/noahbot/secrets.env
-    build: ./web
-    ports:
-      - "6000:5000"
