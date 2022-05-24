@@ -70,11 +70,14 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
         if role.id in RoleIDs.ALL_RANKS + RoleIDs.ALL_POSITIONS:
             to_remove.append(guild.get_role(role.id))
 
+    STDOUT_LOG.debug('Getting role "rank":', role_id=RoleIDs.get_post_or_rank(htb_user_details['rank']), role_obj=guild.get_role(RoleIDs.get_post_or_rank(htb_user_details['rank'])), htb_rank=htb_user_details['rank'])
     to_assign = [guild.get_role(RoleIDs.get_post_or_rank(htb_user_details['rank']))]
 
     if htb_user_details['vip']:
+        STDOUT_LOG.debug('Getting role "VIP":', role_id=RoleIDs.VIP, role_obj=guild.get_role(RoleIDs.VIP))
         to_assign.append(guild.get_role(RoleIDs.VIP))
     if htb_user_details['dedivip']:
+        STDOUT_LOG.debug('Getting role "VIP+":', role_id=RoleIDs.VIP_PLUS, role_obj=guild.get_role(RoleIDs.VIP_PLUS))
         to_assign.append(guild.get_role(RoleIDs.VIP_PLUS))
     if htb_user_details['hof_position'] != "unranked":
         position = int(htb_user_details['hof_position'])
@@ -94,12 +97,15 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
 
         if pos_top:
             STDOUT_LOG.debug(f'User is Hall of Fame rank {position}. Assigning role Top-{pos_top}...')
+            STDOUT_LOG.debug('Getting role "HoF role":', role_id=RoleIDs.get_post_or_rank(pos_top), role_obj=guild.get_role(RoleIDs.get_post_or_rank(pos_top)), hof_val=pos_top)
             to_assign.append(guild.get_role(RoleIDs.get_post_or_rank(pos_top)))
         else:
             STDOUT_LOG.debug(f'User is position {position}. No Hall of Fame roles for them.')
     if htb_user_details['machines']:
+        STDOUT_LOG.debug('Getting role "BOX_CREATOR":', role_id=RoleIDs.BOX_CREATOR, role_obj=guild.get_role(RoleIDs.BOX_CREATOR))
         to_assign.append(guild.get_role(RoleIDs.BOX_CREATOR))
     if htb_user_details['challenges']:
+        STDOUT_LOG.debug('Getting role "CHALLENGE_CREATOR":', role_id=RoleIDs.CHALLENGE_CREATOR, role_obj=guild.get_role(RoleIDs.CHALLENGE_CREATOR))
         to_assign.append(guild.get_role(RoleIDs.CHALLENGE_CREATOR))
 
     if member.nick != htb_user_details['user_name']:
@@ -108,9 +114,11 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
         except Forbidden as e:
             STDOUT_LOG.error(f'Exception whe trying to edit the nick-name of the user: {e}')
 
+    STDOUT_LOG.debug('All roles to_assign:', to_assign=to_assign)
     await member.add_roles(*to_assign, atomic=True)
     # We don't need to remove any roles that are going to be assigned again
     to_remove = list(set(to_remove) - set(to_assign))
+    STDOUT_LOG.debug('All roles to_remove:', to_remove=to_remove)
     if not to_remove:
         STDOUT_LOG.debug("No roles need to be removed")
     else:
