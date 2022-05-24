@@ -108,6 +108,7 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
         except Forbidden as e:
             STDOUT_LOG.error(f'Exception whe trying to edit the nick-name of the user: {e}')
 
+    await member.add_roles(*to_assign, atomic=True)
     # We don't need to remove any roles that are going to be assigned again
     to_remove = list(set(to_remove) - set(to_assign))
     if not to_remove:
@@ -115,5 +116,4 @@ async def process_identification(ctx, reply, htb_user_details, user_id: int) -> 
     else:
         await member.remove_roles(*to_remove, atomic=True)
 
-    await member.add_roles(*to_assign, atomic=True)
     return to_assign
