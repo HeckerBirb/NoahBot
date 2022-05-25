@@ -29,7 +29,7 @@ class WebhookCog(commands.Cog):
             roles.append(au_role)
             member.add_roles(*roles)
             return {"ok": "Added roles to user"}
-        elif event == "AddCert":
+        elif event == "CertificateAwarded":
             role = await self.get_academy_role(guild, data['certification']['name'])
             member.add_role(role)
             return {"ok": "Added role to user"}
@@ -65,7 +65,6 @@ class WebhookCog(commands.Cog):
             return None
 
     async def mp_handler(self, event: str, data: dict) -> dict:
-
         discord_user = data['discord_id']
         guild = await self.bot.fetch_guild(environ['GUILD_ID'])
         member = await guild.fetch_member(discord_user)
@@ -119,7 +118,7 @@ class WebhookCog(commands.Cog):
             member.remove_roles(*to_remove)
             return {"ok": "Changed user HOF bracket"}
 
-        elif event == "VIPChange":
+        elif event == "SubscriptionChange":
             vip_level = data['vip_level']
             role_id = WebhookCog.vip_role(vip_level)
             to_remove = [guild.get_role(x) for x in {RoleIDs.VIP, RoleIDs.VIP_PLUS} - set([role_id])]
@@ -128,7 +127,7 @@ class WebhookCog(commands.Cog):
             member.remove_roles(*to_remove)
             return {"ok": "Changed user VIP role"}
 
-        elif event == "ContentCreation":
+        elif event == "ContentReleased":
             kind = data['kind']
             if kind == 'machine':
                 member.add_roles(guild.get_role(RoleIDs.BOX_CREATOR))
@@ -141,6 +140,10 @@ class WebhookCog(commands.Cog):
 
 
     async def webserver(self):
+        async def debug_handler(req):
+            print(await req.json())
+            return web.Response(text='Bruh moment\n')
+
         async def handler(req):
             body = await req.json()
             platforms = {"academy": academy_handler}
@@ -148,6 +151,7 @@ class WebhookCog(commands.Cog):
 
         app = web.Application()
         app.router.add_post('/', handler)
+        app.router.add_post('/debug', debug_handler)
         runner = web.AppRunner(app)
         await runner.setup()
         self.site = web.TCPSite(runner, '0.0.0.0', 5000)
