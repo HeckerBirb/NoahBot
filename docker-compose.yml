@@ -15,7 +15,6 @@ services:
       dockerfile: dockerfile
     depends_on:
       - noahbotdb
-      - queue_server
     env_file:
       - ../docker-data/noahbot/secrets.env
       - ../docker-data/noahbot/channels.env
