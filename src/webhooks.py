@@ -100,6 +100,11 @@ class WebhookCog(commands.Cog):
             await member.add_roles(*to_assign)
             return {"ok": "Linked account"}
 
+        elif event == "NameChange":
+            name = data['name']
+            await member.edit(nick=name)
+            return {"ok": "Updated name"}
+
         elif event == "RankUp":
             rank = data['rank']
             rank_id: Optional[int] = RoleIDs.get_post_or_rank(rank)
@@ -146,7 +151,7 @@ class WebhookCog(commands.Cog):
 
         async def handler(req):
             body = await req.json()
-            platforms = {"academy": academy_handler}
+            platforms = {"academy": self.academy_handler, "mp": self.mp_handler}
             return web.json_response(await platforms[body['platform']](body['event'], body['data']))
 
         app = web.Application()
