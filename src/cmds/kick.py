@@ -3,7 +3,7 @@ from discord.commands.context import ApplicationContext
 from discord.errors import Forbidden, HTTPException
 from discord.ext import commands
 
-from src.cmds._proxy_helpers import Reply, get_user_id
+from src.cmds._proxy_helpers import Reply, get_user_id, member_is_staff
 from src.conf import SlashPerms, PrefixPerms, GUILD_ID
 from src.log4noah import STDOUT_LOG
 from src.noahbot import bot
@@ -23,6 +23,9 @@ async def perform_action(ctx: ApplicationContext, reply, user_id, reason):
         await reply(ctx, 'Error: malformed user ID.', send_followup=False)
         return
     member = bot.guilds[0].get_member(user_id)
+
+    if member is not None and member_is_staff(member):
+        return await reply(ctx, 'You cannot kick another staff member.', send_followup=send_followup)
 
     if len(reason) == 0:
         reason = 'No reason given...'
