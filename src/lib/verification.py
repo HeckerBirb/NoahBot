@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, Dict, Union, List, cast
+from typing import Optional, Dict, Union, List, cast, Callable
 
 import aiohttp
 import discord
@@ -38,19 +38,12 @@ async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:
                 return None
 
 
-async def process_identification(ctx, reply, htb_user_details, user_id: Optional[int] = -1, member: Optional[Member] = None) -> Optional[List[Role]]:
+async def process_identification(ctx: discord.ApplicationContext, reply: Callable, htb_user_details: Dict[str, str], member: Optional[Member]) -> Optional[List[Role]]:
     """
     Returns true if identification was successfully processed
     """
     htb_uid = htb_user_details['user_id']
     guild = bot.guilds[0]
-    if member is None:
-        if user_id == -1:
-            STDOUT_LOG.critical('Neither member nor member.id is populated in process_verification!')
-            if ctx is not None:
-                await reply('Critical error when processing user! Please contact Discord staff.', send_followup=False)
-            return
-        member = guild.get_member(user_id)
     banned_details = await _check_for_ban(htb_uid)
 
     # In an automated context, `ctx` is `None`, will need a refactor for autobans

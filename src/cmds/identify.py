@@ -158,7 +158,7 @@ async def perform_action(ctx: ApplicationContext, reply, account_identifier):
             cursor.execute(query_str, (account_identifier, ctx.author.id, json_htb_user_id))
             connection.commit()
 
-    await process_identification(ctx, reply, htb_user_details, ctx.author.id)
+    await process_identification(ctx, reply, htb_user_details, member=ctx.author)
 
     await reply(ctx, f'Your Discord user has been successfully identified as HTB user {json_htb_user_id}.', ephemeral=True, send_followup=True)
 
