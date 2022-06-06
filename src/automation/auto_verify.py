@@ -32,7 +32,7 @@ async def process_reverify(member: Member):
         await set_cooldown(member, timeout=120)
         return
 
-    await process_identification(None, None, htb_details, member.id)
+    await process_identification(None, None, htb_details, member=member)
     await set_cooldown(member, timeout=30)
     await clear_cooldowns()
 

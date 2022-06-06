@@ -3,7 +3,7 @@ from typing import Optional, Dict, Union, List, cast
 
 import aiohttp
 import discord
-from discord import Forbidden, Role
+from discord import Forbidden, Role, Member
 
 from src.cmds._proxy_helpers import perform_temp_ban
 from src.conf import API_URL, HTB_API_SECRET, ChannelIDs, RoleIDs
@@ -38,13 +38,19 @@ async def _check_for_ban(uid) -> Optional[Dict[str, Union[bool, str]]]:
                 return None
 
 
-async def process_identification(ctx, reply, htb_user_details, user_id: int) -> Optional[List[Role]]:
+async def process_identification(ctx, reply, htb_user_details, user_id: Optional[int] = -1, member: Optional[Member] = None) -> Optional[List[Role]]:
     """
     Returns true if identification was successfully processed
     """
     htb_uid = htb_user_details['user_id']
     guild = bot.guilds[0]
-    member = guild.get_member(user_id)
+    if member is None:
+        if user_id == -1:
+            STDOUT_LOG.critical('Neither member nor member.id is populated in process_verification!')
+            if ctx is not None:
+                await reply('Critical error when processing user! Please contact Discord staff.', send_followup=False)
+            return
+        member = guild.get_member(user_id)
     banned_details = await _check_for_ban(htb_uid)
 
     # In an automated context, `ctx` is `None`, will need a refactor for autobans
