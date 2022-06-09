@@ -35,14 +35,14 @@ async def perform_action(ctx: ApplicationContext, reply, role_name):
 
     filtered = [(k, v) for k, v in JOINABLE_ROLES.items() if role_name.lower() in k.lower()]
     if not filtered:
-        return await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False, ephemeral=True, delete_after=5)
+        return await reply(ctx, "I don't know what role that is. Did you spell it right?", send_followup=False, ephemeral=True)
     if len(filtered) > 1:
-        return await reply(ctx, "Matched multiple roles, try being more specific", send_followup=False, ephemeral=True, delete_after=5)
+        return await reply(ctx, "Matched multiple roles, try being more specific", send_followup=False, ephemeral=True)
     _, details = filtered[0]
     rid, _ = details
     guild_role = ctx.guild.get_role(rid)
     await ctx.author.add_roles(guild_role)
-    await reply(ctx, f'Welcome to {guild_role.name}!', send_followup=False, ephemeral=True, delete_after=5)
+    await reply(ctx, f'Welcome to {guild_role.name}!', send_followup=False, ephemeral=True)
 
 
 @bot.slash_command(guild_ids=[GUILD_ID], name=name(), description=description())
