@@ -41,7 +41,7 @@ API_URL = f'{HTB_URL}/api'
 API_V4_URL = f'{API_URL}/v4'
 
 JOINABLE_ROLES = {
-    'CA 2022': (_get_int_env('CA2022_ROLE'), "To infinity and beyond! Oh wait, wrong movie. Never mind."),
+    'Business CTF': (_get_int_env('BIZCTF2022_ROLE'), "Join ENIGMA, the multinational law enforcement operation, and let's bring those criminals to the light of justice."),
     'Noah Gang': (_get_int_env('NOAH_GANG_ROLE'), "Get pinged when Fugl posts pictures of his cute bird"),
     'Buddy Gang': (_get_int_env('BUDDY_GANG_ROLE'), "Get pinged when Legacyy posts pictures of his cute dog"),
     'Red Team': (_get_int_env('RED_TEAM_ROLE'), "Red team fans. Also gives access to the Red and Blue team channels"),
