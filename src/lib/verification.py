@@ -71,7 +71,7 @@ async def process_identification(ctx: discord.ApplicationContext, reply: Callabl
 
     to_assign = []
     STDOUT_LOG.debug('Getting role "rank":', role_id=RoleIDs.get_post_or_rank(htb_user_details['rank']), role_obj=guild.get_role(RoleIDs.get_post_or_rank(htb_user_details['rank'])), htb_rank=htb_user_details['rank'])
-    if htb_user_details['rank'] != 'Deleted':
+    if htb_user_details['rank'] not in ['Deleted', 'Moderator', 'Ambassador']:
         to_assign.append(guild.get_role(RoleIDs.get_post_or_rank(htb_user_details['rank'])))
 
     if htb_user_details['vip']:
@@ -116,7 +116,8 @@ async def process_identification(ctx: discord.ApplicationContext, reply: Callabl
             STDOUT_LOG.error(f'Exception whe trying to edit the nick-name of the user: {e}')
 
     STDOUT_LOG.debug('All roles to_assign:', to_assign=to_assign)
-    await member.add_roles(*to_assign, atomic=True)
+    if len(to_assign) > 0:
+        await member.add_roles(*to_assign, atomic=True)
     # We don't need to remove any roles that are going to be assigned again
     to_remove = list(set(to_remove) - set(to_assign))
     STDOUT_LOG.debug('All roles to_remove:', to_remove=to_remove)
